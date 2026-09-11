@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot name="bracket_with_femto_bolt" xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:include filename="femto_bolt.urdf.xacro" />
+
+  <!-- 원본 카메라 매크로는 유지하고 이 조립 파일에서만 메쉬 경로를 설정한다. -->
+  <xacro:property name="mesh_path" value="${xacro.abs_filename('../meshes/')}" />
+
+  <!-- bracket.stl의 원점/축을 그대로 사용한다. STL은 mm, URDF는 m 단위. -->
+  <link name="bracket_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}bracket.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="bracket_blue">
+        <color rgba="0.25 0.55 0.85 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}bracket.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!--
+    합본 STL 정렬 결과: 브라켓 기준 camera_base_link의 자세.
+    XYZ = (0, +3, -51.26) mm, RPY = (0, 0, +90) deg.
+    단품/합본 브라켓의 180도 차이는 이미 상대변환에 반영되어 있다.
+    메쉬 정렬로 구한 초기값이며 실물 캘리브레이션 결과는 아니다.
+    카메라 내부의 nominal depth/color TF는 원본 매크로가 연결한다.
+  -->
+  <xacro:femto_bolt prefix="camera" parent="bracket_link" use_nominal_extrinsics="true">
+    <origin xyz="0 0.003 -0.05126" rpy="0 0 ${M_PI/2}" />
+  </xacro:femto_bolt>
+</robot>

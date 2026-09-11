@@ -1569,6 +1569,43 @@ bool DoosanController::isRealtimeControlRunning() const
     return realtime_control_running_;
 }
 
+bool DoosanController::readActualJointState(JointArray &position, JointArray &velocity)
+{
+    std::lock_guard<std::mutex> lock(drfl_mutex_);
+    if (!connected_ || disconnected_)
+    {
+        return false;
+    }
+    // Use controller queries, not the last RT buffer after a completed move.
+    const auto *pose = drfl_.get_current_posj();
+    if (!pose)
+    {
+        return false;
+    }
+    JointArray measured_position = {};
+    for (int i = 0; i < kNumJoints; ++i)
+    {
+        measured_position[i] = pose->_fPosition[i];
+    }
+    const auto *speed = drfl_.get_current_velj();
+    if (!speed)
+    {
+        return false;
+    }
+    JointArray measured_velocity = {};
+    for (int i = 0; i < kNumJoints; ++i)
+    {
+        measured_velocity[i] = speed->_fVelocity[i];
+        if (!std::isfinite(measured_position[i]) || !std::isfinite(measured_velocity[i]))
+        {
+            return false;
+        }
+    }
+    position = measured_position;
+    velocity = measured_velocity;
+    return true;
+}
+
 DoosanController::RobotSystem DoosanController::robotSystemFromString(const std::string &value)
 {
     if (value == "virtual")

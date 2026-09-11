@@ -1,0 +1,2 @@
+/usr/bin/ar qc libdoosan_controller.a CMakeFiles/doosan_controller.dir/src/doosan_controller.cpp.o
+/usr/bin/ranlib libdoosan_controller.a

@@ -140,6 +140,10 @@ public:
     bool isServoOn() const;
     bool isRealtimeControlRunning() const;
 
+    // Read-only telemetry for stationary scan capture (deg, deg/s).
+    // Fails if either measurement is unavailable; never substitutes a target/zero.
+    bool readActualJointState(JointArray &position, JointArray &velocity);
+
     static RobotSystem robotSystemFromString(const std::string &value);
 
     struct TaskTrajectoryPoint

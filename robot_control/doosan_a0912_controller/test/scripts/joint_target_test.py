@@ -50,13 +50,14 @@ VELOCITY_SEQUENCE = [
 
 
 class DoosanRobot:
-    def __init__(self) -> None:
-        if not LIB_PATH.exists():
+    def __init__(self, library_path: str | Path | None = None) -> None:
+        library_path = Path(library_path) if library_path is not None else LIB_PATH
+        if not library_path.exists():
             raise RuntimeError(
-                f"{LIB_PATH} not found. Build first with: cmake -S . -B build && cmake --build build"
+                f"{library_path} not found. Build first with: cmake -S . -B build && cmake --build build"
             )
 
-        self._lib = ctypes.CDLL(str(LIB_PATH))
+        self._lib = ctypes.CDLL(str(library_path))
         self._configure_signatures()
         self._handle = self._lib.doosan_controller_create()
         if not self._handle:
@@ -363,6 +364,26 @@ class DoosanRobot:
         )
         if not ok:
             raise RuntimeError("task trajectory CSV velocity control failed")
+
+    def read_actual_joint_state(self) -> dict:
+        """Actual controller measurements; no connection or motion is started here."""
+        if self._closed or not self._handle:
+            raise RuntimeError("robot is closed")
+        try:
+            read = self._lib.doosan_controller_read_actual_joint_state
+        except AttributeError as exc:
+            raise RuntimeError("Rebuild the control library to enable scan telemetry") from exc
+        read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
+        read.restype = ctypes.c_int
+        position, velocity = Float6(), Float6()
+        started = time.time_ns()
+        if not read(self._handle, position, velocity):
+            raise RuntimeError("actual joint position/velocity measurement unavailable")
+        return {
+            "joint_deg": list(position), "joint_velocity_deg_s": list(velocity),
+            "host_query_start_ns": started, "host_query_end_ns": time.time_ns(),
+            "motion_running": self.is_motion_running(),
+        }
 
     def hold(self) -> None:
         self._lib.doosan_controller_hold(self._handle)

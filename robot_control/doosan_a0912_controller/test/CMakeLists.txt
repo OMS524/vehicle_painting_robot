@@ -9,6 +9,11 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(API_DRFL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../API-DRFL")
 set(DOOSAN_DRCF_VERSION 2 CACHE STRING "Doosan DRCF major version. Use 2 for M2.x and 3 for M3.x.")
 
+# 활성화한 Conda 환경의 Eigen/Pinocchio를 우선 사용한다.
+if(DEFINED ENV{CONDA_PREFIX})
+  list(PREPEND CMAKE_PREFIX_PATH "$ENV{CONDA_PREFIX}")
+endif()
+
 find_package(Eigen3 REQUIRED)
 find_package(pinocchio REQUIRED)
 
@@ -35,6 +40,11 @@ if(NOT EXISTS "${API_DRFL_DIR}/library/Linux/64bits/${DRFL_ARCH}/${DRFL_UBUNTU_V
 endif()
 
 set(DRFL_LIB_DIR "${API_DRFL_DIR}/library/Linux/64bits/${DRFL_ARCH}/${DRFL_UBUNTU_VERSION}")
+# 빌드에 실제 사용한 Pinocchio 설치 위치를 .so에 기록한다.
+# 실행 시 LD_LIBRARY_PATH를 따로 설정하지 않아도 라이브러리를 찾을 수 있다.
+set(DOOSAN_RUNTIME_LIBRARY_DIRS
+  "$<TARGET_FILE_DIR:pinocchio::pinocchio_default>;${DRFL_LIB_DIR}"
+)
 
 add_library(doosan_controller
   src/doosan_controller.cpp
@@ -68,8 +78,8 @@ target_link_libraries(doosan_controller_c_api PRIVATE
 )
 
 set_target_properties(doosan_controller_c_api PROPERTIES
-  BUILD_RPATH "${DRFL_LIB_DIR}"
-  INSTALL_RPATH "${DRFL_LIB_DIR}"
+  BUILD_RPATH "${DOOSAN_RUNTIME_LIBRARY_DIRS}"
+  INSTALL_RPATH "${DOOSAN_RUNTIME_LIBRARY_DIRS}"
 )
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
@@ -82,8 +92,8 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
   )
 
   set_target_properties(doosan_controller_demo PROPERTIES
-    BUILD_RPATH "${DRFL_LIB_DIR}"
-    INSTALL_RPATH "${DRFL_LIB_DIR}"
+    BUILD_RPATH "${DOOSAN_RUNTIME_LIBRARY_DIRS}"
+    INSTALL_RPATH "${DOOSAN_RUNTIME_LIBRARY_DIRS}"
   )
 endif()
 

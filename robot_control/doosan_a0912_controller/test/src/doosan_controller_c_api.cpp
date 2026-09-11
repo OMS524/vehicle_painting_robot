@@ -121,6 +121,35 @@ int doosan_controller_initialize(
     return 0;
 }
 
+int doosan_controller_read_actual_joint_state(void *handle, float *position, float *velocity)
+{
+    try
+    {
+        auto *controller = asController(handle);
+        JointArray measured_position = {}, measured_velocity = {};
+        if (!controller || !position || !velocity ||
+            !controller->readActualJointState(measured_position, measured_velocity))
+        {
+            return 0;
+        }
+        for (int i = 0; i < Controller::kNumJoints; ++i)
+        {
+            position[i] = measured_position[i];
+            velocity[i] = measured_velocity[i];
+        }
+        return 1;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[c_api] read actual joint state failed: " << e.what() << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "[c_api] read actual joint state failed with unknown exception\n";
+    }
+    return 0;
+}
+
 int doosan_controller_position_control(
     void *handle,
     const float *position,

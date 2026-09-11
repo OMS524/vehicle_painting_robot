@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<robot name="a0912_with_scan_tool" xmlns:xacro="http://wiki.ros.org/xacro">
+  <!--
+    link_6(로봇 말단 장착면) -> bracket_link(브라켓 장착면 중앙).
+    위치는 m, 고정축 RPY는 rad이며 link_6 기준이다.
+    기본값은 두 장착면의 중심을 일치시킨다.
+    브라켓 본체가 로컬 -Z에 있으므로 X축 180도 회전하여
+    link_6의 +Z 방향(로봇 바깥쪽)에 배치한다.
+    플랜지 둘레의 체결 방향은 실물에 맞춰 mount_rpy로 조정한다.
+    이 값은 초기 조립 자세이며 로봇 컨트롤러의 TCP 등록값이 아니다.
+  -->
+  <xacro:arg name="mount_xyz" default="0 0 0" />
+  <xacro:arg name="mount_rpy" default="3.141592653589793 0 0" />
+
+  <!-- 로봇의 6개 회전 조인트와 기존 브라켓 -> 카메라 TF는 그대로 유지한다. -->
+  <xacro:include filename="../urdf/a0912.white.urdf" />
+  <xacro:include filename="tool_scan.xacro" />
+
+  <link name="world" />
+
+  <joint name="world_to_base_link" type="fixed">
+    <parent link="world" />
+    <child link="base_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
+  <joint name="a0912_to_tool_scan_joint" type="fixed">
+    <parent link="link_6" />
+    <child link="bracket_link" />
+    <origin xyz="$(arg mount_xyz)" rpy="$(arg mount_rpy)" />
+  </joint>
+</robot>

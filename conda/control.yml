@@ -1,0 +1,15 @@
+name: vehicle_painting_robot_control
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - pip
+  - numpy=1.26.4
+  # Python 바인딩과 제어 .so 빌드용 C++ 헤더/라이브러리를 함께 설치한다.
+  - pinocchio=3.9.0
+  - casadi=3.7.2
+  - eigen=3.4.0
+  - libstdcxx=16.2.0
+  - libgcc=16.2.0
+  # Orbbec SDK/Open3D는 설치하지 않는다. DRFL은 프로젝트의 API-DRFL을 사용한다.

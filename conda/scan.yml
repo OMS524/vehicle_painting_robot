@@ -1,0 +1,24 @@
+name: vehicle_painting_robot_scan
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - pip
+  # 카메라/수치 처리 패키지는 pip wheel을 사용한다. 제어용 C++ 패키지는 넣지 않는다.
+  - pip:
+      # Python 3.10에서 Orbbec SDK가 요구하는 NumPy < 2 / Open3D 0.18.
+      - numpy==1.26.4
+      - scipy==1.15.2
+      - pyorbbecsdk2==2.1.2
+      # 스캔 뷰어의 GUI를 유지하기 위해 공식 pip wheel 사용.
+      - open3d==0.18.0
+      - opencv-python==4.11.0.86
+      - av==12.3.0
+      - plotly==6.5.2
+      - matplotlib==3.10.9
+      # Xacro/URDF 및 STL/DAE 시각화와 메쉬 분석.
+      - trimesh==4.11.1
+      - pycollada==0.9.3
+      - xacro==2.1.1
+      - pyyaml==6.0.3

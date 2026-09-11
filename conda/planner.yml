@@ -1,0 +1,15 @@
+name: vehicle_painting_robot_planner
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - pip
+  # 경로 생성 및 CSV/HTML 디버깅에 필요한 패키지만 설치한다.
+  - pip:
+      - numpy==1.26.4
+      - scipy==1.15.2
+      - pyyaml==6.0.3
+      - open3d==0.18.0
+      - plotly==6.5.2
+      - matplotlib==3.10.9

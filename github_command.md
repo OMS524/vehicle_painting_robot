@@ -11,4 +11,8 @@ git push origin main
 git pull origin main
 ```
 
-
+# Submodule
+```bash
+cd /home/oms/vehicle_painting_robot
+git submodule update --init --recursive -- robot_control/doosan_a0912_controller/API-DRFL
+```
