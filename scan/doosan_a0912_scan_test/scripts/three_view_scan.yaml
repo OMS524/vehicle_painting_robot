@@ -7,7 +7,7 @@ output_dir: ../log
 
 # 실제 장착 방향, 관절 영점/축, 카메라 nominal TF를 확인한 후에만 true.
 # 현재 Xacro의 TF를 그대로 사용하며 자동 hand-eye 보정은 하지 않습니다.
-mounting_tf_confirmed: false
+mounting_tf_confirmed: true
 
 robot:
   ip: 192.168.137.100
@@ -20,7 +20,7 @@ robot:
   target_tolerance_deg: 0.1
   command_time_sec: 0.01
   # 각 이동의 현재 관절각 대비 최대 변화. 충돌 검사를 대체하지 않습니다.
-  max_move_delta_deg: 45.0
+  max_move_delta_deg: 100.0
   settle_sec: 1.0
   settle_timeout_sec: 10.0
   stationary_velocity_deg_s: 0.05
@@ -31,11 +31,11 @@ robot:
 # null 상태에서는 --execute를 붙여도 로봇에 연결하지 않습니다.
 views:
   - name: front
-    joint_deg: null
+    joint_deg: [100.0, -13.0, 95.0, 0.0, 125.0, -90.0]
   - name: left
-    joint_deg: null
+    joint_deg: [145.0, -13.0, 95.0, 0.0, 125.0, -90.0]
   - name: right
-    joint_deg: null
+    joint_deg: [55.0, -13.0, 95.0, 0.0, 125.0, -90.0]
 
 camera:
   serial_number: ""  # 한 대일 때만 자동 선택. 여러 대면 시리얼 필수.
