@@ -1,10 +1,17 @@
 # A0912 + Femto Bolt 스캔 테스트
 
-## 정면·왼쪽·오른쪽 촬영 및 통합
+## 여러 시점 촬영 및 통합
 
-`three_view_scan.py`가 정면 → 왼쪽 → 오른쪽 순서로 이동하고, **목표 도달과
-정지 유지가 확인된 뒤** 각 위치에서 Depth 1장을 저장한다. 마지막에는 실제 관절각과
-Xacro TF로 세 점군을 `base_link` 좌표계에 통합한다. ROS는 사용하지 않는다.
+`three_view_scan.py`가 YAML의 `views`에 적힌 순서로 이동하고, **이동 명령 종료와
+실제 자세의 정지 유지가 확인된 뒤** 각 위치에서 Depth와 RGB 한 쌍을 저장한다. 마지막에는 실제 관절각과
+Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. 시점은 1개 이상 원하는 만큼
+지정할 수 있다. ROS는 사용하지 않는다.
+
+촬영 목표각은 여러 시점을 잡기 위한 이동 명령이다. **목표각과의 오차로 촬영을 거부하지 않으며**,
+정합에는 촬영 직후 읽은 실제 관절각을 사용한다. 정지 확인은 `motion_running: false`,
+관절 속도 `stationary_velocity_deg_s` 이하, 자세 변화 `capture_drift_deg` 이내가
+`settle_sec` 동안 유지되는 조건이다. 정지 확인 시간 초과와 촬영 전후 움직임은 계속 오류 처리한다.
+`target_tolerance_deg`는 기존 속도 제어기의 이동 프로파일 계산에만 전달되며 촬영 허용 기준이 아니다.
 
 - `three_view_scan.py`: scan 환경에서 카메라 취득, FK/TF 계산, 저장, 점군 통합.
 - `three_view_scan.yaml`: 촬영 관절각, IP, 속도, 카메라 범위, 저장 위치 등의 설정.
@@ -15,9 +22,11 @@ Xacro TF로 세 점군을 `base_link` 좌표계에 통합한다. ROS는 사용�
 
 `three_view_scan.yaml`에서 아래 항목을 먼저 수정한다. 상대 파일 경로는 YAML 위치 기준이다.
 
-1. `views`의 `front`, `left`, `right` 각각에 **펜던트로 안전을 확인한 J1~J6 관절각(deg)**을
+1. `views`에 원하는 만큼 `name`과 **펜던트로 안전을 확인한 J1~J6 관절각(deg)**을
    `joint_deg: [J1, J2, J3, J4, J5, J6]`로 입력한다. `null` 상태에서는 로봇에 연결하지 않는다.
-   촬영 위치/시선 방향을 자동으로 계산하지 않는다.
+   이름은 중복 없이 지정하며 목록 순서대로 이동한다. `front`, `left`, `right`는 필수 이름이 아니다.
+   이름에는 문자(한글 포함), 숫자, `_`, `-`를 사용할 수 있고 255바이트 이내여야 한다.
+   촬영 위치/시선 방향을 이름으로 자동 계산하지 않는다.
 2. `robot.ip`, 필요하면 포트, 이동 속도와 허용 이동량을 확인한다.
 3. 실제 로봇/브라켓/카메라와 Xacro의 원점·축·장착 TF가 일치하는지 확인한 뒤에만
    `mounting_tf_confirmed: true`로 변경한다. 현재 Xacro에는 mesh 정렬 기반 장착값과
@@ -26,10 +35,27 @@ Xacro TF로 세 점군을 `base_link` 좌표계에 통합한다. ROS는 사용�
    `reconstruction.roi_min_mm`, `roi_max_mm`에 **base_link 기준** 관심 영역을 지정한다.
    여러 카메라가 연결되어 있으면 `serial_number`도 지정한다.
 
+뷰를 늘리려면 기존 `views` 목록 아래에 다음 항목을 같은 들여쓰기로 추가한다.
+`null`은 실제 확인한 관절각 6개로 바꾼다. `view_04`, `view_05`도 원하는 고유 이름으로 바꿀 수 있다.
+스크립트 이름과 실행 명령은 그대로 사용한다.
+
+```yaml
+  - name: view_04
+    joint_deg: null  # [J1, J2, J3, J4, J5, J6] (deg) 입력
+  - name: view_05
+    joint_deg: null
+```
+
+`camera.capture_color: true`이면 같은 FPS의 Depth/RGB를 함께 촬영하고 SDK로 RGB를
+native Depth 픽셀에 정렬한다. `color_width`, `color_height`가 0이면 지원 프로파일을 자동 선택하며,
+USB 전송량을 줄이기 위해 MJPG를 우선 사용한 뒤 RGB로 디코딩한다. SDK 프레임 동기화를 켜고
+장치 타임스탬프 차이가 `color_max_time_delta_ms` 이내인 프레임 쌍만 사용한다.
+`capture_color: false`이면 Depth만 촬영하고 시점별 구분색을 사용한다.
+
 `max_move_delta_deg`는 현재 자세와 다음 목표 사이의 관절별 최대 변화 제한이다.
-자동 충돌 회피/이동 경로 검증이 아니므로 **초기 위치 → 정면 → 왼쪽 → 오른쪽의 전체 이동 구간**,
+자동 충돌 회피/이동 경로 검증이 아니므로 **초기 위치부터 YAML에 지정한 순서의 전체 이동 구간**,
 툴 무게/무게중심 설정, 케이블, 작업자와 주변 장애물, 비상정지 접근성을 직접 확인해야 한다.
-세 촬영에는 같은 부품의 겹치는 영역이 보이도록 하고, 촬영 중 대상과 로봇 베이스는 고정한다.
+각 촬영에는 같은 부품의 겹치는 영역이 보이도록 하고, 촬영 중 대상과 로봇 베이스는 고정한다.
 
 ### 2. 실행
 
@@ -38,16 +64,16 @@ conda activate vehicle_painting_robot_scan
 cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
 
 # 하드웨어 연결 없이 파일/TF/환경/.so만 검사. 기본 실행도 검사만 한다.
-python three_view_scan.py --check
+python -s three_view_scan.py --check
 
 # 실제 로봇 이동 + Depth 취득 + 통합/저장. 터미널에 SCAN 입력 시 시작한다.
-python three_view_scan.py --execute
+python -s three_view_scan.py --execute
 ```
 
 `--execute`는 로봇 제어권/서보를 활성화한다. 성공·실패·Ctrl+C 시 기존 제어기의
 `shutdown()`(servo-off 및 연결 종료)을 호출한다. **네트워크/프로세스 장애 시 소프트웨어 종료가
 물리적 정지를 보장하지는 않는다.** 오류가 나면 현장에서 정지 여부를 확인한다.
-기본 흐름에는 별도의 복귀 이동을 넣지 않았으므로 정상 완료 시 오른쪽 촬영 위치에서 종료한다.
+기본 흐름에는 별도의 복귀 이동을 넣지 않았으므로 정상 완료 시 마지막 촬영 위치에서 종료한다.
 
 scan/control 환경은 **한 프로세스에서 섞지 않는다.** `control_python`에 지정한 Python을
 자식 프로세스로 실행하고, JSON-lines로 요청/응답한다. 자식에게 상속되는 Python/네이티브
@@ -62,31 +88,48 @@ scan/control 환경은 **한 프로세스에서 섞지 않는다.** `control_pyt
 20260911_153000_123456/
 ├── settings.json          # 실행 설정(해석된 절대 경로 포함)
 ├── model.urdf             # 실행 시 Xacro를 확장한 TF 모델 스냅샷
-├── manifest.json          # 시점 순서/진행 상태/개수/환경 버전/오류
+├── manifest.json          # 시점 순서/구분색/진행 상태/개수/환경 버전/오류
 ├── robot_worker.log       # Python 래퍼 및 C++ 제어 로그
-├── front/                 # left/, right/도 동일
+├── <name>/                # YAML의 각 시점 이름으로 폴더 생성
 │   ├── depth_raw.npy      # 원본 uint16 Depth. mm = raw × camera.json의 scale
+│   ├── color_rgb.png      # 원본 RGB를 디코딩한 PNG (컬러 촬영 시)
+│   ├── color_aligned_depth.png # Depth 픽셀에 정렬한 RGB (컬러 촬영 시)
 │   ├── camera.json        # 내참수/왜곡/해상도/단위/시리얼/타임스탬프
 │   ├── pose.json          # 촬영 전후 실제 관절각·속도·TF, accepted 여부
 │   ├── camera_raw.ply     # 원본 유효 점군: depth optical 좌표계, m
 │   ├── camera_filtered.ply # 거리/ROI 범위 내 점군: depth optical 좌표계, m
 │   └── base.ply           # 동일 점군: 로봇 base_link 좌표계, m
-├── merged_raw.ply         # 세 base.ply를 그대로 합친 점군
-└── merged.ply             # 통합 점군을 voxel_size_mm으로 다운샘플링
+├── merged_raw.ply         # 모든 시점의 base.ply를 그대로 합친 점군
+├── merged.ply             # 통합 점군을 voxel_size_mm으로 다운샘플링
+└── merged_view_colors.ply # 시점별 구분색 비교본 (컬러 촬영 시)
 ```
 
-점군 색은 실제 RGB가 아니라 **front=빨강, left=초록, right=파랑** 구분색이다.
-현재 테스트는 Depth 전용이며 RGB 취득, 삼각형 메쉬 생성, TSDF, ICP는 적용하지 않는다.
+컬러 촬영 시 시점별 PLY와 `merged_raw.ply`, `merged.ply`에 실제 RGB 색상을 저장한다.
+Depth와 RGB의 시야가 겹치지 않아 색상을 대응시킬 수 없는 부분은 검정색이다. 시야 차이와
+가림 경계에서는 색상이 비거나 어긋날 수 있다. `merged_view_colors.ply`는
+**front=빨강, left=초록, right=파랑**을 유지하고, 다른 이름에는 구분색을 자동 배정하여
+시점 간 정합을 비교할 수 있다. 각 시점의 구분색은 `manifest.json`의 `views[].view_color_rgb`에
+0~1 범위 RGB로 기록한다. 실제 RGB 색상과 시점 구분색은 별개다.
+이전에 Depth만 저장한 결과에는 원본 RGB가 없으므로 실제 색상을 넣으려면 다시 촬영해야 한다.
+삼각형 메쉬 생성, TSDF, ICP는 적용하지 않는다.
 따라서 여기서 3D reconstruction 결과는 **TF 기반 통합 포인트클라우드**다.
-TF/깊이 오차로 세 면이 겹치지 않으면 그대로 표시하므로 초기 장착 보정을 확인하기 좋다.
+TF/깊이 오차로 시점 간 점군이 겹치지 않으면 그대로 표시하므로 초기 장착 보정을 확인하기 좋다.
 
 오류가 나면 다음 촬영 위치로 진행하지 않으며, 완료된 시점 파일과 `error.log`를 남긴다.
 `manifest.json`의 `status: complete` 여부를 확인한다. 정지/자세 조회 검증을 통과하지 못한
 Depth는 보존하되 `pose.json`의 `accepted: false`로 기록하고 통합에는 사용하지 않는다.
 
+이동 후 실제 관절각과 목표각의 최대 차이를 터미널에 출력한다. `manifest.json`의
+`settled_state`에는 정지 확인 시점의 실제 자세와 목표 오차가 저장된다. 촬영을 통과한
+`pose.json`과 manifest의 각 시점에는 촬영 직후 기준 `target_error_deg`(실제각 − 목표각)와
+`max_target_error_deg`(절댓값 최대)가 저장된다. 이 오차는 진단용이며 점군 변환에 더하지 않는다.
+
 ```bash
 # 저장한 결과만 보기. 로봇/카메라 연결 없음.
-python three_view_scan.py --view ../log/촬영디렉토리/merged.ply
+python -s three_view_scan.py --view ../log/촬영디렉토리/merged.ply
+
+# 컬러 촬영 결과의 시점별 구분색 비교본
+python -s three_view_scan.py --view ../log/촬영디렉토리/merged_view_colors.ply
 ```
 
 ### TF 및 촬영 시점 기준
@@ -98,7 +141,10 @@ Depth 광학 좌표계 점(m)
   → base_link 좌표계 점(m)
 ```
 
-SDK의 native Depth를 사용하므로 color 프레임으로 정렬하지 않는다. Depth 광학 좌표축은
+XYZ는 SDK의 native Depth로 계산하고, RGB 영상만 Depth 픽셀로 정렬한다(C2D).
+따라서 점군의 기준은 계속 `camera_depth_optical_frame`이며 기존 Xacro TF를 적용한다.
+색상 정렬에는 SDK가 제공하는 내부 보정값과 Depth → Color extrinsics를 사용하고
+이 값 및 컬러 타임스탬프를 `camera.json`에 저장한다. Depth 광학 좌표축은
 X=오른쪽, Y=아래, Z=렌즈 전방이다. PointCloudFilter의 출력은 프레임에 저장된
 `get_position_value_scale()`을 곱해 mm로 변환하고, 다시 1000으로 나눠 m로 저장한다.
 Depth raw scale을 점군에 중복해서 적용하지 않는다.
@@ -112,6 +158,7 @@ Depth raw scale을 점군에 중복해서 적용하지 않는다.
 단위/광학 좌표계/카메라 보정 처리 참고:
 [Orbbec PointCloudFilter 구현](https://github.com/orbbec/OrbbecSDK_v2/blob/main/src/filter/publicfilters/PointCloudProcess.cpp),
 [PointsFrame 좌표 스케일 정의](https://github.com/orbbec/OrbbecSDK_v2/blob/main/include/libobsensor/hpp/Frame.hpp),
+[Orbbec Color → Depth 정렬 구현](https://github.com/orbbec/OrbbecSDK_v2/blob/main/src/filter/publicfilters/Align.cpp),
 [Python SDK](https://github.com/orbbec/pyorbbecsdk/tree/v2-main).
 
 ### 제어 라이브러리와 오프라인 검사
@@ -128,11 +175,15 @@ cmake --build build-scan --target doosan_controller_c_api -j2
 
 conda activate vehicle_painting_robot_scan
 cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
-python -B -m unittest test_three_view_scan -v
+python -sB -m unittest test_three_view_scan -v
 ```
 
-테스트는 합성 로봇/Depth를 사용한다. SDK 테스트도 실제 장치 대신 메모리에 만든 Depth를
-점군으로 변환하여 단위/축 방향을 확인하므로 로봇/카메라 연결이나 동작을 하지 않는다.
+테스트는 합성 로봇/점군과 SDK 메모리 프레임을 사용하며 로봇/카메라 연결이나 동작을 하지 않는다.
+목표 오차가 남은 정지 자세의 허용, 움직임·자세 드리프트·잘못된 측정값의 거부,
+이동 타임아웃 전파, 임의 이름의 여러 시점에서 실제 관절각 기반 TF와 점군 저장·통합을 확인한다.
+시점 개수·순서 보존, 잘못된 이름과 중복 이름 거부, 미입력 자세의 실행 차단도 확인한다.
+RGB 정렬의 보정값 적용, MJPG 디코딩, Depth 좌표·단위 유지, 거리/ROI 필터와 PLY 통합 후
+색상 보존도 검증한다.
 
 ## A0912 + 스캔 툴 Xacro 시각화
 

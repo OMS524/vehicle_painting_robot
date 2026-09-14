@@ -1,0 +1,431 @@
+[09/14 21:35:13.098879][info][7922][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[09/14 21:35:13.156800][info][7922][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[09/14 21:35:13.156835][info][7922][DeviceManager.cpp:25] Current found device(s): (1)
+[09/14 21:35:13.156838][info][7922][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:35:13.156841][info][7922][DeviceManager.cpp:463] Enable net device enumeration: true
+[09/14 21:35:14.165678][info][7922][DeviceManager.cpp:25] Current device(s) list: (1)
+[09/14 21:35:14.165715][info][7922][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:35:14.512731][info][7922][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[09/14 21:35:14.512799][info][7922][Pipeline.cpp:54] [CL8M8410004] Pipeline created with device: {name: Femto Bolt, sn: CL8M8410004}, @0x605CB3EDDDF0
+[09/14 21:35:14.513945][info][7922][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[09/14 21:35:14.539046][info][7989][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[09/14 21:35:16.039409][info][7922][Pipeline.cpp:65] [CL8M8410004] Pipeline destroyed! @0x605CB3EDDDF0
+[09/14 21:35:16.042597][info][7922][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:35:16.042602][info][7922][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:35:16.042637][info][7922][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 21:35:16.042903][info][7922][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:35:16.042906][info][7922][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:41:07.183602][info][3854][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[09/14 21:41:07.241717][info][3854][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[09/14 21:41:07.241751][info][3854][DeviceManager.cpp:25] Current found device(s): (1)
+[09/14 21:41:07.241754][info][3854][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:41:07.241756][info][3854][DeviceManager.cpp:463] Enable net device enumeration: true
+[09/14 21:41:08.250821][info][3854][DeviceManager.cpp:25] Current device(s) list: (1)
+[09/14 21:41:08.250859][info][3854][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:41:08.602217][info][3854][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[09/14 21:41:08.602262][info][3854][Pipeline.cpp:54] [CL8M8410004] Pipeline created with device: {name: Femto Bolt, sn: CL8M8410004}, @0x5B2CDDEF9BE0
+[09/14 21:41:08.605863][info][3854][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[09/14 21:41:08.617992][info][3934][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[09/14 21:41:24.241969][info][3854][Pipeline.cpp:65] [CL8M8410004] Pipeline destroyed! @0x5B2CDDEF9BE0
+[09/14 21:41:24.245287][info][3854][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:41:24.245293][info][3854][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:41:24.245337][info][3854][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 21:41:24.245669][info][3854][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:41:24.245670][info][3854][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:41:31.201042][info][4019][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[09/14 21:41:31.257902][info][4019][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[09/14 21:41:31.257937][info][4019][DeviceManager.cpp:25] Current found device(s): (1)
+[09/14 21:41:31.257939][info][4019][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:41:31.257942][info][4019][DeviceManager.cpp:463] Enable net device enumeration: true
+[09/14 21:41:32.267054][info][4019][DeviceManager.cpp:25] Current device(s) list: (1)
+[09/14 21:41:32.267070][info][4019][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:41:32.615460][info][4019][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[09/14 21:41:32.615519][info][4019][Pipeline.cpp:54] [CL8M8410004] Pipeline created with device: {name: Femto Bolt, sn: CL8M8410004}, @0x5D9B9625BCA0
+[09/14 21:41:32.616468][info][4019][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[09/14 21:41:32.641305][info][4093][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[09/14 21:42:08.454267][info][4019][Pipeline.cpp:65] [CL8M8410004] Pipeline destroyed! @0x5D9B9625BCA0
+[09/14 21:42:08.457751][info][4019][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:42:08.457756][info][4019][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:42:08.457804][info][4019][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 21:42:08.458090][info][4019][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:42:08.458092][info][4019][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:44:53.792809][info][4745][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[09/14 21:44:53.850647][info][4745][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[09/14 21:44:53.850687][info][4745][DeviceManager.cpp:25] Current found device(s): (1)
+[09/14 21:44:53.850689][info][4745][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:44:53.850692][info][4745][DeviceManager.cpp:463] Enable net device enumeration: true
+[09/14 21:44:54.859229][info][4745][DeviceManager.cpp:25] Current device(s) list: (1)
+[09/14 21:44:54.859264][info][4745][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:44:55.207974][info][4745][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[09/14 21:44:55.208064][info][4745][Pipeline.cpp:54] [CL8M8410004] Pipeline created with device: {name: Femto Bolt, sn: CL8M8410004}, @0x5C14457C5190
+[09/14 21:44:55.209172][info][4745][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[09/14 21:44:55.234451][info][4819][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[09/14 21:45:04.124979][info][4745][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 21:45:04.124997][info][4745][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 21:45:04.125014][info][4745][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:45:04.125023][info][4745][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 21:45:04.125027][info][4745][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:45:04.416931][info][4745][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 21:45:04.416937][info][4745][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 21:45:04.742429][info][4871][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 21:45:05.760729][info][4745][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 21:45:05.760767][info][4745][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 21:45:05.760785][info][4745][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 21:45:06.477856][info][4745][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 21:45:06.478108][info][4745][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 21:45:06.478114][info][4745][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 21:45:06.478122][info][4745][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 21:45:22.257019][info][4745][Pipeline.cpp:65] [CL8M8410004] Pipeline destroyed! @0x5C14457C5190
+[09/14 21:45:22.260820][info][4745][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:45:22.260826][info][4745][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:45:22.260862][info][4745][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 21:45:22.338643][info][4745][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:45:22.338655][info][4745][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:57:25.521746][info][6124][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[09/14 21:57:25.580019][info][6124][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[09/14 21:57:25.580070][info][6124][DeviceManager.cpp:25] Current found device(s): (1)
+[09/14 21:57:25.580082][info][6124][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:57:25.580084][info][6124][DeviceManager.cpp:463] Enable net device enumeration: true
+[09/14 21:57:26.588056][info][6124][DeviceManager.cpp:25] Current device(s) list: (1)
+[09/14 21:57:26.588072][info][6124][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 21:57:26.936125][info][6124][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[09/14 21:57:26.936202][info][6124][Pipeline.cpp:54] [CL8M8410004] Pipeline created with device: {name: Femto Bolt, sn: CL8M8410004}, @0x5C71FB049E90
+[09/14 21:57:26.937522][info][6124][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[09/14 21:57:26.960371][info][6202][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[09/14 21:57:35.609529][info][6124][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 21:57:35.609546][info][6124][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 21:57:35.609562][info][6124][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:57:35.609571][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 21:57:35.609575][info][6124][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:57:35.902533][info][6124][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 21:57:35.902539][info][6124][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 21:57:36.224311][info][6251][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 21:57:37.243902][info][6124][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 21:57:37.243919][info][6124][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 21:57:37.243956][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 21:57:37.952789][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 21:57:37.952996][info][6124][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 21:57:37.953001][info][6124][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 21:57:37.953009][info][6124][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 21:57:44.719936][info][6124][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 21:57:44.719961][info][6124][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 21:57:44.719990][info][6124][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:57:44.720002][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 21:57:44.720009][info][6124][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:57:44.722525][info][6124][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 21:57:44.722529][info][6124][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 21:57:45.107831][info][6295][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=3.826244fps
+[09/14 21:57:45.107852][info][6295][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 21:57:45.108105][info][6299][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=3.825813fps
+[09/14 21:57:46.181394][info][6124][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 21:57:46.181411][info][6124][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 21:57:46.181429][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 21:57:46.878959][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 21:57:46.879079][info][6124][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 21:57:46.879082][info][6124][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 21:57:46.879090][info][6124][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 21:57:53.704530][info][6124][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 21:57:53.704548][info][6124][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 21:57:53.704571][info][6124][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:57:53.704580][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 21:57:53.704584][info][6124][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 21:57:53.706939][info][6124][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 21:57:53.706943][info][6124][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 21:57:54.072569][info][6338][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=3.679750fps
+[09/14 21:57:54.072585][info][6338][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 21:57:54.072738][info][6340][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=3.679750fps
+[09/14 21:57:55.137683][info][6124][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 21:57:55.137697][info][6124][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 21:57:55.137712][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 21:57:55.876935][info][6124][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 21:57:55.877154][info][6124][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 21:57:55.877160][info][6124][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 21:57:55.877170][info][6124][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 21:57:57.138695][info][6124][Pipeline.cpp:65] [CL8M8410004] Pipeline destroyed! @0x5C71FB049E90
+[09/14 21:57:57.141989][info][6124][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:57:57.141995][info][6124][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 21:57:57.142032][info][6124][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 21:57:57.214941][info][6124][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 21:57:57.214947][info][6124][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 22:10:41.709145][info][7715][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[09/14 22:10:41.767000][info][7715][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[09/14 22:10:41.767031][info][7715][DeviceManager.cpp:25] Current found device(s): (1)
+[09/14 22:10:41.767034][info][7715][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 22:10:41.767036][info][7715][DeviceManager.cpp:463] Enable net device enumeration: true
+[09/14 22:10:42.775540][info][7715][DeviceManager.cpp:25] Current device(s) list: (1)
+[09/14 22:10:42.775572][info][7715][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 22:10:43.123357][info][7715][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[09/14 22:10:43.123439][info][7715][Pipeline.cpp:54] [CL8M8410004] Pipeline created with device: {name: Femto Bolt, sn: CL8M8410004}, @0x57A6E1EF9920
+[09/14 22:10:43.124422][info][7715][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[09/14 22:10:43.150122][info][7790][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[09/14 22:11:02.553168][info][7715][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:11:02.553187][info][7715][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:11:02.553204][info][7715][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:11:02.553213][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:11:02.553218][info][7715][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:11:02.843745][info][7715][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:11:02.843754][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:11:02.843759][info][7715][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:11:02.861968][info][7715][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:11:02.861973][info][7715][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:11:03.169732][info][7879][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:11:03.362104][warning][7715][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:11:03.842815][info][7887][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:11:03.843085][warning][7895][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset!
+[09/14 22:11:05.069262][info][7715][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:11:05.069275][info][7715][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:11:05.069288][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:11:06.856709][warning][7890][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**36 logs in 3013ms**]
+[09/14 22:11:06.969260][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:11:06.969370][info][7715][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:11:06.969381][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:11:07.577991][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:11:07.578139][info][7715][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:11:07.578142][info][7715][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:11:07.578159][info][7715][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:11:12.890154][warning][7911][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**3 logs in 6033ms, last: 22:11:06.956776**]
+[09/14 22:11:15.240306][info][7715][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:11:15.240358][info][7715][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:11:15.240422][info][7715][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:11:15.240432][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:11:15.240436][info][7715][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:11:15.242898][info][7715][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:11:15.242909][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:11:15.242916][info][7715][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:11:15.261278][info][7715][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:11:15.261285][info][7715][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:11:15.507629][info][7956][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=9.482898fps
+[09/14 22:11:15.507645][info][7956][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:11:15.507874][info][7960][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=9.482898fps
+[09/14 22:11:15.761417][warning][7715][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:11:16.264765][info][7958][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=3.059089fps
+[09/14 22:11:16.264783][info][7958][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:11:16.265010][info][7962][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=3.059335fps
+[09/14 22:11:17.474410][info][7715][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:11:17.474425][info][7715][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:11:17.474441][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:11:19.400423][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:11:19.400553][info][7715][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:11:19.400564][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:11:19.937257][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:11:19.937597][info][7715][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:11:19.937602][info][7715][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:11:19.937619][info][7715][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:11:26.960401][info][7715][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:11:26.960422][info][7715][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:11:26.960454][info][7715][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:11:26.960464][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:11:26.960469][info][7715][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:11:26.963105][info][7715][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:11:26.963114][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:11:26.963119][info][7715][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:11:26.981463][info][7715][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:11:26.981469][info][7715][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:11:27.231842][info][8009][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=10.064824fps
+[09/14 22:11:27.231860][info][8009][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:11:27.232042][info][8013][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=10.064824fps
+[09/14 22:11:27.481611][warning][7715][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:11:27.989679][info][8011][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=3.155650fps
+[09/14 22:11:27.989691][info][8011][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:11:27.989907][warning][8015][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**43 logs in 15099ms**]
+[09/14 22:11:27.990054][info][8015][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=3.155650fps
+[09/14 22:11:29.199291][info][7715][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:11:29.199306][info][7715][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:11:29.199322][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:11:31.098818][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:11:31.098974][info][7715][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:11:31.098993][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:11:31.707081][info][7715][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:11:31.707274][info][7715][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:11:31.707279][info][7715][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:11:31.707298][info][7715][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:11:34.068292][info][7715][Pipeline.cpp:65] [CL8M8410004] Pipeline destroyed! @0x57A6E1EF9920
+[09/14 22:11:34.068447][info][7715][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 22:11:34.070172][info][7715][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 22:11:34.070176][info][7715][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 22:11:34.070199][info][7715][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 22:11:34.149872][info][7715][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 22:11:34.149882][info][7715][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 22:11:34.173835][warning][8026][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**38 logs in 6183ms, last: 22:11:31.078420**]
+[09/14 22:23:23.813142][info][8946][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[09/14 22:23:23.871065][info][8946][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[09/14 22:23:23.871080][info][8946][DeviceManager.cpp:25] Current found device(s): (1)
+[09/14 22:23:23.871082][info][8946][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 22:23:23.871085][info][8946][DeviceManager.cpp:463] Enable net device enumeration: true
+[09/14 22:23:24.879547][info][8946][DeviceManager.cpp:25] Current device(s) list: (1)
+[09/14 22:23:24.879563][info][8946][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB3.1
+[09/14 22:23:25.227947][info][8946][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[09/14 22:23:25.228030][info][8946][Pipeline.cpp:54] [CL8M8410004] Pipeline created with device: {name: Femto Bolt, sn: CL8M8410004}, @0x63286B3B1000
+[09/14 22:23:25.229115][info][8946][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[09/14 22:23:25.254101][info][9014][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[09/14 22:23:43.570720][info][8946][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:23:43.570740][info][8946][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:23:43.570758][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:23:43.570767][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:23:43.570772][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:23:43.851861][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:23:43.851870][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:23:43.851875][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:23:43.870169][info][8946][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:23:43.870174][info][8946][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:23:44.287590][info][9100][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:23:44.370319][warning][8946][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:23:44.852463][info][9105][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:23:44.852723][warning][9113][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset!
+[09/14 22:23:46.078192][info][8946][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:23:46.078205][info][8946][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:23:46.078218][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:23:47.871574][warning][9108][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**36 logs in 3018ms**]
+[09/14 22:23:47.971921][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:23:47.972037][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:23:47.972048][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:23:48.628935][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:23:48.629145][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:23:48.629149][info][8946][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:23:48.629168][info][8946][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:23:53.177249][info][8946][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:23:53.177272][info][8946][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:23:53.177304][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:23:53.177314][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:23:53.177319][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:23:53.179797][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:23:53.179806][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:23:53.179811][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:23:53.198175][info][8946][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:23:53.198182][info][8946][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:23:53.462668][info][9164][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=12.425068fps
+[09/14 22:23:53.462679][info][9164][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:23:53.462871][info][9168][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=12.426423fps
+[09/14 22:23:53.698279][warning][8946][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:23:53.905420][warning][9129][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**3 logs in 6033ms, last: 22:23:47.971096**]
+[09/14 22:23:54.226638][info][9166][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=4.053766fps
+[09/14 22:23:54.226654][info][9166][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:23:54.226938][info][9170][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=4.053766fps
+[09/14 22:23:55.438904][info][8946][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:23:55.438924][info][8946][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:23:55.438950][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:23:57.341125][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:23:57.341268][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:23:57.341280][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:23:57.910259][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:23:57.910555][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:23:57.910558][info][8946][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:23:57.910588][info][8946][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:24:02.487778][info][8946][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:24:02.487805][info][8946][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:24:02.487880][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:02.487892][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:24:02.487898][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:02.490869][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:02.490878][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:24:02.490884][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:02.508935][info][8946][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:24:02.508942][info][8946][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:24:02.876272][info][9205][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=12.323382fps
+[09/14 22:24:02.876289][info][9205][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:24:02.876514][info][9209][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=12.323382fps
+[09/14 22:24:03.009036][warning][8946][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:24:03.520779][info][9207][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=3.981491fps
+[09/14 22:24:03.520791][info][9207][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:24:03.521018][info][9213][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=3.981063fps
+[09/14 22:24:04.739448][info][8946][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:24:04.739470][info][8946][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:24:04.739496][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:24:05.911364][warning][9209][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**60 logs in 12006ms**]
+[09/14 22:24:06.700921][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:24:06.701069][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:24:06.701080][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:24:07.330585][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:24:07.330849][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:24:07.330854][info][8946][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:24:07.330872][info][8946][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:24:11.854119][info][8946][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:24:11.854140][info][8946][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:24:11.854171][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:11.854181][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:24:11.854185][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:11.856705][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:11.856713][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:24:11.856718][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:11.859220][info][8946][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:24:11.859224][info][8946][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:24:12.359404][warning][8946][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:24:12.632322][info][9249][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=11.787619fps
+[09/14 22:24:12.632364][info][9249][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:24:12.632538][info][9256][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=11.787619fps
+[09/14 22:24:12.723595][info][9251][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=4.020428fps
+[09/14 22:24:12.723608][info][9251][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:24:12.723799][info][9257][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=4.020865fps
+[09/14 22:24:13.920887][info][8946][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:24:13.920900][info][8946][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:24:13.920912][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:24:15.852035][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:24:15.852255][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:24:15.852268][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:24:16.430193][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:24:16.430523][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:24:16.430527][info][8946][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:24:16.430543][info][8946][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:24:20.953266][info][8946][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:24:20.953294][info][8946][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:24:20.953342][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:20.953356][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:24:20.953380][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:20.955985][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:20.955993][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:24:20.955998][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:20.958556][info][8946][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:24:20.958561][info][8946][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:24:21.458663][warning][8946][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:24:21.827717][info][9296][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=4.064594fps
+[09/14 22:24:21.827728][info][9296][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:24:21.827896][info][9301][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=4.064147fps
+[09/14 22:24:21.835004][info][9294][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=10.649859fps
+[09/14 22:24:21.835012][info][9294][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:24:21.835175][info][9302][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=10.649859fps
+[09/14 22:24:23.028154][info][8946][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:24:23.028166][info][8946][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:24:23.028179][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:24:24.933750][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:24:24.933878][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:24:24.933889][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:24:25.510147][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:24:25.510317][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:24:25.510321][info][8946][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:24:25.510355][info][8946][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:24:29.944863][warning][9225][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**100 logs in 24033ms, last: 22:24:24.914697**]
+[09/14 22:24:30.061440][info][8946][Pipeline.cpp:228] [CL8M8410004] Check and set config done!
+[09/14 22:24:30.061463][info][8946][Pipeline.cpp:266] [CL8M8410004] Try to start streams!
+[09/14 22:24:30.061535][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:30.061545][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[09/14 22:24:30.061551][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[09/14 22:24:30.064162][info][8946][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:30.064171][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[09/14 22:24:30.064177][info][8946][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[09/14 22:24:30.082065][info][8946][Pipeline.cpp:293] [CL8M8410004] Start streams done!
+[09/14 22:24:30.082072][info][8946][Pipeline.cpp:250] [CL8M8410004] Pipeline start done!
+[09/14 22:24:30.337384][info][9337][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=11.056222fps
+[09/14 22:24:30.337396][info][9337][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[09/14 22:24:30.337676][info][9344][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=11.056222fps
+[09/14 22:24:30.582183][warning][8946][Pipeline.cpp:335] [CL8M8410004] Wait for frame timeout, you can try to increase the wait time! current timeout=500
+[09/14 22:24:31.094528][info][9339][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=3.992662fps
+[09/14 22:24:31.094545][info][9339][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[09/14 22:24:31.094823][info][9349][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=3.993093fps
+[09/14 22:24:32.293894][info][8946][Pipeline.cpp:367] [CL8M8410004] Try to stop pipeline!
+[09/14 22:24:32.293907][info][8946][Pipeline.cpp:343] [CL8M8410004] Try to stop streams!
+[09/14 22:24:32.293919][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[09/14 22:24:34.173476][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[09/14 22:24:34.173711][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Color
+[09/14 22:24:34.173722][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[09/14 22:24:34.780820][info][8946][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[09/14 22:24:34.781043][info][8946][Pipeline.cpp:357] [CL8M8410004] Sensor stream stopped, sensorType=Depth
+[09/14 22:24:34.781048][info][8946][Pipeline.cpp:363] [CL8M8410004] Stop streams done!
+[09/14 22:24:34.781066][info][8946][Pipeline.cpp:393] [CL8M8410004] Stop pipeline done!
+[09/14 22:24:39.202745][info][8946][Pipeline.cpp:65] [CL8M8410004] Pipeline destroyed! @0x63286B3B1000
+[09/14 22:24:39.202856][info][8946][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 22:24:39.204707][info][8946][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 22:24:39.204714][info][8946][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 22:24:39.204735][info][8946][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[09/14 22:24:39.280739][info][8946][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[09/14 22:24:39.280745][info][8946][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[09/14 22:24:40.038563][warning][9350][Pipeline.cpp:324] [CL8M8410004] Output frameset queue is full, drop oldest frameset! [**41 logs in 10093ms, last: 22:24:34.150024**]

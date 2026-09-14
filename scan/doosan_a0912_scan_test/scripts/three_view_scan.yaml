@@ -15,30 +15,46 @@ robot:
   rt_port: 12347
   connect_timeout_sec: 15
   move_timeout_sec: 120
-  max_velocity_deg_s: 5.0
+  max_velocity_deg_s: 10.0
   acceleration_deg_s2: 10.0
+  # 이동 프로파일 계산에 사용하는 허용 오차. 촬영 허용 조건에는 사용하지 않는다.
   target_tolerance_deg: 0.1
   command_time_sec: 0.01
   # 각 이동의 현재 관절각 대비 최대 변화. 충돌 검사를 대체하지 않습니다.
   max_move_delta_deg: 100.0
+  # 이동 명령 종료 후 실제 관절 속도/자세가 이 시간 동안 안정되면 촬영한다.
+  # 목표각과의 차이는 기록하며, 정합 TF는 촬영 직후 실제 관절각으로 계산한다.
   settle_sec: 1.0
   settle_timeout_sec: 10.0
   stationary_velocity_deg_s: 0.05
   capture_drift_deg: 0.05
 
 # 펜던트로 확인한 실제 안전한 J1~J6(deg)를 각각 입력하세요.
-# 정면/왼쪽/오른쪽은 대상 부품을 보는 촬영 위치 이름이지 자동 계산 방향이 아닙니다.
+# 시점은 1개 이상 원하는 만큼 추가할 수 있고, 아래 목록 순서대로 이동/촬영합니다.
+# name은 중복 없이 지정하세요. 문자(한글 포함), 숫자, _, - 사용 가능 (결과 폴더명).
+# 이름으로 촬영 위치/시선 방향을 자동 계산하지 않습니다.
 # null 상태에서는 --execute를 붙여도 로봇에 연결하지 않습니다.
 views:
-  - name: front
-    joint_deg: [100.0, -13.0, 95.0, 0.0, 125.0, -90.0]
-  - name: left
+  - name: view_01
     joint_deg: [145.0, -13.0, 95.0, 0.0, 125.0, -90.0]
-  - name: right
-    joint_deg: [55.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+  - name: view_02
+    joint_deg: [125.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+  - name: view_03
+    joint_deg: [105.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+  - name: view_04
+    joint_deg: [85.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+  - name: view_05
+    joint_deg: [65.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+  - name: view_06
+    joint_deg: [45.0, -13.0, 95.0, 0.0, 125.0, -90.0]
 
 camera:
   serial_number: ""  # 한 대일 때만 자동 선택. 여러 대면 시리얼 필수.
+  capture_color: true  # RGB 촬영 및 컬러 점군 저장. false이면 시점별 구분색 사용.
+  # 0: Depth와 같은 FPS의 첫 지원 컬러 프로파일. MJPG를 우선 선택한다.
+  color_width: 0
+  color_height: 0
+  color_max_time_delta_ms: 50.0
   # 0: SDK가 제공하는 해당 항목의 기본/첫 Y16 프로파일 선택.
   width: 0
   height: 0

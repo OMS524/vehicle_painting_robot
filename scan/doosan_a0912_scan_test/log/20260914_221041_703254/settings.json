@@ -1,0 +1,79 @@
+{
+  "control_python": "/home/oms/miniconda3/envs/vehicle_painting_robot_control/bin/python3.10",
+  "control_wrapper": "/home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/scripts/joint_target_test.py",
+  "control_library": "/home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/build-scan/libdoosan_controller_c_api.so",
+  "xacro": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/description/xacro/a0912_to_tool_scan.xacro",
+  "output_dir": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log",
+  "mounting_tf_confirmed": true,
+  "robot": {
+    "ip": "192.168.137.100",
+    "port": 12345,
+    "rt_port": 12347,
+    "connect_timeout_sec": 15,
+    "move_timeout_sec": 120,
+    "max_velocity_deg_s": 10.0,
+    "acceleration_deg_s2": 10.0,
+    "target_tolerance_deg": 0.1,
+    "command_time_sec": 0.01,
+    "max_move_delta_deg": 100.0,
+    "settle_sec": 1.0,
+    "settle_timeout_sec": 10.0,
+    "stationary_velocity_deg_s": 0.05,
+    "capture_drift_deg": 0.05
+  },
+  "views": [
+    {
+      "name": "left",
+      "joint_deg": [
+        145.0,
+        -13.0,
+        95.0,
+        0.0,
+        125.0,
+        -90.0
+      ]
+    },
+    {
+      "name": "front",
+      "joint_deg": [
+        100.0,
+        -13.0,
+        95.0,
+        0.0,
+        125.0,
+        -90.0
+      ]
+    },
+    {
+      "name": "right",
+      "joint_deg": [
+        55.0,
+        -13.0,
+        95.0,
+        0.0,
+        125.0,
+        -90.0
+      ]
+    }
+  ],
+  "camera": {
+    "serial_number": "",
+    "capture_color": true,
+    "color_width": 0,
+    "color_height": 0,
+    "color_max_time_delta_ms": 50.0,
+    "width": 0,
+    "height": 0,
+    "fps": 0,
+    "warmup_frames": 30,
+    "capture_timeout_sec": 20.0,
+    "min_depth_mm": 200.0,
+    "max_depth_mm": 3000.0,
+    "min_points": 1000
+  },
+  "reconstruction": {
+    "voxel_size_mm": 2.0,
+    "roi_min_mm": null,
+    "roi_max_mm": null
+  }
+}

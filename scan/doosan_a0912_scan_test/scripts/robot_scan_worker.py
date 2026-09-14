@@ -32,26 +32,36 @@ def check_library(path):
 
 
 def stationary(state, settings):
+    for name in ("joint_deg", "joint_velocity_deg_s"):
+        values = state[name]
+        if not isinstance(values, list) or len(values) != 6 or not all(
+                isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+                for v in values):
+            raise RuntimeError(f"유효하지 않은 실제 관절 상태: {name}")
     return (not state["motion_running"]
-            and all(math.isfinite(v) and abs(v) <= settings["stationary_velocity_deg_s"]
+            and all(abs(v) <= settings["stationary_velocity_deg_s"]
                     for v in state["joint_velocity_deg_s"]))
 
 
 def wait_settled(robot, target, settings):
+    """실측 자세의 정지 유지로 촬영 허용. 목표각 차이는 진단 정보로만 기록한다."""
     deadline = time.monotonic() + settings["settle_timeout_sec"]
-    stable_since, anchor = None, None
+    stable_since, anchor, state = None, None, None
     while time.monotonic() < deadline:
         state = robot.read_actual_joint_state()
-        close = max(abs(a - b) for a, b in zip(state["joint_deg"], target)) <= settings["target_tolerance_deg"]
-        if close and stationary(state, settings):
+        if stationary(state, settings):
             if anchor is None or max(abs(a - b) for a, b in zip(state["joint_deg"], anchor)) > settings["capture_drift_deg"]:
-                stable_since, anchor = time.monotonic(), state["joint_deg"]
+                stable_since, anchor = time.monotonic(), list(state["joint_deg"])
             if time.monotonic() - stable_since >= settings["settle_sec"]:
-                return state
+                error = [actual - goal for actual, goal in zip(state["joint_deg"], target)]
+                return {**state, "settle_criterion": "stationary_actual_joints",
+                        "target_joint_deg": list(target), "target_error_deg": error,
+                        "max_target_error_deg": max(abs(value) for value in error)}
         else:
             stable_since, anchor = None, None
         time.sleep(0.05)
-    raise TimeoutError("실제 관절각의 목표 도달/정지 유지 확인 실패. 다음 촬영/이동을 중단합니다.")
+    raise TimeoutError("실제 관절 속도/자세의 정지 유지 확인 실패. 다음 촬영/이동을 중단합니다. "
+                       f"마지막 실제 상태: {json.dumps(state, ensure_ascii=False, allow_nan=False)}")
 
 
 def move_and_settle(robot, target, settings):
