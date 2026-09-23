@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py", line 682, in main
+    capture_sequence(cfg, model, robot, camera, output)
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py", line 548, in capture_sequence
+    entry["settled_state"] = robot.move(view["joint_deg"])
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py", line 255, in move
+    return self.call("move", joint_deg=joints,
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py", line 251, in call
+    raise RuntimeError(reply["error"])
+RuntimeError: Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/robot_scan_worker.py", line 118, in serve
+    result = move_and_settle(robot, request["joint_deg"], settings)
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/robot_scan_worker.py", line 76, in move_and_settle
+    raise ValueError(f"이동량 {delta:.3f} deg > max_move_delta_deg. 안전한 시작 자세/목표를 확인하세요.")
+ValueError: 이동량 229.807 deg > max_move_delta_deg. 안전한 시작 자세/목표를 확인하세요.
+

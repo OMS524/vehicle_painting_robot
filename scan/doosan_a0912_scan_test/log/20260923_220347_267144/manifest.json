@@ -1,0 +1,43 @@
+{
+  "status": "failed",
+  "created_at": "2026-09-23T13:03:55.863322+00:00",
+  "units": {
+    "point_cloud": "m",
+    "joint": "deg"
+  },
+  "reference_frame": "base_link",
+  "method": "actual_joint_fk_and_xacro_tf_only",
+  "icp_applied": false,
+  "settle_criterion": "stationary_actual_joints",
+  "capture_mode": "single_frame",
+  "color_mode": "rgb",
+  "views": [
+    {
+      "name": "view_01",
+      "status": "moving",
+      "target_joint_deg": [
+        92.01,
+        2.46,
+        73.92,
+        13.92,
+        100.56,
+        20.35
+      ],
+      "view_color_rgb": [
+        1.0,
+        0.7956,
+        0.27
+      ]
+    }
+  ],
+  "model_sha256": "5c66e370bc3fa9bf9c61c4354bcdb51c04fe80970bfd6bf8fc5cb37386855c46",
+  "python": "/home/oms/miniconda3/envs/vehicle_painting_robot_scan/bin/python",
+  "packages": {
+    "numpy": "1.26.4",
+    "open3d": "0.18.0",
+    "pyorbbecsdk2": "2.1.2",
+    "xacro": "2.1.1"
+  },
+  "error": "Traceback (most recent call last):\n  File \"/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py\", line 682, in main\n    capture_sequence(cfg, model, robot, camera, output)\n  File \"/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py\", line 548, in capture_sequence\n    entry[\"settled_state\"] = robot.move(view[\"joint_deg\"])\n  File \"/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py\", line 255, in move\n    return self.call(\"move\", joint_deg=joints,\n  File \"/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan_single_frame.py\", line 251, in call\n    raise RuntimeError(reply[\"error\"])\nRuntimeError: Traceback (most recent call last):\n  File \"/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/robot_scan_worker.py\", line 118, in serve\n    result = move_and_settle(robot, request[\"joint_deg\"], settings)\n  File \"/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/robot_scan_worker.py\", line 76, in move_and_settle\n    raise ValueError(f\"이동량 {delta:.3f} deg > max_move_delta_deg. 안전한 시작 자세/목표를 확인하세요.\")\nValueError: 이동량 229.807 deg > max_move_delta_deg. 안전한 시작 자세/목표를 확인하세요.\n\n",
+  "finished_at": "2026-09-23T13:03:55.870504+00:00"
+}

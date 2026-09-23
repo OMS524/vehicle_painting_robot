@@ -58,6 +58,17 @@ python -s three_view_scan.py --check
 python -s three_view_scan.py --execute
 ```
 
+이전 단일 프레임 방식은 아래 명령을 사용한다. 같은 `three_view_scan.yaml`을 읽으며,
+현재 `warmup_frames: 30`에 따라 초기 30프레임을 버린 뒤 다음 유효 Depth 한 장과
+동기 RGB를 저장한다. 이 버전은 YAML의 `capture_frames`, `min_valid_frames`를
+실행 중 1로 고정한다. 기존 다중 프레임 스크립트와 YAML 파일은 그대로 유지된다.
+
+```bash
+python -s three_view_scan_single_frame.py --check
+python -s three_view_scan_single_frame.py --execute
+python -s three_view_scan_single_frame.py --view ../log/촬영디렉토리/merged.ply
+```
+
 ```bash
 python -s three_view_scan.py --view ../log/촬영디렉토리/merged.ply
 

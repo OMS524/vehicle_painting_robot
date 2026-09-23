@@ -1,5 +1,5 @@
 # 상대 경로는 이 YAML 파일 기준. ROS 없이 scan/control 별도 Python 프로세스 사용.
-control_python: ~/miniforge3/envs/vehicle_painting_robot_control/bin/python
+control_python: ~/miniconda3/envs/vehicle_painting_robot_control/bin/python
 control_wrapper: ../../../robot_control/doosan_a0912_controller/test/scripts/joint_target_test.py
 control_library: ../../../robot_control/doosan_a0912_controller/test/build-scan/libdoosan_controller_c_api.so
 xacro: ../description/xacro/a0912_to_tool_scan.xacro
@@ -21,7 +21,7 @@ robot:
   target_tolerance_deg: 0.1
   command_time_sec: 0.01
   # 각 이동의 현재 관절각 대비 최대 변화. 충돌 검사를 대체하지 않습니다.
-  max_move_delta_deg: 100.0
+  max_move_delta_deg: 250.0
   # 이동 명령 종료 후 실제 관절 속도/자세가 이 시간 동안 안정되면 촬영한다.
   # 목표각과의 차이는 기록하며, 정합 TF는 촬영 직후 실제 관절각으로 계산한다.
   settle_sec: 1.0
@@ -36,17 +36,15 @@ robot:
 # null 상태에서는 --execute를 붙여도 로봇에 연결하지 않습니다.
 views:
   - name: view_01
-    joint_deg: [145.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+    joint_deg: [92.01, 2.46, 73.92, 13.92, 100.56, 20.35]
   - name: view_02
-    joint_deg: [125.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+    # joint_deg: [8.46, -62.97, 119.27, 0.58, 133.05, -80.31]
+    joint_deg: [88.65, -40.48, 98.05, 18.19, 121.40, 9.74]
   - name: view_03
-    joint_deg: [105.0, -13.0, 95.0, 0.0, 125.0, -90.0]
-  - name: view_04
-    joint_deg: [85.0, -13.0, 95.0, 0.0, 125.0, -90.0]
-  - name: view_05
-    joint_deg: [65.0, -13.0, 95.0, 0.0, 125.0, -90.0]
-  - name: view_06
-    joint_deg: [45.0, -13.0, 95.0, 0.0, 125.0, -90.0]
+    # joint_deg: [-94.86, 12.75, 59.21, -13.08, 101.04, -215.96]
+    # joint_deg: [-93.65, 8.53, 74.49, -8.06, 88.31, -207.61]
+    joint_deg: [-89.93, 7.75, 62.36, -13.43, 98.00, -209.48]
+
 
 camera:
   serial_number: ""  # 한 대일 때만 자동 선택. 여러 대면 시리얼 필수.

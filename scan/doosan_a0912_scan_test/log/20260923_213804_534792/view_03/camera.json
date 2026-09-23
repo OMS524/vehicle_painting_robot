@@ -1,0 +1,352 @@
+{
+  "device": {
+    "name": "Orbbec Femto Bolt",
+    "serial_number": "CL8M8410004",
+    "firmware_version": "1.0.9"
+  },
+  "frame": "camera_depth_optical_frame",
+  "alignment": "color_to_native_depth",
+  "axes": "x right, y down, z forward",
+  "host_received_ns": 1790167144242889946,
+  "device_timestamp_us": 5020088000,
+  "sdk_system_timestamp_us": 1790167144231777,
+  "frame_index": 79,
+  "width": 640,
+  "height": 576,
+  "fps": 30,
+  "format": "Y16",
+  "depth_scale_mm_per_unit": 1.0,
+  "point_scale_mm_per_unit": 1.0,
+  "intrinsic": {
+    "fx": 504.2851257324219,
+    "fy": 504.22467041015625,
+    "cx": 325.01690673828125,
+    "cy": 332.89300537109375,
+    "width": 640.0,
+    "height": 576.0
+  },
+  "distortion": {
+    "k1": 15.219247817993164,
+    "k2": 7.276235103607178,
+    "k3": 0.24340029060840607,
+    "k4": 15.53681755065918,
+    "k5": 12.416430473327637,
+    "k6": 1.6172322034835815,
+    "p1": 4.253004590282217e-05,
+    "p2": 5.413623512140475e-06
+  },
+  "distortion_model": "OBCameraDistortionModel.BROWN_CONRADY_K6",
+  "discarded_warmup_frames": 30,
+  "depth_aggregation": {
+    "method": "nonzero_lower_median",
+    "frame_count": 30,
+    "min_valid_frames": 3,
+    "raw_frames_file": "depth_frames.npy",
+    "valid_counts_file": "depth_valid_counts.npy",
+    "output_file": "depth_raw.npy",
+    "reference_frame": "last_collected",
+    "depth_storage": "uint16, original raw units; pixels below min_valid_frames=0",
+    "valid_pixels": 282356,
+    "rejected_low_observation_pixels": 4360,
+    "filled_pixels_vs_reference": 12895,
+    "frames": [
+      {
+        "frame_index": 50,
+        "device_timestamp_us": 5019125000,
+        "sdk_system_timestamp_us": 1790167143269622,
+        "host_received_ns": 1790167143280537119,
+        "color_frame_index": 31,
+        "color_device_timestamp_us": 5019123000
+      },
+      {
+        "frame_index": 51,
+        "device_timestamp_us": 5019158000,
+        "sdk_system_timestamp_us": 1790167143301974,
+        "host_received_ns": 1790167143312944535,
+        "color_frame_index": 32,
+        "color_device_timestamp_us": 5019156000
+      },
+      {
+        "frame_index": 52,
+        "device_timestamp_us": 5019191000,
+        "sdk_system_timestamp_us": 1790167143336238,
+        "host_received_ns": 1790167143347317057,
+        "color_frame_index": 33,
+        "color_device_timestamp_us": 5019190000
+      },
+      {
+        "frame_index": 53,
+        "device_timestamp_us": 5019224000,
+        "sdk_system_timestamp_us": 1790167143369068,
+        "host_received_ns": 1790167143379970541,
+        "color_frame_index": 34,
+        "color_device_timestamp_us": 5019223000
+      },
+      {
+        "frame_index": 54,
+        "device_timestamp_us": 5019257000,
+        "sdk_system_timestamp_us": 1790167143401678,
+        "host_received_ns": 1790167143412589752,
+        "color_frame_index": 35,
+        "color_device_timestamp_us": 5019256000
+      },
+      {
+        "frame_index": 55,
+        "device_timestamp_us": 5019291000,
+        "sdk_system_timestamp_us": 1790167143434763,
+        "host_received_ns": 1790167143445805002,
+        "color_frame_index": 36,
+        "color_device_timestamp_us": 5019289000
+      },
+      {
+        "frame_index": 56,
+        "device_timestamp_us": 5019324000,
+        "sdk_system_timestamp_us": 1790167143468827,
+        "host_received_ns": 1790167143479748416,
+        "color_frame_index": 37,
+        "color_device_timestamp_us": 5019322000
+      },
+      {
+        "frame_index": 57,
+        "device_timestamp_us": 5019357000,
+        "sdk_system_timestamp_us": 1790167143501149,
+        "host_received_ns": 1790167143512059883,
+        "color_frame_index": 38,
+        "color_device_timestamp_us": 5019356000
+      },
+      {
+        "frame_index": 58,
+        "device_timestamp_us": 5019390000,
+        "sdk_system_timestamp_us": 1790167143535517,
+        "host_received_ns": 1790167143546352491,
+        "color_frame_index": 39,
+        "color_device_timestamp_us": 5019389000
+      },
+      {
+        "frame_index": 59,
+        "device_timestamp_us": 5019423000,
+        "sdk_system_timestamp_us": 1790167143568556,
+        "host_received_ns": 1790167143579434185,
+        "color_frame_index": 40,
+        "color_device_timestamp_us": 5019422000
+      },
+      {
+        "frame_index": 60,
+        "device_timestamp_us": 5019457000,
+        "sdk_system_timestamp_us": 1790167143601956,
+        "host_received_ns": 1790167143612832435,
+        "color_frame_index": 41,
+        "color_device_timestamp_us": 5019455000
+      },
+      {
+        "frame_index": 61,
+        "device_timestamp_us": 5019490000,
+        "sdk_system_timestamp_us": 1790167143634787,
+        "host_received_ns": 1790167143645725344,
+        "color_frame_index": 42,
+        "color_device_timestamp_us": 5019488000
+      },
+      {
+        "frame_index": 62,
+        "device_timestamp_us": 5019523000,
+        "sdk_system_timestamp_us": 1790167143668002,
+        "host_received_ns": 1790167143678896999,
+        "color_frame_index": 43,
+        "color_device_timestamp_us": 5019522000
+      },
+      {
+        "frame_index": 63,
+        "device_timestamp_us": 5019556000,
+        "sdk_system_timestamp_us": 1790167143700355,
+        "host_received_ns": 1790167143711513630,
+        "color_frame_index": 44,
+        "color_device_timestamp_us": 5019555000
+      },
+      {
+        "frame_index": 64,
+        "device_timestamp_us": 5019589000,
+        "sdk_system_timestamp_us": 1790167143734471,
+        "host_received_ns": 1790167143745578431,
+        "color_frame_index": 45,
+        "color_device_timestamp_us": 5019588000
+      },
+      {
+        "frame_index": 65,
+        "device_timestamp_us": 5019623000,
+        "sdk_system_timestamp_us": 1790167143767500,
+        "host_received_ns": 1790167143778700712,
+        "color_frame_index": 46,
+        "color_device_timestamp_us": 5019621000
+      },
+      {
+        "frame_index": 66,
+        "device_timestamp_us": 5019656000,
+        "sdk_system_timestamp_us": 1790167143800304,
+        "host_received_ns": 1790167143811356330,
+        "color_frame_index": 47,
+        "color_device_timestamp_us": 5019654000
+      },
+      {
+        "frame_index": 67,
+        "device_timestamp_us": 5019689000,
+        "sdk_system_timestamp_us": 1790167143833572,
+        "host_received_ns": 1790167143844564041,
+        "color_frame_index": 48,
+        "color_device_timestamp_us": 5019688000
+      },
+      {
+        "frame_index": 68,
+        "device_timestamp_us": 5019722000,
+        "sdk_system_timestamp_us": 1790167143867220,
+        "host_received_ns": 1790167143878218900,
+        "color_frame_index": 49,
+        "color_device_timestamp_us": 5019721000
+      },
+      {
+        "frame_index": 69,
+        "device_timestamp_us": 5019756000,
+        "sdk_system_timestamp_us": 1790167143900246,
+        "host_received_ns": 1790167143911193394,
+        "color_frame_index": 50,
+        "color_device_timestamp_us": 5019754000
+      },
+      {
+        "frame_index": 70,
+        "device_timestamp_us": 5019789000,
+        "sdk_system_timestamp_us": 1790167143934233,
+        "host_received_ns": 1790167143945152666,
+        "color_frame_index": 51,
+        "color_device_timestamp_us": 5019787000
+      },
+      {
+        "frame_index": 71,
+        "device_timestamp_us": 5019822000,
+        "sdk_system_timestamp_us": 1790167143966605,
+        "host_received_ns": 1790167143977626782,
+        "color_frame_index": 52,
+        "color_device_timestamp_us": 5019821000
+      },
+      {
+        "frame_index": 72,
+        "device_timestamp_us": 5019855000,
+        "sdk_system_timestamp_us": 1790167143999353,
+        "host_received_ns": 1790167144010272413,
+        "color_frame_index": 53,
+        "color_device_timestamp_us": 5019854000
+      },
+      {
+        "frame_index": 73,
+        "device_timestamp_us": 5019888000,
+        "sdk_system_timestamp_us": 1790167144033315,
+        "host_received_ns": 1790167144044316654,
+        "color_frame_index": 54,
+        "color_device_timestamp_us": 5019887000
+      },
+      {
+        "frame_index": 74,
+        "device_timestamp_us": 5019922000,
+        "sdk_system_timestamp_us": 1790167144066463,
+        "host_received_ns": 1790167144077412647,
+        "color_frame_index": 55,
+        "color_device_timestamp_us": 5019920000
+      },
+      {
+        "frame_index": 75,
+        "device_timestamp_us": 5019955000,
+        "sdk_system_timestamp_us": 1790167144099006,
+        "host_received_ns": 1790167144110188634,
+        "color_frame_index": 56,
+        "color_device_timestamp_us": 5019953000
+      },
+      {
+        "frame_index": 76,
+        "device_timestamp_us": 5019988000,
+        "sdk_system_timestamp_us": 1790167144132483,
+        "host_received_ns": 1790167144143431685,
+        "color_frame_index": 57,
+        "color_device_timestamp_us": 5019987000
+      },
+      {
+        "frame_index": 77,
+        "device_timestamp_us": 5020021000,
+        "sdk_system_timestamp_us": 1790167144166090,
+        "host_received_ns": 1790167144177131980,
+        "color_frame_index": 58,
+        "color_device_timestamp_us": 5020020000
+      },
+      {
+        "frame_index": 78,
+        "device_timestamp_us": 5020054000,
+        "sdk_system_timestamp_us": 1790167144198811,
+        "host_received_ns": 1790167144209632002,
+        "color_frame_index": 59,
+        "color_device_timestamp_us": 5020053000
+      },
+      {
+        "frame_index": 79,
+        "device_timestamp_us": 5020088000,
+        "sdk_system_timestamp_us": 1790167144231777,
+        "host_received_ns": 1790167144242889946,
+        "color_frame_index": 60,
+        "color_device_timestamp_us": 5020086000
+      }
+    ]
+  },
+  "color": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "source_format": "OBFormat.MJPG",
+    "saved_format": "RGB8",
+    "frame_index": 60,
+    "device_timestamp_us": 5020086000,
+    "sdk_system_timestamp_us": 1790167144242782,
+    "depth_color_time_delta_us": 2000,
+    "intrinsic": {
+      "fx": 1124.690185546875,
+      "fy": 1124.4443359375,
+      "cx": 949.0999145507812,
+      "cy": 534.8060913085938,
+      "width": 1920.0,
+      "height": 1080.0
+    },
+    "distortion": {
+      "k1": 0.07539653033018112,
+      "k2": -0.10546388477087021,
+      "k3": 0.0432061105966568,
+      "k4": 0.0,
+      "k5": 0.0,
+      "k6": 0.0,
+      "p1": 0.00019250008335802704,
+      "p2": 0.0006142936763353646
+    },
+    "distortion_model": "OBCameraDistortionModel.BROWN_CONRADY_K6",
+    "depth_to_color": {
+      "rotation": [
+        [
+          0.9940444231033325,
+          -0.002150482963770628,
+          0.00042206287616863847
+        ],
+        [
+          0.002091681119054556,
+          0.994042158126831,
+          0.10897599160671234
+        ],
+        [
+          -0.0006538992165587842,
+          -0.10897484421730042,
+          0.9940442442893982
+        ]
+      ],
+      "translation_mm": [
+        -32.87438201904297,
+        -1.0448293685913086,
+        2.0977301597595215
+      ]
+    },
+    "unmapped_color": "black",
+    "alignment_target_distortion": true,
+    "selection": "last_collected_pair; aligned_using_aggregated_depth"
+  }
+}

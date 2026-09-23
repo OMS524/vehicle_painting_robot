@@ -15,6 +15,7 @@ Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. �
 `target_tolerance_deg`는 기존 속도 제어기의 이동 프로파일 계산에만 전달되며 촬영 허용 기준이 아니다.
 
 - `three_view_scan.py`: scan 환경에서 카메라 취득, FK/TF 계산, 저장, 점군 통합.
+- `three_view_scan_single_frame.py`: 초기 프레임을 버린 뒤 한 장만 저장하는 이전 방식의 별도 버전.
 - `three_view_scan.yaml`: 촬영 관절각, IP, 속도, 카메라 범위, 저장 위치 등의 설정.
 - `robot_scan_worker.py`: control 환경의 별도 프로세스. 기존 Python 래퍼로 이동/실제 관절 상태 조회.
 - `test_three_view_scan.py`: 합성 입력만 사용하는 오프라인 테스트.
@@ -85,6 +86,36 @@ python -s three_view_scan.py --check
 
 # 실제 로봇 이동 + Depth 취득 + 통합/저장. 터미널에 SCAN 입력 시 시작한다.
 python -s three_view_scan.py --execute
+```
+
+이전의 **초기 30프레임 버림 → 다음 유효 1프레임 저장** 방식은 별도 파일로 실행한다.
+`three_view_scan_single_frame.py`는 다중 프레임 통합 전 버전(`deec341`)을 복원한 코드이며,
+같은 `three_view_scan.yaml`의 자세·속도·카메라·저장 경로를 사용한다.
+`warmup_frames`는 YAML 값을 따르고 현재 값은 30이다. `capture_frames`와
+`min_valid_frames`는 YAML 값에 관계없이 실행 중 1로 고정하며 원본 YAML은 변경하지 않는다.
+
+```bash
+# 단일 프레임 버전: 검사 → 실제 촬영
+python -s three_view_scan_single_frame.py --check
+python -s three_view_scan_single_frame.py --execute
+
+# 결과 시각화
+python -s three_view_scan_single_frame.py --view ../log/촬영디렉토리/merged.ply
+```
+
+각 시점에서 스트림을 새로 시작하고, 중복 수신을 제외한 유효 프레임 30개를 버린 뒤
+다음 프레임의 Depth와 동기 RGB를 저장한다. RGB 촬영 시 누락되거나 타임스탬프가 맞지 않는
+프레임 쌍은 버림 개수에 포함하지 않는다. 시간 방향 중앙값 처리나 결손 보완은 하지 않는다.
+각 시점의 `depth_raw.npy`는 한 장의 원본 Depth이며, `depth_frames.npy`와
+`depth_valid_counts.npy`는 생성하지 않는다. 시점 간 FK/TF 점군 통합과 RGB 저장은 그대로 수행한다.
+`manifest.json`과 `camera.json`에 `capture_mode: single_frame`을 기록하고,
+`settings.json`에는 실제 적용한 `capture_frames: 1`, `min_valid_frames: 1`을 기록한다.
+두 버전 모두 `output_dir` 아래에 실행마다 새 시각 이름의 폴더를 만든다.
+
+단일 프레임 동작은 장치 연결 없이 SDK 메모리 프레임으로 검사할 수 있다.
+
+```bash
+python -sB test_three_view_scan_single_frame.py -v
 ```
 
 `--execute`는 로봇 제어권/서보를 활성화한다. 성공·실패·Ctrl+C 시 기존 제어기의
