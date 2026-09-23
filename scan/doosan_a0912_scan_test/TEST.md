@@ -61,6 +61,6 @@ python -s three_view_scan.py --execute
 ```bash
 python -s three_view_scan.py --view ../log/촬영디렉토리/merged.ply
 
-# 시점별 구분색으로 정합 상태 비교 (컬러 촬영 시 함께 저장)
-python -s three_view_scan.py --view ../log/촬영디렉토리/merged_view_colors.ply
+python -s three_view_scan.py --view /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260914_221041_703254/merged.ply
+python -s three_view_scan.py --view /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260914_222323_805719/merged.ply
 ```

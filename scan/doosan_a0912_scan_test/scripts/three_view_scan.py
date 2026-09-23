@@ -78,6 +78,8 @@ def load_config(path):
     camera.setdefault("color_width", 0)
     camera.setdefault("color_height", 0)
     camera.setdefault("color_max_time_delta_ms", 50.0)
+    camera.setdefault("capture_frames", 30)
+    camera.setdefault("min_valid_frames", 3)
     if type(camera["capture_color"]) is not bool:
         raise ValueError("camera.capture_color는 true/false여야 합니다.")
     for name in ("control_python", "control_wrapper", "control_library", "xacro", "output_dir"):
@@ -107,8 +109,8 @@ def load_config(path):
         "robot": ("connect_timeout_sec", "move_timeout_sec", "max_velocity_deg_s", "acceleration_deg_s2",
                   "target_tolerance_deg", "command_time_sec", "max_move_delta_deg", "settle_sec",
                   "settle_timeout_sec", "stationary_velocity_deg_s", "capture_drift_deg"),
-        "camera": ("warmup_frames", "capture_timeout_sec", "min_depth_mm", "max_depth_mm", "min_points",
-                   "color_max_time_delta_ms"),
+        "camera": ("warmup_frames", "capture_frames", "min_valid_frames", "capture_timeout_sec",
+                   "min_depth_mm", "max_depth_mm", "min_points", "color_max_time_delta_ms"),
         "reconstruction": ("voxel_size_mm",),
     }.items():
         for name in names:
@@ -116,12 +118,14 @@ def load_config(path):
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not np.isfinite(value) or value <= 0:
                 raise ValueError(f"{group}.{name}은 양의 유한한 숫자여야 합니다.")
     for group, names in {"robot": ("port", "rt_port", "connect_timeout_sec"),
-                         "camera": ("width", "height", "fps", "warmup_frames", "min_points",
-                                    "color_width", "color_height")}.items():
+                         "camera": ("width", "height", "fps", "warmup_frames", "capture_frames",
+                                    "min_valid_frames", "min_points", "color_width", "color_height")}.items():
         for name in names:
             value = cfg[group][name]
             if type(value) is not int or value < 0:
                 raise ValueError(f"{group}.{name}은 0 이상의 정수여야 합니다.")
+    if camera["min_valid_frames"] > camera["capture_frames"]:
+        raise ValueError("camera.min_valid_frames는 camera.capture_frames 이하여야 합니다.")
     if not all(0 < cfg["robot"][key] < 65536 for key in ("port", "rt_port")):
         raise ValueError("로봇 포트 범위는 1~65535입니다.")
     if cfg["robot"]["settle_timeout_sec"] <= cfg["robot"]["settle_sec"]:
@@ -195,6 +199,9 @@ def preflight(cfg, model, execute=False):
 
     print("파일·TF·분리된 제어 라이브러리 검사 통과. 하드웨어 연결 없음.")
     print(f"촬영 시점 {len(cfg['views'])}개 (목록 순서): " + " → ".join(v["name"] for v in cfg["views"]))
+    print(f"시점마다 초기 {cfg['camera']['warmup_frames']}프레임을 버린 뒤 "
+          f"Depth {cfg['camera']['capture_frames']}프레임을 통합합니다. "
+          f"픽셀별 최소 {cfg['camera']['min_valid_frames']}회 측정된 값만 사용합니다.")
     if missing:
         print("미입력 목표 자세:", ", ".join(missing))
     print("Xacro 기준 flange → depth optical (translation: m):")
@@ -292,6 +299,27 @@ class CapturedView:
     metadata: dict
     color_rgb: np.ndarray | None = None
     color_aligned_rgb: np.ndarray | None = None
+    depth_frames: np.ndarray | None = None
+    depth_valid_counts: np.ndarray | None = None
+
+
+def fuse_depth_frames(depth_frames, min_valid_frames=3):
+    """같은 자세의 Y16 프레임에서 0을 제외한 픽셀별 하위 중앙값과 유효 관측 수.
+
+    짝수 개일 때도 두 값의 평균 대신 실제 측정값 하나를 선택한다.
+    min_valid_frames회 미만 측정된 픽셀은 0이며 주변 픽셀 보간은 하지 않는다.
+    """
+    stack = np.asarray(depth_frames)
+    if stack.dtype != np.uint16 or stack.ndim != 3 or min(stack.shape) == 0:
+        raise ValueError("Depth 통합 입력은 비어 있지 않은 uint16 (프레임, 높이, 너비) 배열이어야 합니다.")
+    if type(min_valid_frames) is not int or not 1 <= min_valid_frames <= stack.shape[0]:
+        raise ValueError("min_valid_frames는 1 이상 수집 프레임 수 이하의 정수여야 합니다.")
+    counts = np.count_nonzero(stack, axis=0).astype(np.uint32)
+    ordered = np.sort(np.where(stack > 0, stack, np.iinfo(np.uint16).max), axis=0)
+    rank = np.maximum(counts.astype(np.int64) - 1, 0) // 2
+    fused = np.take_along_axis(ordered, rank[None], axis=0)[0]
+    fused[counts < min_valid_frames] = 0
+    return fused, counts
 
 
 def profile_calibration(profile):
@@ -392,21 +420,28 @@ class DepthCamera:
 
     def capture(self):
         sdk, settings = self.sdk, self.settings
+        capture_frames = settings.get("capture_frames", 30)
+        min_valid_frames = settings.get("min_valid_frames", 3)
         # 각 이동이 끝난 뒤 새 스트림 시작. 이동 중 쌓인 이전 프레임 사용 방지.
         self.pipeline.start(self.config)
         try:
             deadline = time.monotonic() + settings["capture_timeout_sec"]
-            count, last_index = 0, None
+            count, seen_frames = 0, set()
+            samples, source_frames = [], []
+            sample_scale = None
             while time.monotonic() < deadline:
                 frames = self.pipeline.wait_for_frames(500)
                 depth = frames.get_depth_frame() if frames is not None else None
-                if depth is None or depth.get_index() == last_index:
+                if depth is None:
+                    continue
+                frame_id = (depth.get_index(), depth.get_timestamp_us())
+                if frame_id in seen_frames:
                     continue
                 color = frames.get_color_frame() if settings.get("capture_color", False) else None
                 if settings.get("capture_color", False) and (color is None or abs(
                         color.get_timestamp_us() - depth.get_timestamp_us()) > settings["color_max_time_delta_ms"] * 1000):
                     continue
-                last_index = depth.get_index()
+                seen_frames.add(frame_id)
                 count += 1
                 if count <= settings["warmup_frames"]:
                     continue
@@ -414,17 +449,38 @@ class DepthCamera:
                 if depth.get_format() != sdk.OBFormat.Y16:
                     raise ValueError("Y16 Depth만 지원합니다.")
                 raw = np.frombuffer(depth.get_data(), dtype=np.uint16).reshape(depth.get_height(), depth.get_width()).copy()
+                scale = float(depth.get_depth_scale())
+                if not np.isfinite(scale) or scale <= 0:
+                    raise ValueError("잘못된 Depth scale")
+                if samples and (raw.shape != samples[0].shape or scale != sample_scale):
+                    raise ValueError("촬영 중 Depth 해상도 또는 scale이 변경되었습니다. 서로 다른 측정값은 통합하지 않습니다.")
+                sample_scale = scale
+                samples.append(raw)
+                source = {"frame_index": depth.get_index(), "device_timestamp_us": depth.get_timestamp_us(),
+                          "sdk_system_timestamp_us": depth.get_system_timestamp_us(), "host_received_ns": received_ns}
+                if color is not None:
+                    source.update(color_frame_index=color.get_index(), color_device_timestamp_us=color.get_timestamp_us())
+                source_frames.append(source)
+                if len(samples) < capture_frames:
+                    continue
+
+                stack = np.stack(samples)
+                raw, valid_counts = fuse_depth_frames(stack, min_valid_frames)
+                # 보정값/좌표계/scale은 마지막 수신 프레임에서 유지하고 Depth 버퍼만 통합본으로 교체.
+                # 원본 프레임은 수정하지 않으며 이후 점군과 RGB 정렬 모두 같은 통합 Depth를 사용한다.
+                fused_depth = sdk.Frame.create_frame_from_other_frame(depth, True).as_depth_frame()
+                fused_depth.set_value_scale(scale)
+                fused_depth.update_data(raw.tobytes())
+                fused_frames = sdk.Frame.create_frame_set()
+                fused_frames.push_frame(fused_depth)
                 point_filter = sdk.PointCloudFilter()
                 point_filter.set_create_point_format(sdk.OBFormat.POINT)
                 point_filter.set_coordinate_system(sdk.OBCoordinateSystemType.RIGHT_HAND)
-                points = point_filter.process(frames)
+                points = point_filter.process(fused_frames)
                 if points is None:
                     raise RuntimeError("SDK Depth → point cloud 변환 실패")
                 points = points.as_points_frame()
                 xyz = points_in_meters(points)
-                scale = float(depth.get_depth_scale())
-                if not np.isfinite(scale) or scale <= 0:
-                    raise ValueError("잘못된 Depth scale")
                 metadata = {
                     "device": self.device_info, "frame": DEPTH_FRAME, "alignment": "native_depth_no_color_alignment",
                     "axes": "x right, y down, z forward", "host_received_ns": received_ns,
@@ -433,11 +489,24 @@ class DepthCamera:
                     "width": depth.get_width(), "height": depth.get_height(), "fps": self.profile.get_fps(),
                     "format": "Y16", "depth_scale_mm_per_unit": scale,
                     "point_scale_mm_per_unit": float(points.get_position_value_scale()),
-                    **profile_calibration(self.profile), "discarded_warmup_frames": count - 1,
+                    **profile_calibration(self.profile), "discarded_warmup_frames": settings["warmup_frames"],
+                    "depth_aggregation": {
+                        "method": "nonzero_lower_median", "frame_count": len(samples),
+                        "min_valid_frames": min_valid_frames,
+                        "raw_frames_file": "depth_frames.npy", "valid_counts_file": "depth_valid_counts.npy",
+                        "output_file": "depth_raw.npy", "reference_frame": "last_collected",
+                        "depth_storage": "uint16, original raw units; pixels below min_valid_frames=0",
+                        "valid_pixels": int(np.count_nonzero(raw)),
+                        "rejected_low_observation_pixels": int(np.count_nonzero(
+                            (valid_counts > 0) & (valid_counts < min_valid_frames))),
+                        "filled_pixels_vs_reference": int(np.count_nonzero((stack[-1] == 0) & (raw > 0))),
+                        "frames": source_frames,
+                    },
                 }
-                result = CapturedView(raw, xyz, metadata)
+                result = CapturedView(raw, xyz, metadata, depth_frames=stack, depth_valid_counts=valid_counts)
                 if color is not None:
-                    result.color_rgb, result.color_aligned_rgb = align_color_to_depth(sdk, depth, color)
+                    # RGB는 평균내지 않는다. 정지한 장면의 마지막 동기 RGB 한 장을 원본으로 보존한다.
+                    result.color_rgb, result.color_aligned_rgb = align_color_to_depth(sdk, fused_depth, color)
                     if len(xyz) != raw.size:
                         raise ValueError("점군과 Depth 픽셀 개수가 달라 RGB를 대응시킬 수 없습니다.")
                     extrinsic = self.profile.get_extrinsic_to(self.color_profile)
@@ -453,10 +522,18 @@ class DepthCamera:
                         "depth_to_color": {"rotation": np.asarray(extrinsic.rot).reshape(3, 3).tolist(),
                                            "translation_mm": np.asarray(extrinsic.transform).reshape(3).tolist()},
                         "unmapped_color": "black", "alignment_target_distortion": True,
+                        "selection": "last_collected_pair; aligned_using_aggregated_depth",
                     }
+                print(f"Depth {len(samples)}프레임 통합: 유효 {np.count_nonzero(raw):,}픽셀, "
+                      f"최소 {min_valid_frames}회 미달 제외 "
+                      f"{metadata['depth_aggregation']['rejected_low_observation_pixels']:,}픽셀, "
+                      f"마지막 프레임 대비 결손 보완 {metadata['depth_aggregation']['filled_pixels_vs_reference']:,}픽셀",
+                      flush=True)
                 return result
-            raise TimeoutError("유효한 새 Depth/RGB 프레임 취득 시간 초과" if settings.get("capture_color", False)
-                               else "유효한 새 Depth 프레임 취득 시간 초과")
+            stream = "Depth/RGB" if settings.get("capture_color", False) else "Depth"
+            raise TimeoutError(f"유효한 새 {stream} 프레임 취득 시간 초과: "
+                               f"초기 버림 {min(count, settings['warmup_frames'])}/{settings['warmup_frames']}, "
+                               f"수집 {len(samples)}/{capture_frames}. 불완전한 묶음은 사용하지 않습니다.")
         finally:
             self.pipeline.stop()
 
@@ -544,6 +621,9 @@ def capture_sequence(cfg, model, robot, camera, output):
             finally:
                 # 직후 자세 조회가 실패해도 이미 받은 원본은 남긴다.
                 np.save(directory / "depth_raw.npy", raw, allow_pickle=False)
+                if captured.depth_frames is not None:
+                    np.save(directory / "depth_frames.npy", captured.depth_frames, allow_pickle=False)
+                    np.save(directory / "depth_valid_counts.npy", captured.depth_valid_counts, allow_pickle=False)
                 if captured.color_rgb is not None:
                     save_rgb(directory / "color_rgb.png", captured.color_rgb)
                 if captured.color_aligned_rgb is not None:

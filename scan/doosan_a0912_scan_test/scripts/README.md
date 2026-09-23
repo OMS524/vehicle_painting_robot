@@ -3,7 +3,8 @@
 ## 여러 시점 촬영 및 통합
 
 `three_view_scan.py`가 YAML의 `views`에 적힌 순서로 이동하고, **이동 명령 종료와
-실제 자세의 정지 유지가 확인된 뒤** 각 위치에서 Depth와 RGB 한 쌍을 저장한다. 마지막에는 실제 관절각과
+실제 자세의 정지 유지가 확인된 뒤** 각 위치에서 여러 Depth 프레임의 유효 측정값을 통합하고
+마지막 동기 RGB 한 장과 함께 저장한다. 마지막에는 실제 관절각과
 Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. 시점은 1개 이상 원하는 만큼
 지정할 수 있다. ROS는 사용하지 않는다.
 
@@ -52,6 +53,22 @@ USB 전송량을 줄이기 위해 MJPG를 우선 사용한 뒤 RGB로 디코딩�
 장치 타임스탬프 차이가 `color_max_time_delta_ms` 이내인 프레임 쌍만 사용한다.
 `capture_color: false`이면 Depth만 촬영하고 시점별 구분색을 사용한다.
 
+`camera.warmup_frames: 30`은 스트림 시작 직후 버리는 프레임 수이고,
+`camera.capture_frames: 30`은 그 뒤 **같은 자세에서 실제로 수집해 통합하는 프레임 수**다.
+`capture_frames: 1`, `min_valid_frames: 1`이면 단일 프레임 방식이다. 초기 버림과 수집 수는 별개이며, 취득 제한 시간
+`capture_timeout_sec` 안에 초기 버림과 전체 수집이 끝나야 한다. 부족한 프레임으로 조용히 진행하지 않는다.
+
+Depth는 픽셀마다 `0`인 결손값을 제외한 **실제 측정값의 중앙값**을 사용한다.
+유효값 개수가 짝수이면 가운데 두 값 중 작은 것을 선택하여 측정하지 않은 중간 깊이를 만들지 않는다.
+`camera.min_valid_frames: 3` 이상 측정된 픽셀만 유지하며, 0~2회만 측정된 픽셀은 0으로 처리한다.
+측정은 연속된 프레임일 필요가 없다. 최소 횟수는 1 이상 `capture_frames` 이하의 정수이며,
+1로 설정하면 한 번만 측정된 픽셀도 유지한다. 기준을 높이면 드물게 측정된 정상 점도 제외될 수 있고,
+반복해서 나타나는 노이즈까지 제거하는 조건은 아니다.
+주변 픽셀로 구멍을 메우거나 `TemporalFilter`를 적용하는 처리는 없다.
+통합한 Depth를 SDK `PointCloudFilter`와 `AlignFilter` 양쪽에 사용하므로 저장한 Depth·XYZ·정렬 RGB가 대응한다.
+RGB는 평균내지 않고 마지막 수집 프레임 쌍의 원본 이미지를 사용한다. 수집 동안 로봇뿐 아니라
+부품도 움직이지 않아야 하며, 계속 측정되지 않는 반사/가림 영역은 이 방법으로 복구되지 않는다.
+
 `max_move_delta_deg`는 현재 자세와 다음 목표 사이의 관절별 최대 변화 제한이다.
 자동 충돌 회피/이동 경로 검증이 아니므로 **초기 위치부터 YAML에 지정한 순서의 전체 이동 구간**,
 툴 무게/무게중심 설정, 케이블, 작업자와 주변 장애물, 비상정지 접근성을 직접 확인해야 한다.
@@ -91,12 +108,14 @@ scan/control 환경은 **한 프로세스에서 섞지 않는다.** `control_pyt
 ├── manifest.json          # 시점 순서/구분색/진행 상태/개수/환경 버전/오류
 ├── robot_worker.log       # Python 래퍼 및 C++ 제어 로그
 ├── <name>/                # YAML의 각 시점 이름으로 폴더 생성
-│   ├── depth_raw.npy      # 원본 uint16 Depth. mm = raw × camera.json의 scale
-│   ├── color_rgb.png      # 원본 RGB를 디코딩한 PNG (컬러 촬영 시)
-│   ├── color_aligned_depth.png # Depth 픽셀에 정렬한 RGB (컬러 촬영 시)
-│   ├── camera.json        # 내참수/왜곡/해상도/단위/시리얼/타임스탬프
+│   ├── depth_raw.npy      # 통합 Depth(uint16). 기존 소비 코드와 호환되는 이름. mm = raw × scale
+│   ├── depth_frames.npy   # 통합 전 수집 원본 uint16, (capture_frames, height, width)
+│   ├── depth_valid_counts.npy # 픽셀별 0이 아닌 관측 횟수(uint32), (height, width)
+│   ├── color_rgb.png      # 마지막 프레임 쌍의 원본 RGB를 디코딩한 PNG (컬러 촬영 시)
+│   ├── color_aligned_depth.png # 통합 Depth 픽셀에 정렬한 RGB (컬러 촬영 시)
+│   ├── camera.json        # 보정/단위/대표 타임스탬프, depth_aggregation에 전체 프레임 이력
 │   ├── pose.json          # 촬영 전후 실제 관절각·속도·TF, accepted 여부
-│   ├── camera_raw.ply     # 원본 유효 점군: depth optical 좌표계, m
+│   ├── camera_raw.ply     # 통합 Depth의 유효 점군: depth optical 좌표계, m (거리/ROI 필터 전)
 │   ├── camera_filtered.ply # 거리/ROI 범위 내 점군: depth optical 좌표계, m
 │   └── base.ply           # 동일 점군: 로봇 base_link 좌표계, m
 ├── merged_raw.ply         # 모든 시점의 base.ply를 그대로 합친 점군
@@ -149,7 +168,14 @@ X=오른쪽, Y=아래, Z=렌즈 전방이다. PointCloudFilter의 출력은 프�
 `get_position_value_scale()`을 곱해 mm로 변환하고, 다시 1000으로 나눠 m로 저장한다.
 Depth raw scale을 점군에 중복해서 적용하지 않는다.
 
-카메라 스트림은 각 이동/정지 확인 후 새로 시작하고 `warmup_frames`개를 버린다.
+카메라 스트림은 각 이동/정지 확인 후 새로 시작하고 `warmup_frames`개를 버린 뒤
+서로 다른 `capture_frames`개의 프레임을 수집한다. 한 시점의 이력은 다른 시점과 섞지 않는다.
+`camera.json` 최상위 타임스탬프는 마지막 수집 Depth 기준이고, `depth_aggregation.frames`에는
+통합에 사용한 각 Depth/RGB의 프레임 번호와 타임스탬프가 저장된다.
+`depth_aggregation.min_valid_frames`에는 적용한 최소 측정 횟수,
+`rejected_low_observation_pixels`에는 1회 이상 측정됐지만 최소 횟수 미달로 제외한 픽셀 수를 기록한다.
+`depth_valid_counts.npy`는 제외 여부와 관계없이 원래 관측 횟수를 보존한다.
+`filled_pixels_vs_reference`는 마지막 Depth에서는 0이었지만 다른 프레임의 측정값으로 유지된 픽셀 수다.
 촬영 전후 실제 관절각/속도를 확인하며, 허용 범위보다 움직였으면 그 촬영은 거부한다.
 이는 **정지 촬영 방식**이고 카메라-로봇 하드웨어 동기화나 이동 중 스캔이 아니다.
 `T_base_flange`는 목표 자세나 펜던트의 사용자 TCP 값이 아니라 **실제 관절각의 FK 계산값**이다.
@@ -184,6 +210,8 @@ python -sB -m unittest test_three_view_scan -v
 시점 개수·순서 보존, 잘못된 이름과 중복 이름 거부, 미입력 자세의 실행 차단도 확인한다.
 RGB 정렬의 보정값 적용, MJPG 디코딩, Depth 좌표·단위 유지, 거리/ROI 필터와 PLY 통합 후
 색상 보존도 검증한다.
+여러 프레임의 결손 제외/중앙값 선택, SDK 통합 Depth의 단위·RGB 대응, 중복 프레임 제외,
+수집 부족 시 타임아웃, 원본 프레임/유효 관측 횟수 저장도 하드웨어 없이 검증한다.
 
 ## A0912 + 스캔 툴 Xacro 시각화
 
