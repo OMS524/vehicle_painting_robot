@@ -69,6 +69,8 @@ struct RegenerateRequest {
     control_points: Value,
     #[serde(default)]
     deleted_row_indices: Vec<usize>,
+    #[serde(default)]
+    deleted_point_ids: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -467,6 +469,7 @@ async fn regenerate_trajectory(
         "sessionDir": session.session_dir,
         "controlPoints": request.control_points,
         "deletedRowIndices": request.deleted_row_indices,
+        "deletedPointIds": request.deleted_point_ids,
     });
     let response = tauri::async_runtime::spawn_blocking(move || {
         run_backend(&python, &backend_script, "regenerate", &payload)

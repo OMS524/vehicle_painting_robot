@@ -1,0 +1,181 @@
+{
+  "schema": "sam3_resource_usage_v1",
+  "status": "complete",
+  "error": null,
+  "started_at_utc": "2026-09-25T13:58:15.853508+00:00",
+  "finished_at_utc": "2026-09-25T13:58:33.570301+00:00",
+  "elapsed_sec": 17.716767476988025,
+  "pid": 319489,
+  "python": "/home/oms/miniforge3/envs/vehicle_painting_robot_sam3/bin/python",
+  "torch_version": "2.10.0+cu128",
+  "logical_cpu_count": 56,
+  "gpu": {
+    "cuda_device": 0,
+    "name": "NVIDIA RTX 6000 Ada Generation",
+    "total_memory_mib": 48505.9375,
+    "uuid": "GPU-31901a8e-7076-a4a6-ab4f-fac10b352703"
+  },
+  "sample_interval_sec": 0.5,
+  "metrics": {
+    "process_cpu_percent": {
+      "sample_count": 35,
+      "max": 1603.6878034801805,
+      "mean_of_samples": 354.80499956068763
+    },
+    "process_ram_mib": {
+      "sample_count": 36,
+      "max": 7374.7890625,
+      "mean_of_samples": 2588.8204210069443
+    },
+    "gpu_utilization_percent_device": {
+      "sample_count": 29,
+      "max": 23.0,
+      "mean_of_samples": 2.5517241379310347
+    },
+    "gpu_memory_used_mib_device": {
+      "sample_count": 29,
+      "max": 6566.0,
+      "mean_of_samples": 2546.551724137931
+    },
+    "gpu_memory_used_mib_process": {
+      "sample_count": 29,
+      "max": 5850.0,
+      "mean_of_samples": 1837.448275862069
+    },
+    "torch_allocated_mib": {
+      "sample_count": 29,
+      "max": 4772.76171875,
+      "mean_of_samples": 968.0485082165949
+    },
+    "torch_reserved_mib": {
+      "sample_count": 29,
+      "max": 5334.0,
+      "mean_of_samples": 1346.0
+    }
+  },
+  "phases": [
+    {
+      "phase": "import_model_api",
+      "image": "",
+      "status": "complete",
+      "elapsed_sec": 3.567275214008987,
+      "process_cpu_time_sec": 10.462194623,
+      "average_process_cpu_percent": 293.28251943988204
+    },
+    {
+      "phase": "model_load",
+      "image": "",
+      "status": "complete",
+      "elapsed_sec": 11.365002245060168,
+      "process_cpu_time_sec": 49.124874401,
+      "average_process_cpu_percent": 432.246939699042,
+      "torch_peak_allocated_mib": 3409.6396484375,
+      "torch_peak_reserved_mib": 3512.0
+    },
+    {
+      "phase": "image_load",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_01/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.045116646913811564,
+      "process_cpu_time_sec": 0.0465508899999989,
+      "average_process_cpu_percent": 103.17896648863831,
+      "torch_peak_allocated_mib": 3409.6396484375,
+      "torch_peak_reserved_mib": 3512.0
+    },
+    {
+      "phase": "inference",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_01/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.5849470949033275,
+      "process_cpu_time_sec": 0.5883923929999995,
+      "average_process_cpu_percent": 100.58899311180294,
+      "torch_peak_allocated_mib": 5089.97509765625,
+      "torch_peak_reserved_mib": 5334.0
+    },
+    {
+      "phase": "save_result",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_01/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.535917789908126,
+      "process_cpu_time_sec": 0.5392467810000028,
+      "average_process_cpu_percent": 100.62117570167759,
+      "torch_peak_allocated_mib": 3535.33251953125,
+      "torch_peak_reserved_mib": 5334.0
+    },
+    {
+      "phase": "image_load",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_02/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.05112406506668776,
+      "process_cpu_time_sec": 0.05149538300000245,
+      "average_process_cpu_percent": 100.72630752822633,
+      "torch_peak_allocated_mib": 3418.7646484375,
+      "torch_peak_reserved_mib": 5334.0
+    },
+    {
+      "phase": "inference",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_02/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.10935206804424524,
+      "process_cpu_time_sec": 0.10944894600000055,
+      "average_process_cpu_percent": 100.08859270564147,
+      "torch_peak_allocated_mib": 5087.63134765625,
+      "torch_peak_reserved_mib": 5334.0
+    },
+    {
+      "phase": "save_result",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_02/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.5817501230631024,
+      "process_cpu_time_sec": 0.5846873129999963,
+      "average_process_cpu_percent": 100.50488858024278,
+      "torch_peak_allocated_mib": 3535.11376953125,
+      "torch_peak_reserved_mib": 5334.0
+    },
+    {
+      "phase": "image_load",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_03/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.05197012599091977,
+      "process_cpu_time_sec": 0.05237476099999583,
+      "average_process_cpu_percent": 100.77859154920417,
+      "torch_peak_allocated_mib": 3418.7646484375,
+      "torch_peak_reserved_mib": 5334.0
+    },
+    {
+      "phase": "inference",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_03/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.10992061102297157,
+      "process_cpu_time_sec": 0.1113016170000023,
+      "average_process_cpu_percent": 101.25636672156246,
+      "torch_peak_allocated_mib": 5087.63134765625,
+      "torch_peak_reserved_mib": 5334.0
+    },
+    {
+      "phase": "save_result",
+      "image": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_03/color_rgb.png",
+      "status": "complete",
+      "elapsed_sec": 0.5656355179380625,
+      "process_cpu_time_sec": 0.5705981820000048,
+      "average_process_cpu_percent": 100.87736075698233,
+      "torch_peak_allocated_mib": 3535.11376953125,
+      "torch_peak_reserved_mib": 5334.0
+    }
+  ],
+  "warnings": {},
+  "notes": [
+    "Memory unit: MiB (1024^2 bytes). CPU 100% = one logical CPU; values can exceed 100%.",
+    "process_* covers this Python PID (including monitor thread), not other apps or child processes.",
+    "gpu_*_device includes other processes; gpu_*_process is NVIDIA-reported VRAM for this PID.",
+    "torch_* is PyTorch allocator memory, not total process VRAM including CUDA context/libraries.",
+    "CSV GPU/CPU/RAM values are periodic samples; sampled maxima can miss brief peaks.",
+    "Per-phase torch_peak_* uses allocator peak counters; CUDA is synchronized at phase boundaries.",
+    "Missing/unavailable metrics are CSV blanks / JSON null, never substituted with zero.",
+    "Samples carry the phase at sampling start; a slow GPU query can cross a phase boundary.",
+    "Model loading may include checkpoint download. First inference may include warm-up.",
+    "Logging/synchronization adds overhead; measured phases do not include logger shutdown."
+  ],
+  "torch_peak_allocated_mib": 5089.97509765625,
+  "torch_peak_reserved_mib": 5334.0
+}

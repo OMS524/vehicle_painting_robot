@@ -1,0 +1,16 @@
+ICP: point_to_point
+입력: /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308
+저장: /home/oms/vehicle_painting_robot/scan/calibration_test/log/point-to-point_ICP/20260930_205647_691525
+고정 기준 뷰: view_01 / 3개 뷰
+[1/3] view_01
+[2/3] view_02
+  voxel 10 mm: fitness=0.8587, RMSE=7.774 mm, 0.206초
+  voxel 5 mm: fitness=0.8283, RMSE=4.470 mm, 1.170초
+  voxel 2 mm: fitness=0.7664, RMSE=2.855 mm, 0.885초
+  공통 평가: fitness 0.7736 -> 0.7923, RMSE 4.369437539573708 -> 3.760637034763378 mm
+[3/3] view_03
+  voxel 10 mm: fitness=0.4986, RMSE=9.758 mm, 0.710초
+  voxel 5 mm: fitness=0.4508, RMSE=5.079 mm, 1.238초
+  voxel 2 mm: fitness=0.4387, RMSE=2.883 mm, 1.257초
+  공통 평가: fitness 0.3073 -> 0.4184, RMSE 5.896521023231418 -> 3.996731454240435 mm
+완료 (complete): /home/oms/vehicle_painting_robot/scan/calibration_test/log/point-to-point_ICP/20260930_205647_691525

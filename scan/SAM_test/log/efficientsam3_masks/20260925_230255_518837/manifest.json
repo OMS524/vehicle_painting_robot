@@ -1,0 +1,44 @@
+{
+  "status": "complete",
+  "python": "/home/oms/miniforge3/envs/vehicle_painting_robot_efficientsam3/bin/python",
+  "prompt": "car door",
+  "views": [
+    {
+      "rgb": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_01/color_rgb.png",
+      "mask": "/home/oms/vehicle_painting_robot/scan/sam_test/log/efficientsam3_masks/20260925_230255_518837/01_view_01/mask.png",
+      "candidate_count": 0,
+      "selected_indices": [],
+      "mask_pixels": 0,
+      "status": "no_detection",
+      "inference_elapsed_sec": 0.30610978906042874
+    },
+    {
+      "rgb": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_02/color_rgb.png",
+      "mask": "/home/oms/vehicle_painting_robot/scan/sam_test/log/efficientsam3_masks/20260925_230255_518837/02_view_02/mask.png",
+      "candidate_count": 0,
+      "selected_indices": [],
+      "mask_pixels": 0,
+      "status": "no_detection",
+      "inference_elapsed_sec": 0.04906225809827447
+    },
+    {
+      "rgb": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_03/color_rgb.png",
+      "mask": "/home/oms/vehicle_painting_robot/scan/sam_test/log/efficientsam3_masks/20260925_230255_518837/03_view_03/mask.png",
+      "candidate_count": 0,
+      "selected_indices": [],
+      "mask_pixels": 0,
+      "status": "no_detection",
+      "inference_elapsed_sec": 0.04801957693416625
+    }
+  ],
+  "resource_log": "resource_usage.csv",
+  "performance_summary": "performance_summary.json",
+  "model": {
+    "name": "EfficientSAM3",
+    "backbone_type": "tinyvit",
+    "model_name": "11m",
+    "text_encoder_type": "MobileCLIP-S0",
+    "text_encoder_context_length": 16
+  },
+  "checkpoint_resolved": "/home/oms/.cache/huggingface/hub/blobs/63/6359dca3e7e3a2773b1f949f47504fcccd00224136aa1c4359db59f106eee0e3"
+}

@@ -373,7 +373,8 @@ def _quaternion_spray_direction(value: Any) -> np.ndarray:
 
 
 def _apply_control_points(
-    state: dict[str, Any], controls_source: Any, deleted_rows_source: Any = None
+    state: dict[str, Any], controls_source: Any, deleted_rows_source: Any = None,
+    deleted_points_source: Any = None,
 ) -> list[dict[str, Any]]:
     if not isinstance(controls_source, list):
         raise ValueError("수정 제어점 목록이 배열이 아닙니다.")
@@ -410,9 +411,25 @@ def _apply_control_points(
             f"삭제할 수 없는 경로 row가 있습니다: {sorted(unknown_deleted_rows)}"
         )
 
+    if deleted_points_source is None:
+        deleted_points_source = []
+    if (not isinstance(deleted_points_source, list)
+            or any(not isinstance(value, str) for value in deleted_points_source)):
+        raise ValueError("삭제 포인트 ID 목록은 문자열 배열이어야 합니다.")
+    if len(set(deleted_points_source)) != len(deleted_points_source):
+        raise ValueError("삭제 포인트 ID가 중복되었습니다.")
+    baseline_key_by_id = {str(item["id"]): key for key, item in baseline_by_key.items()}
+    unknown_deleted_points = set(deleted_points_source) - baseline_key_by_id.keys()
+    if unknown_deleted_points:
+        raise ValueError(f"삭제할 수 없는 포인트 ID가 있습니다: {sorted(unknown_deleted_points)}")
+    deleted_keys = {baseline_key_by_id[value] for value in deleted_points_source}
+    changed_rows = {key[0] for key in deleted_keys} - deleted_rows
     expected_keys = {
-        key for key in baseline_by_key if key[0] not in deleted_rows
+        key for key in baseline_by_key if key[0] not in deleted_rows and key not in deleted_keys
     }
+    for row_index in changed_rows:
+        if sum(key[0] == row_index for key in expected_keys) < 2:
+            raise ValueError(f"row {row_index}에는 최소 2개의 편집 포인트가 남아야 합니다. 경로 전체 삭제를 사용하세요.")
     actual_keys = set(source_by_key)
     if actual_keys != expected_keys:
         raise ValueError(
@@ -499,7 +516,8 @@ def _apply_control_points(
                 np.linalg.norm((-normals) - baseline_directions, axis=1) > 1.0e-9
             )
         )
-        if not position_changed and not direction_changed:
+        points_deleted = row_index in changed_rows
+        if not position_changed and not direction_changed and not points_deleted:
             continue
 
         original_row = new_rows[offset_row_index]
@@ -508,10 +526,17 @@ def _apply_control_points(
             positions = original_row + (positions[0] - baseline_positions[0])
             normals = np.repeat(normals[0].reshape(1, 3), len(original_row), axis=0)
         else:
-            if raster_zigzag and source_row_index % 2 == 1:
+            reversed_row = raster_zigzag and source_row_index % 2 == 1
+            if reversed_row:
                 positions = positions[::-1].copy()
                 normals = normals[::-1].copy()
-            if float(np.linalg.norm(positions[-1] - original_row[-1])) > 1.0e-9:
+            # 마지막 편집점 뒤의 원본 끝점은 기존 동작대로 보존하되,
+            # 끝 편집점을 삭제한 경우에는 복원하지 않는다. 지그재그 row의
+            # 원본 끝점은 화면상 첫 편집점 쪽이므로 source row 순서를 따른다.
+            original_keys = [key for key in baseline_by_key if key[0] == row_index]
+            tail_key = min(original_keys) if reversed_row else max(original_keys)
+            if (tail_key not in deleted_keys
+                    and float(np.linalg.norm(positions[-1] - original_row[-1])) > 1.0e-9):
                 positions = np.vstack([positions, original_row[-1]])
                 normals = np.vstack([normals, original_normals[-1]])
         new_rows[offset_row_index] = positions
@@ -535,7 +560,7 @@ def _apply_control_points(
     normalized_controls = [
         normalized_by_key[(int(item["rowIndex"]), int(item["pointIndex"]))]
         for item in baseline_controls
-        if int(item["rowIndex"]) not in deleted_rows
+        if (int(item["rowIndex"]), int(item["pointIndex"])) in normalized_by_key
     ]
     state["_workstation_edit_controls"] = normalized_controls
     state["_workstation_edit_offset_row_indices"] = offset_indices
@@ -563,6 +588,7 @@ def regenerate(request: dict[str, Any]) -> dict[str, Any]:
         state,
         request.get("controlPoints"),
         deleted_rows_source,
+        request.get("deletedPointIds", []),
     )
     config = PaintingTrajectoryConfig.from_dict(state.get("_workstation_config"))
     regenerated = generate_spline(state, **config.spline.to_kwargs())

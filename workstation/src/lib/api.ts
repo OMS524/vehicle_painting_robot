@@ -62,10 +62,11 @@ export async function readControlPoints(): Promise<ControlPointDataset> {
 export async function regenerateTrajectory(
   controlPoints: EditableControlPoint[],
   deletedRowIndices: number[] = [],
+  deletedPointIds: string[] = [],
 ): Promise<GenerationSummary> {
   requireTauri();
   return invoke<GenerationSummary>("regenerate_trajectory", {
-    request: { controlPoints, deletedRowIndices },
+    request: { controlPoints, deletedRowIndices, deletedPointIds },
   });
 }
 

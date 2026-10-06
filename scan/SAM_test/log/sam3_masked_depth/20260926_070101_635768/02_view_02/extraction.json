@@ -1,0 +1,12 @@
+{
+  "mask": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masks/20260925_225815_839551/02_view_02/mask.png",
+  "mask_sha256": "6ddcb80ac014eb3f27d09588f82107c2097b74b29383b3540a8e43d0314713da",
+  "source_view": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_02",
+  "output": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masked_depth/20260926_070101_635768/02_view_02",
+  "depth_storage": "uint16, original raw units; excluded pixels=0",
+  "depth_scale_mm_per_unit": 1.0,
+  "input_valid_depth": 288622,
+  "unprojected_points": 288622,
+  "rgb_mapped_points": 230881,
+  "selected_points": 85798
+}

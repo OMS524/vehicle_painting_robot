@@ -257,6 +257,7 @@ export default function App() {
   const [selectedControlPointId, setSelectedControlPointId] = useState<string | null>(null);
   const [transformGizmoMode, setTransformGizmoMode] = useState<TransformGizmoMode>("translate");
   const [deletedRowIndices, setDeletedRowIndices] = useState<number[]>([]);
+  const [deletedPointIds, setDeletedPointIds] = useState<string[]>([]);
   const [busy, setBusy] = useState<BusyAction>(null);
   const [dirty, setDirty] = useState(false);
   const [generationStale, setGenerationStale] = useState(false);
@@ -367,6 +368,7 @@ export default function App() {
       setControlPoints([]);
       setSelectedControlPointId(null);
       setDeletedRowIndices([]);
+      setDeletedPointIds([]);
       setDirty(false);
       setGenerationStale(false);
       setStep(1);
@@ -389,6 +391,7 @@ export default function App() {
     setControlPoints(controls.points);
     setSelectedControlPointId(null);
     setDeletedRowIndices([]);
+    setDeletedPointIds([]);
   };
 
   const generate = async () => {
@@ -456,6 +459,40 @@ export default function App() {
     }));
   };
 
+  const selectedRowPointCount = selectedControlPoint
+    ? controlPoints.filter((point) => point.rowIndex === selectedControlPoint.rowIndex).length
+    : 0;
+
+  const deleteSelectedPoint = () => {
+    if (!selectedControlPoint || !trajectory || busy || selectedRowPointCount <= 2) return;
+    const { id, rowIndex, pointIndex } = selectedControlPoint;
+    if (!window.confirm(`Row ${rowIndex}의 Point ${pointIndex} 하나를 삭제할까요?\n재생성 시 남은 점들을 연결해 경로를 다시 만듭니다.`)) return;
+    setControlPoints((current) => current.filter((point) => point.id !== id));
+    setDeletedPointIds((current) => current.includes(id) ? current : [...current, id]);
+    setTrajectory((current) => {
+      if (!current) return current;
+      const rows = current.rows.map((row) => {
+        if (row.rowIndex !== rowIndex) return row;
+        const points = row.points.filter((point) => point.pointId !== pointIndex);
+        return {
+          ...row,
+          points,
+          length: points.length ? Math.max(0, points[points.length - 1].distance - points[0].distance) : 0,
+          paintRatio: points.length ? points.filter((point) => point.paint).length / points.length : 0,
+        };
+      });
+      return {
+        rows,
+        pointCount: rows.reduce((count, row) => count + row.points.length, 0),
+        paintPointCount: rows.reduce((count, row) => count + row.points.filter((point) => point.paint).length, 0),
+      };
+    });
+    setSelectedControlPointId(null);
+    setDirty(true);
+    setCompletion(null);
+    setStatus(`Row ${rowIndex}의 Point ${pointIndex}를 삭제했습니다. 경로 재생성을 눌러 반영하세요.`);
+  };
+
   const deleteSelectedRow = () => {
     if (!selectedControlPoint || !trajectory || trajectory.rows.length <= 1) return;
     const rowIndex = selectedControlPoint.rowIndex;
@@ -491,7 +528,7 @@ export default function App() {
     setStatus("수정한 최종 경로 코어 포인트로 경로를 재생성하고 있습니다.");
     try {
       const selectedId = selectedControlPointId;
-      const summary = await regenerateTrajectory(controlPoints, deletedRowIndices);
+      const summary = await regenerateTrajectory(controlPoints, deletedRowIndices, deletedPointIds);
       const [trajectoryBuffer, controls] = await Promise.all([
         readGeneratedTrajectory(),
         readControlPoints(),
@@ -499,6 +536,7 @@ export default function App() {
       setTrajectory(parseTrajectoryCsv(trajectoryBuffer));
       setControlPoints(controls.points);
       setDeletedRowIndices([]);
+      setDeletedPointIds([]);
       setSelectedControlPointId(
         selectedId && controls.points.some((point) => point.id === selectedId)
           ? selectedId
@@ -706,6 +744,19 @@ export default function App() {
               </div>
             </div>
             <div className="path-row-actions" data-preserve-point-selection>
+              <button
+                className="delete-row-action"
+                type="button"
+                disabled={Boolean(busy) || selectedRowPointCount <= 2}
+                onClick={deleteSelectedPoint}
+              >
+                선택 포인트 삭제
+              </button>
+              <p>
+                {selectedRowPointCount <= 2
+                  ? "경로에는 최소 2개의 편집 포인트가 필요합니다. 전체 삭제는 아래 버튼을 사용하세요."
+                  : "선택한 포인트 하나만 삭제합니다. 재생성 시 남은 점을 연결하고 설정된 간격으로 다시 샘플링합니다."}
+              </p>
               <button
                 className="delete-row-action"
                 type="button"

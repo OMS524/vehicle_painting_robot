@@ -1,0 +1,20 @@
+ICP + Pose Graph: point_to_plane
+입력: /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308
+저장: /home/oms/vehicle_painting_robot/scan/calibration_test/log/icp_pose_graph/point_to_plane/20261006_051237_539005
+ICP 쌍: view_01 -> view_02
+  voxel 10 mm: fitness=0.7731, RMSE=8.058 mm, 0.115초
+  voxel 5 mm: fitness=0.7666, RMSE=4.427 mm, 0.377초
+  voxel 2 mm: fitness=0.7149, RMSE=2.776 mm, 1.243초
+  accepted: 
+ICP 쌍: view_01 -> view_03
+  voxel 10 mm: fitness=0.5005, RMSE=10.362 mm, 0.191초
+  voxel 5 mm: fitness=0.4757, RMSE=5.242 mm, 0.921초
+  voxel 2 mm: fitness=0.4443, RMSE=3.011 mm, 1.451초
+  accepted: 
+ICP 쌍: view_02 -> view_03
+  voxel 10 mm: fitness=0.6710, RMSE=9.432 mm, 0.138초
+  voxel 5 mm: fitness=0.6238, RMSE=4.968 mm, 0.555초
+  voxel 2 mm: fitness=0.5813, RMSE=2.779 mm, 1.588초
+  accepted: 
+PGO: 3 nodes, 3 edges / 고정: view_01
+완료 (complete): /home/oms/vehicle_painting_robot/scan/calibration_test/log/icp_pose_graph/point_to_plane/20261006_051237_539005

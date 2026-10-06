@@ -1,0 +1,40 @@
+{
+  "schema": "sam3_rgb_mask_v1",
+  "coordinate_space": "native_color_pixels",
+  "model": {
+    "name": "EfficientSAM3",
+    "backbone_type": "tinyvit",
+    "model_name": "11m",
+    "text_encoder_type": "MobileCLIP-S0",
+    "text_encoder_context_length": 16
+  },
+  "image_size": [
+    1920,
+    1080
+  ],
+  "prompt": "car door",
+  "confidence_threshold": 0.5,
+  "selection": "highest_score",
+  "selected_indices": [],
+  "sources": {
+    "rgb": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_03/color_rgb.png",
+      "sha256": "a02a96e28fac87eb393fc2ef0c12f73a42367cfd14d0ed6171dd8dde0370da06"
+    },
+    "depth": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_03/depth_raw.npy",
+      "sha256": "9a363ebccfae9f5b4bf6ae1356578df78a49ea43ee394f914216e80acbcda6d2"
+    },
+    "camera": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_03/camera.json",
+      "sha256": "818e9b414ebb080bc42150d5f2b01aed5a1443edf76a6898cc059cd500827244"
+    },
+    "pose": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_03/pose.json",
+      "sha256": "200f01d21bac5c9e7788893e6efb5edd5405544b501409bfe0767434e6b4e439"
+    }
+  },
+  "candidates": [],
+  "checkpoint": "HF:Simon7108528/EfficientSAM3@main/efficientsam3_ft/efficientsam3_tinyvit.pt",
+  "status": "no_detection"
+}

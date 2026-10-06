@@ -1,0 +1,47 @@
+{
+  "schema": "sam3_rgb_mask_v1",
+  "coordinate_space": "native_color_pixels",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "prompt": "car door",
+  "confidence_threshold": 0.5,
+  "selection": "highest_score",
+  "selected_indices": [
+    0
+  ],
+  "sources": {
+    "rgb": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_01/color_rgb.png",
+      "sha256": "b4c353a126d5073647a176d8a71154f15123f55941d914c8020aaa3dc7b6dae7"
+    },
+    "depth": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_01/depth_raw.npy",
+      "sha256": "65a7a6086f609b05ab2d255597f6ff8a23787c3ffa2614dd61ff0b704c2e1957"
+    },
+    "camera": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_01/camera.json",
+      "sha256": "9a3244996a72e7ce9a6cf306c5bbcae1e6e7734c2c93674b70fed7577af3b3b7"
+    },
+    "pose": {
+      "path": "../../../../../doosan_a0912_scan_test/log/20260923_220542_796308/view_01/pose.json",
+      "sha256": "265fb81e095ea65e1931049450adad16e0ec4cf869f21d7bcc0c1de576730d66"
+    }
+  },
+  "candidates": [
+    {
+      "index": 0,
+      "score": 0.69140625,
+      "box_xyxy": [
+        494.38037109375,
+        92.64886474609375,
+        1387.8724365234375,
+        1009.105712890625
+      ],
+      "pixel_count": 445010
+    }
+  ],
+  "checkpoint": "HF:facebook/sam3",
+  "status": "ok"
+}

@@ -1,0 +1,52 @@
+{
+  "status": "complete",
+  "python": "/home/oms/miniforge3/envs/vehicle_painting_robot_scan/bin/python",
+  "sdk": "2.1.2",
+  "reference_frame": "base_link",
+  "point_cloud_unit": "m",
+  "method": "saved_T_base_depth_no_ICP",
+  "depth_to_xyz": "Orbbec PointCloudFilter, RIGHT_HAND",
+  "mask_to_depth": "Orbbec AlignFilter, DEPTH_STREAM, TargetDistortion=1",
+  "voxel_size_mm": 2.0,
+  "notes": "원본 RGB 마스크를 SDK로 Depth에 대응. 결손 보간/ICP/가림 보정 없음.",
+  "views": [
+    {
+      "mask": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masks/20260925_225815_839551/01_view_01/mask.png",
+      "mask_sha256": "8021652bae05d92e25aaedf6ba055469cb74f5fce1d9232bf9e03cd296d706fc",
+      "source_view": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_01",
+      "output": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masked_depth/20260926_070101_635768/01_view_01",
+      "depth_storage": "uint16, original raw units; excluded pixels=0",
+      "depth_scale_mm_per_unit": 1.0,
+      "input_valid_depth": 284415,
+      "unprojected_points": 284415,
+      "rgb_mapped_points": 225700,
+      "selected_points": 69625
+    },
+    {
+      "mask": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masks/20260925_225815_839551/02_view_02/mask.png",
+      "mask_sha256": "6ddcb80ac014eb3f27d09588f82107c2097b74b29383b3540a8e43d0314713da",
+      "source_view": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_02",
+      "output": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masked_depth/20260926_070101_635768/02_view_02",
+      "depth_storage": "uint16, original raw units; excluded pixels=0",
+      "depth_scale_mm_per_unit": 1.0,
+      "input_valid_depth": 288622,
+      "unprojected_points": 288622,
+      "rgb_mapped_points": 230881,
+      "selected_points": 85798
+    },
+    {
+      "mask": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masks/20260925_225815_839551/03_view_03/mask.png",
+      "mask_sha256": "df8dfaab15b266b1091679be8b4fd9b0c06e4b553798c62b19db810d01e3148e",
+      "source_view": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260923_220542_796308/view_03",
+      "output": "/home/oms/vehicle_painting_robot/scan/sam_test/log/sam3_masked_depth/20260926_070101_635768/03_view_03",
+      "depth_storage": "uint16, original raw units; excluded pixels=0",
+      "depth_scale_mm_per_unit": 1.0,
+      "input_valid_depth": 276501,
+      "unprojected_points": 276501,
+      "rgb_mapped_points": 215942,
+      "selected_points": 62309
+    }
+  ],
+  "merged_raw_points": 217732,
+  "merged_points": 203636
+}
