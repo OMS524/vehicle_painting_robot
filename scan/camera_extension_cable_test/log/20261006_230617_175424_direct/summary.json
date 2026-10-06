@@ -1,0 +1,107 @@
+{
+  "schema": "camera_cable_diagnostic_v1",
+  "status": "completed",
+  "started_at": "2026-10-06T23:06:17.175533+09:00",
+  "settings": {
+    "label": "direct",
+    "note": "",
+    "seconds": 60.0,
+    "warmup": 5.0,
+    "timeout": 2.0,
+    "serial": "",
+    "color_width": 1920,
+    "color_height": 1080,
+    "color_format": "MJPG",
+    "depth_width": 640,
+    "depth_height": 576,
+    "fps": 30,
+    "visualize": false,
+    "preview_fps": 5.0
+  },
+  "python": "/home/oms/miniconda3/envs/vehicle_painting_robot_scan/bin/python",
+  "platform": "Linux-6.8.0-52-generic-x86_64-with-glibc2.35",
+  "streams": {
+    "color": {
+      "received": 1807,
+      "unique": 1807,
+      "duplicates": 0,
+      "index_gap_events": 0,
+      "suspected_missing_by_index": 0,
+      "resets_or_reorders": 0,
+      "repeated_index": 0,
+      "repeated_device_timestamp": 0,
+      "device_gap_events": 0,
+      "host_gap_events": 0,
+      "host_reorders": 0,
+      "timeout_episodes": 0,
+      "empty_payloads": 0,
+      "measured_seconds": 60.0,
+      "configured_fps": 30,
+      "received_fps": 30.116666666666667,
+      "max_no_unique_frame_ms": 43.61911000000873,
+      "max_device_gap_ms": 34.0,
+      "max_arrival_gap_ms": 43.61911000000873,
+      "mean_arrival_gap_ms": 33.212686019933514
+    },
+    "depth": {
+      "received": 1807,
+      "unique": 1807,
+      "duplicates": 0,
+      "index_gap_events": 0,
+      "suspected_missing_by_index": 0,
+      "resets_or_reorders": 0,
+      "repeated_index": 0,
+      "repeated_device_timestamp": 0,
+      "device_gap_events": 0,
+      "host_gap_events": 0,
+      "host_reorders": 0,
+      "timeout_episodes": 0,
+      "empty_payloads": 0,
+      "measured_seconds": 60.0,
+      "configured_fps": 30,
+      "received_fps": 30.116666666666667,
+      "max_no_unique_frame_ms": 39.371528999936345,
+      "max_device_gap_ms": 34.0,
+      "max_arrival_gap_ms": 39.371528999936345,
+      "mean_arrival_gap_ms": 33.21111587763013
+    }
+  },
+  "events": {},
+  "queue_overflow": 0,
+  "mode": "independent_sensor_callbacks_no_alignment_no_frame_pairing",
+  "notes": [
+    "SDK가 애플리케이션에 전달한 프레임 계측이며 USB 패킷 분석/케이블 합격 인증이 아닙니다.",
+    "번호 건너뜀은 수신 누락 의심값. SDK 버퍼, CPU/GIL 지연 등도 원인일 수 있습니다.",
+    "장치 timestamp와 host monotonic 시계는 다릅니다. 두 값을 빼서 절대 지연으로 보지 마세요.",
+    "미리보기는 일부 프레임만 디코딩합니다. 화면 갱신 수와 수신 수는 다릅니다.",
+    "로봇 동작/전원 제어/재연결/설정 완화/깊이 평균/정합을 하지 않습니다."
+  ],
+  "sdk_package": {
+    "name": "pyorbbecsdk2",
+    "version": "2.1.2"
+  },
+  "device": {
+    "name": "Orbbec Femto Bolt",
+    "serial": "CL8M8410004",
+    "firmware": "1.0.9",
+    "connection": "USB3.1"
+  },
+  "profiles": {
+    "color": {
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "format": "MJPG"
+    },
+    "depth": {
+      "width": 640,
+      "height": 576,
+      "fps": 30,
+      "format": "Y16"
+    }
+  },
+  "measurement_started_at_after_warmup_seconds": 5.0,
+  "finished_at": "2026-10-06T23:07:27.040644+09:00",
+  "assessment": "no_anomalies_observed",
+  "review_reasons": []
+}

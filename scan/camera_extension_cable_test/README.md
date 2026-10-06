@@ -13,14 +13,15 @@ conda activate vehicle_painting_robot_scan
 cd /home/oms/vehicle_painting_robot/scan/camera_extension_cable_test/scripts
 
 # 기본 케이블 직결, 10분 측정. 준비 시간 5초는 통계에서 제외.
-python camera_cable_diagnostic.py --label direct --seconds 600
+python camera_cable_diagnostic.py --label direct --seconds 60
 
 # 케이블을 직접 교체하고 각각 별도 실행
-python camera_cable_diagnostic.py --label cable_a --seconds 600
-python camera_cable_diagnostic.py --label cable_b --seconds 600
+python camera_cable_diagnostic.py --label cable_StarTech --seconds 60
+python camera_cable_diagnostic.py --label cable_NEXTU --seconds 60
 
 # 영상도 확인: RGB / Depth를 나란히 표시. Q/ESC 또는 창 닫기로 중도 종료.
-python camera_cable_diagnostic.py --label cable_a --seconds 600 --visualize
+python camera_cable_diagnostic.py --label cable_a --seconds 10 --visualize
+python camera_cable_diagnostic.py --label cable_b --seconds 10 --visualize
 
 # 제품명, 총 길이, 별도 전원 여부 등을 결과에 기록
 python camera_cable_diagnostic.py --label cable_a --note "제품명 / 총 길이 / 별도 전원 여부"

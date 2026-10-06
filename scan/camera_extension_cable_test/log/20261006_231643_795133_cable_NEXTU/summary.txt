@@ -1,0 +1,7 @@
+케이블: cable_NEXTU
+실행 상태: completed
+관측 판정: no_anomalies_observed
+프로파일: {'color': {'width': 1920, 'height': 1080, 'fps': 30, 'format': 'MJPG'}, 'depth': {'width': 640, 'height': 576, 'fps': 30, 'format': 'Y16'}}
+color: 30.117 FPS, 고유 수신 1807, 누락 의심 0, 중복 0, 최장 무수신 55.0 ms, 타임아웃 사건 0
+depth: 30.117 FPS, 고유 수신 1807, 누락 의심 0, 중복 0, 최장 무수신 38.3 ms, 타임아웃 사건 0
+관측된 이상이 없어도 케이블의 장기/실제 겐트리 운용 안정성을 보장하지 않습니다.
