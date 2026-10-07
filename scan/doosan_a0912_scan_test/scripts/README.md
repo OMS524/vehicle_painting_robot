@@ -16,16 +16,20 @@ Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. �
 
 - `three_view_scan.py`: scan 환경에서 카메라 취득, FK/TF 계산, 저장, 점군 통합.
 - `three_view_scan_single_frame.py`: 초기 프레임을 버린 뒤 한 장만 저장하는 이전 방식의 별도 버전.
-- `three_view_scan.yaml`: 촬영 관절각, IP, 속도, 카메라 범위, 저장 위치 등의 설정.
+- `three_view_scan.yaml`: 촬영 목표 관절각 또는 Cartesian 자세, IP, 속도, 카메라 등의 설정.
 - `robot_scan_worker.py`: control 환경의 별도 프로세스. 기존 Python 래퍼로 이동/실제 관절 상태 조회.
+- `cartesian_scan.py`: XYZ/RPY 규약 및 제어 환경의 Pinocchio IK. SDK/C++ 제어기는 변경하지 않는다.
+- `test_cartesian_scan.py`: Cartesian 입력, IK, 이동 차단, 두 촬영 버전의 저장을 하드웨어 없이 검사.
 - `test_three_view_scan.py`: 합성 입력만 사용하는 오프라인 테스트.
 
 ### 1. 설정 입력
 
 `three_view_scan.yaml`에서 아래 항목을 먼저 수정한다. 상대 파일 경로는 YAML 위치 기준이다.
 
-1. `views`에 원하는 만큼 `name`과 **펜던트로 안전을 확인한 J1~J6 관절각(deg)**을
-   `joint_deg: [J1, J2, J3, J4, J5, J6]`로 입력한다. `null` 상태에서는 로봇에 연결하지 않는다.
+1. `views`에 원하는 만큼 `name`과 목표 자세를 입력한다.
+   `pose_mm_deg: [x, y, z, roll, pitch, yaw]` 또는 기존
+   `joint_deg: [J1, J2, J3, J4, J5, J6]` 중 **하나만** 지정한다.
+   `null` 상태에서는 로봇에 연결하지 않는다. 아래 Cartesian 규약과 전체 이동 구간을 확인한다.
    이름은 중복 없이 지정하며 목록 순서대로 이동한다. `front`, `left`, `right`는 필수 이름이 아니다.
    이름에는 문자(한글 포함), 숫자, `_`, `-`를 사용할 수 있고 255바이트 이내여야 한다.
    촬영 위치/시선 방향을 이름으로 자동 계산하지 않는다.
@@ -47,6 +51,59 @@ Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. �
   - name: view_05
     joint_deg: null
 ```
+
+#### Cartesian 목표 입력 (다중/단일 프레임 공통)
+
+기존 YAML에 입력된 관절값은 보존되어 있다. Cartesian으로 사용할 시점은 `joint_deg` 줄을
+삭제하고 `pose_mm_deg`로 교체한다. 두 키를 동시에 쓰면 오류로 거부한다.
+
+```yaml
+cartesian:
+  target_frame: link_6
+  position_tolerance_mm: 0.1
+  orientation_tolerance_deg: 0.1
+  max_iterations: 300
+
+views:
+  - name: front
+    pose_mm_deg: null  # [x, y, z, roll, pitch, yaw] 실제 숫자 6개 입력
+```
+
+- 기준은 **로봇 `base_link`**, 절대 위치는 **mm**, 회전은 **deg**다.
+- RPY는 고정축 X/Y/Z 회전으로 `R = Rz(yaw) @ Ry(pitch) @ Rx(roll)`이다.
+  두산 기본 Euler ZYZ(A/B/C)와 다르다. 펜던트 값이 ZYZ이면 그대로 복사하지 않는다.
+- `target_frame: link_6`는 로봇 플랜지 원점과 축이다. `bracket_link`는 브라켓 원점과 축,
+  `camera_depth_optical_frame`는 Depth 광학 원점과 축을 대상으로 한다.
+  현재 Xacro의 플랜지/브라켓 원점은 일치하지만 X축 180도 회전이 있으므로 **같은 RPY를 쓰면 안 된다**.
+  펜던트의 활성 TCP/사용자 좌표계를 자동으로 읽거나 적용하지 않는다.
+- 같은 Xacro를 확장한 URDF를 제어 프로세스로 전달하고 **Pinocchio 수치 IK**로 관절각을 구한다.
+  현재 실측 J1~J6를 seed로 사용하며 관절 제한과 `max_move_delta_deg` 안에서만 찾는다.
+  자동 무작위 재시드나 다른 로봇 자세 분기로의 재시도는 하지 않는다.
+  수렴 실패는 해당 시작 자세에서의 실패이며, 다른 자세에서도 도달 불가능하다는 뜻은 아니다.
+- IK가 허용 위치/회전 잔차를 만족한 경우에만 기존 관절 이동 함수를 호출한다.
+  **Cartesian 직선 이동(MoveL)이 아니라, IK로 정한 목표 관절각까지의 기존 관절 이동**이다.
+  IK 도중 실측 자세가 바뀌거나, IK 실패/관절 범위 초과가 있으면 이동하지 않고 스캔을 중단한다.
+- 실제 촬영 조건은 기존 정지 유지 기준이다. IK 수치 잔차와 실제 도달 오차는 별개이며,
+  촬영 직후 실측 관절 FK로 목표 위치/회전 오차를 로그에 남긴다.
+  정합 TF도 목표가 아닌 **촬영 직후 실제 관절각**으로 계속 계산한다.
+
+`--check`는 Pinocchio와 URDF/툴 프레임을 실제로 로딩하지만 로봇에 연결하지 않으므로
+현재 관절을 seed로 하는 목표 IK/도달 가능성/충돌 안전을 확인한 것은 아니다.
+IK는 `--execute`와 `SCAN` 확인 후, 각 이동 직전에 실제 관절을 읽어 계산한다.
+제어용 환경의 기존 Pinocchio를 사용하며 스캔 환경에 Pinocchio를 설치하거나 `.so`를 재빌드할 필요는 없다.
+
+`manifest.json` / `pose.json`에는 입력 `command`, IK 결과 `target_joint_deg`,
+`ik`(seed, 반복 횟수, 목표 TF, 수치 잔차), 촬영 후
+`actual_cartesian_position_error_mm` / `actual_cartesian_orientation_error_deg`가 저장된다.
+manifest의 IK 정보는 각 뷰의 `settled_state.ik`에 있다. 이동 전 해는 `robot_worker.log`에도 기록한다.
+
+```bash
+# 로봇/카메라 연결 없는 테스트 (별도 control Python에서 실제 Pinocchio 계산 포함)
+python -sB -m unittest test_cartesian_scan -v
+```
+
+회전 규약 참고: [두산 posx의 기본 Euler ZYZ](https://manual.doosanrobotics.com/en/programming-manual/3.4.0/publish/posx-x-0-y-0-z-0-a-0-b-0-c-0).
+IK 참고: [Pinocchio 공식 IK 예제](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/inverse-kinematics.py).
 
 `camera.capture_color: true`이면 같은 FPS의 Depth/RGB를 함께 촬영하고 SDK로 RGB를
 native Depth 픽셀에 정렬한다. `color_width`, `color_height`가 0이면 지원 프로파일을 자동 선택하며,

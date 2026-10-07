@@ -83,8 +83,33 @@ def move_and_settle(robot, target, settings):
     return wait_settled(robot, target, settings)
 
 
+def move_cartesian_and_settle(robot, pose, settings, ik):
+    if ik is None:
+        raise ValueError("Cartesian IK 모델이 초기화되지 않았습니다.")
+    state = robot.read_actual_joint_state()
+    if not stationary(state, settings):
+        raise RuntimeError("IK 계산 시작 전 로봇이 정지 상태가 아닙니다.")
+    solved = ik.solve(pose, state["joint_deg"], settings["max_move_delta_deg"])
+    print("Cartesian IK: " + json.dumps(solved, ensure_ascii=False, allow_nan=False), file=sys.stderr, flush=True)
+    # IK 동안 외부 조작으로 seed 자세가 바뀌면 이전 해로 이동하지 않는다.
+    current = robot.read_actual_joint_state()
+    if not stationary(current, settings) or max(abs(a - b) for a, b in
+            zip(current["joint_deg"], state["joint_deg"])) > settings["capture_drift_deg"]:
+        raise RuntimeError("IK 계산 중 실제 자세가 변했습니다. 이동하지 않습니다.")
+    result = move_and_settle(robot, solved["target_joint_deg"], settings)
+    result["ik"] = solved["ik"]
+    return result
+
+
+def make_ik(request):
+    if "cartesian" not in request:
+        return None
+    from cartesian_scan import CartesianIK
+    return CartesianIK(request["model_xml"], request["cartesian"])
+
+
 def serve(wrapper, library, protocol):
-    robot, settings = None, None
+    robot, settings, ik = None, None, None
 
     def interrupted(signum, _frame):
         raise KeyboardInterrupt(f"control worker signal {signum}")
@@ -99,6 +124,7 @@ def serve(wrapper, library, protocol):
                 op = request["op"]
                 if op == "initialize" and robot is None:
                     settings = request["settings"]
+                    ik = make_ik(request)  # 모델 오류는 로봇 연결/서보 활성화 전에 거부.
                     robot = wrapper.DoosanRobot(library_path=library)
                     robot.initialize(settings["ip"], settings["port"], "real", settings["ip"],
                                      settings["rt_port"], False, settings["connect_timeout_sec"])
@@ -116,6 +142,8 @@ def serve(wrapper, library, protocol):
                     result = robot.read_actual_joint_state()
                 elif op == "move":
                     result = move_and_settle(robot, request["joint_deg"], settings)
+                elif op == "move_cartesian":
+                    result = move_cartesian_and_settle(robot, request["pose_mm_deg"], settings, ik)
                 else:
                     raise ValueError(f"지원하지 않는 요청: {op}")
                 protocol.write(json.dumps({"id": request["id"], "result": result}, allow_nan=False) + "\n")
@@ -153,6 +181,9 @@ def main():
         checked = check_library(args.library)
         wrapper = load_wrapper(args.wrapper)
         if args.check:
+            request = json.loads(sys.stdin.read() or "{}") if not sys.stdin.isatty() else {}
+            ik = make_ik(request)
+            checked["cartesian_ik_model_loaded"] = ik is not None
             protocol.write(json.dumps(checked) + "\n")
         else:
             serve(wrapper, args.library, protocol)

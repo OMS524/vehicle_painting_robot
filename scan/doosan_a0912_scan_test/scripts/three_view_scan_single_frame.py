@@ -32,6 +32,9 @@ import numpy as np
 import yaml
 
 from visualize_xacro import link_transforms
+from cartesian_scan import (cartesian_error, pose_matrix, target_description, target_key,
+                            validate_targets)
+from three_view_scan import ik_request
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_CONFIG = HERE / "three_view_scan.yaml"
@@ -96,7 +99,7 @@ def load_config(path):
     view_names = set()
     for index, view in enumerate(views, start=1):
         if not isinstance(view, dict):
-            raise ValueError(f"views의 {index}번째 항목에 name과 joint_deg를 지정하세요.")
+            raise ValueError(f"views의 {index}번째 항목에 name과 목표 자세를 지정하세요.")
         name = view.get("name")
         # 이름은 결과 폴더명으로 사용한다. 경로와 세션 파일 이름 충돌을 차단한다.
         if (not isinstance(name, str) or not name or len(name.encode("utf-8")) > 255
@@ -106,10 +109,7 @@ def load_config(path):
         if name in view_names:
             raise ValueError(f"views의 name이 중복됩니다: {name}. 시점마다 고유한 이름을 지정하세요.")
         view_names.add(name)
-        if "joint_deg" not in view:
-            raise ValueError(f"views.{name}.joint_deg에 J1~J6 또는 null을 지정하세요.")
-        if view["joint_deg"] is not None:
-            finite_vector(view["joint_deg"], 6, f"views.{name}.joint_deg")
+    validate_targets(cfg)
     for group, names in {
         "robot": ("connect_timeout_sec", "move_timeout_sec", "max_velocity_deg_s", "acceleration_deg_s2",
                   "target_tolerance_deg", "command_time_sec", "max_move_delta_deg", "settle_sec",
@@ -183,16 +183,19 @@ def preflight(cfg, model, execute=False):
             raise FileNotFoundError(f"{name}: {cfg[name]}")
     missing = []
     for view in cfg["views"]:
-        if view["joint_deg"] is None:
+        key = target_key(view)
+        if view[key] is None:
             missing.append(view["name"])
-        else:
+        elif key == "joint_deg":
             model.transforms(view["joint_deg"])  # 조인트 제한과 TF 연결까지 검사.
+        else:
+            pose_matrix(view[key])
     if execute and missing:
         raise ValueError(f"촬영 자세를 먼저 입력하세요: {', '.join(missing)} (연결/이동하지 않았습니다)")
     if execute and cfg["mounting_tf_confirmed"] is not True:
         raise ValueError("실제 장착과 Xacro TF를 확인한 후 mounting_tf_confirmed: true로 설정하세요.")
     checked = subprocess.run(worker_command(cfg, "--check"), env=worker_environment(cfg["control_python"]),
-                             capture_output=True, text=True, timeout=30)
+                             input=json.dumps(ik_request(cfg, model)), capture_output=True, text=True, timeout=30)
     if checked.returncode:
         raise RuntimeError("제어 환경 라이브러리 검사 실패:\n" + checked.stdout + checked.stderr)
     import open3d  # noqa: F401 -- 실행 전에 스캔 환경 의존성 로딩 확인
@@ -206,6 +209,9 @@ def preflight(cfg, model, execute=False):
           "다음 유효 Depth 1프레임을 저장합니다. 시간 방향 통합 없음.")
     if missing:
         print("미입력 목표 자세:", ", ".join(missing))
+    if ik_request(cfg, model):
+        print(f"Cartesian: base_link 기준 {cfg['cartesian']['target_frame']}, XYZ(mm)/RPY(deg). "
+              "IK 환경/모델만 검사했으며, 목표 IK는 실행 시 현재 실측 관절에서 계산합니다.")
     print("Xacro 기준 flange → depth optical (translation: m):")
     frames = model.transforms([0.0] * 6)
     print(np.linalg.inv(frames["link_6"]) @ frames[DEPTH_FRAME])
@@ -254,6 +260,10 @@ class RobotClient(AbstractContextManager):
     def move(self, joints):
         return self.call("move", joint_deg=joints,
                          timeout=self.cfg["robot"]["move_timeout_sec"] + self.cfg["robot"]["settle_timeout_sec"] + 15)
+
+    def move_cartesian(self, pose):
+        return self.call("move_cartesian", pose_mm_deg=pose,
+                         timeout=self.cfg["robot"]["move_timeout_sec"] + self.cfg["robot"]["settle_timeout_sec"] + 30)
 
     def snapshot(self):
         return self.call("snapshot")
@@ -540,13 +550,16 @@ def capture_sequence(cfg, model, robot, camera, output):
             name = view["name"]
             directory = output / name
             directory.mkdir()
-            entry = {"name": name, "status": "moving", "target_joint_deg": view["joint_deg"],
-                     "view_color_rgb": palette[name]}
+            entry = {"name": name, "status": "moving", "target_joint_deg": view.get("joint_deg"),
+                     "command": target_description(view, cfg), "view_color_rgb": palette[name]}
             manifest["views"].append(entry)
             save_json(output / "manifest.json", manifest)
             print(f"[{name}] 이동 및 정지 확인", flush=True)
-            entry["settled_state"] = robot.move(view["joint_deg"])
+            entry["settled_state"] = (robot.move_cartesian(view["pose_mm_deg"])
+                                      if target_key(view) == "pose_mm_deg" else robot.move(view["joint_deg"]))
             settled = entry["settled_state"]
+            target = finite_vector(settled["target_joint_deg"], 6, "계산된 target_joint_deg").tolist()
+            entry["target_joint_deg"] = target
             print(f"[{name}] 정지 확인: 실제 관절각 {settled['joint_deg']} deg, "
                   f"목표와 최대 차이 {settled['max_target_error_deg']:.4f} deg (기록용)", flush=True)
             save_json(output / "manifest.json", manifest)
@@ -580,9 +593,10 @@ def capture_sequence(cfg, model, robot, camera, output):
             if len(raw_points):
                 save_cloud(directory / "camera_raw.ply", raw_points, colors=colors)
             drift = validate_capture(before, after, cfg["robot"])
-            target_error = (np.asarray(after["joint_deg"]) - view["joint_deg"]).tolist()
+            target_error = (np.asarray(after["joint_deg"]) - target).tolist()
             max_target_error = max(abs(value) for value in target_error)
             frames = model.transforms(after["joint_deg"])
+            cartesian_diagnostics = cartesian_error(view, cfg, frames)
             transform = frames[DEPTH_FRAME]
             camera_cfg = cfg["camera"]
             keep = ((raw_points[:, 2] >= camera_cfg["min_depth_mm"] / 1000)
@@ -603,7 +617,8 @@ def capture_sequence(cfg, model, robot, camera, output):
             save_cloud(directory / "camera_filtered.ply", points, colors=colors)
             cloud = save_cloud(directory / "base.ply", base_points, palette[name], colors=colors)
             pose = {"before": before, "after": after, "accepted": True, "joint_drift_deg": drift,
-                    "target_joint_deg": view["joint_deg"], "target_error_deg": target_error,
+                    "target_joint_deg": target, "target_error_deg": target_error,
+                    "command": entry["command"], "ik": settled.get("ik"), **cartesian_diagnostics,
                     "max_target_error_deg": max_target_error,
                     "pose_source": "actual_joint_measurement_after_capture_plus_URDF_FK",
                     "T_base_flange": frames["link_6"].tolist(), "T_base_bracket": frames["bracket_link"].tolist(),
@@ -615,7 +630,8 @@ def capture_sequence(cfg, model, robot, camera, output):
             view_cloud.paint_uniform_color(palette[name])
             merged_view_colors += view_cloud
             entry.update(status="accepted", point_count=len(points), joint_drift_deg=drift,
-                         target_error_deg=target_error, max_target_error_deg=max_target_error)
+                         target_error_deg=target_error, max_target_error_deg=max_target_error,
+                         **cartesian_diagnostics)
             save_json(output / "manifest.json", manifest)
             print(f"[{name}] 저장 완료: {len(points):,} points", flush=True)
         if not o3d.io.write_point_cloud(str(output / "merged_raw.ply"), merged):
@@ -666,7 +682,7 @@ def main():
     if not args.execute:
         return 0
     for view in cfg["views"]:
-        print(f"{view['name']}: {view['joint_deg']} deg")
+        print(f"{view['name']}: {target_description(view, cfg)}")
     print("주의: 실제 로봇의 서보/자동 제어가 활성화됩니다. 이동 구간 충돌 검사는 없습니다.\n"
           "툴 무게·장착·전체 이동 경로·주변 안전·비상정지를 확인하세요. 종료 시 servo-off 합니다.")
     if input("실제 이동/촬영을 시작하려면 SCAN 입력: ").strip() != "SCAN":
@@ -678,7 +694,8 @@ def main():
     try:
         camera = DepthCamera(cfg["camera"])  # 카메라/프로파일 오류는 로봇 초기화 전에 검사.
         with RobotClient(cfg, output) as robot:
-            robot.call("initialize", settings=cfg["robot"], timeout=cfg["robot"]["connect_timeout_sec"] + 15)
+            robot.call("initialize", settings=cfg["robot"], **ik_request(cfg, model),
+                       timeout=cfg["robot"]["connect_timeout_sec"] + 15)
             capture_sequence(cfg, model, robot, camera, output)
     except BaseException:
         error = traceback.format_exc()

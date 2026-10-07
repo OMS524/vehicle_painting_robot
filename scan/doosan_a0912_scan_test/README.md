@@ -1,5 +1,117 @@
 # Doosan A0912 + ORBBEC Femto Bolt 스캔 테스트
 
+## 실행 방법 (2026-10-07)
+
+실행 파일은 `scripts/three_view_scan.py`, 설정 파일은
+[`scripts/three_view_scan.yaml`](scripts/three_view_scan.yaml)이다.
+**관절 입력과 Cartesian 입력 모두 실행 명령어는 동일하다.**
+아래 1~8절은 2026-09-07의 제조사 CAD/TF 조사 기록이며, 현재 실행 방법은 이 절을 따른다.
+촬영·저장 구조의 상세 설명은 [`scripts/README.md`](scripts/README.md)에 있다.
+
+### 1) 환경 활성화와 작업 디렉토리 이동
+
+```bash
+conda activate vehicle_painting_robot_scan
+cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
+```
+
+사용자가 실행하는 환경은 **scan 환경**이다. 로봇 제어 및 IK는 YAML의 `control_python`에
+지정된 **control 환경 Python**을 자식 프로세스로 실행하므로 별도 터미널에서 제어 코드를
+실행할 필요가 없다. 다른 PC/환경에서는 `control_python`, `control_wrapper`, `control_library`
+경로를 확인한다. `robot_scan_worker.py`와 `cartesian_scan.py`를 직접 실행하지 않는다.
+
+### 2) 목표 자세 설정
+
+현재 YAML의 `views`에는 기존 `joint_deg` 값이 남아 있다. **XYZ/RPY로 이동하려면 각 시점의
+`joint_deg`를 삭제하고 `pose_mm_deg`로 교체해야 한다.** 한 시점에 두 키를 동시에 쓰면 오류다.
+
+```yaml
+cartesian:
+  target_frame: link_6
+  position_tolerance_mm: 0.1
+  orientation_tolerance_deg: 0.1
+  max_iterations: 300
+
+views:
+  - name: view_01
+    pose_mm_deg: null  # [x, y, z, roll, pitch, yaw] 실제 숫자 6개로 교체
+  - name: view_02
+    pose_mm_deg: null
+  - name: view_03
+    pose_mm_deg: null
+```
+
+- 위치는 **mm**, 회전은 **deg**, 기준 좌표계는 로봇 **`base_link`**다. 상대 이동량이 아닌 절대 자세다.
+- RPY 규약은 `Rz(yaw) @ Ry(pitch) @ Rx(roll)`이다. 두산 기본 Euler ZYZ(A/B/C)를 그대로 넣지 않는다.
+- `target_frame: link_6`는 **플랜지 원점·축**이다. 브라켓 기준이면 `bracket_link`,
+  Depth 광학 원점 기준이면 `camera_depth_optical_frame`을 선택한다.
+  플랜지와 브라켓은 원점이 같아도 축 방향이 다를 수 있다. 펜던트의 활성 TCP를 자동 적용하지 않는다.
+- `null`이 남아 있으면 실제 실행은 차단된다. `views`는 원하는 시점 수만큼 지정하며 목록 순서대로 이동한다.
+- 로봇 IP, 속도·이동량 제한, 장착 TF를 확인한다. `mounting_tf_confirmed: true`는 실물과 TF를 확인한 경우에만 사용한다.
+
+### 3) 하드웨어 연결 없는 검사
+
+```bash
+python -s three_view_scan.py --check
+```
+
+파일·TF·라이브러리와, Cartesian 입력 시 제어 환경의 Pinocchio/IK 모델 로딩을 검사한다.
+**로봇·카메라에 연결하거나 로봇을 움직이지 않는다.** 목표 미입력 여부도 출력한다.
+현재 로봇 관절각은 읽지 않으므로 실제 시작 자세에서의 IK 성공이나 충돌 안전을 보장하는 검사는 아니다.
+`--check`와 `--execute` 모두 생략한 기본 실행도 검사만 한다.
+
+### 4) 실제 로봇 이동 + 스캔 + 결과 저장
+
+```bash
+python -s three_view_scan.py --execute
+```
+
+출력된 목표 자세와 현장 안전을 확인하고, 터미널에서 **`SCAN`**을 입력하면 시작한다.
+전체 이동 구간의 장애물·케이블·작업자, 장착 및 툴 설정, 비상정지를 먼저 확인한다.
+코드에 충돌 검사나 자동 회피는 없다.
+
+Cartesian 입력 시 동작은 **현재 실측 관절각 조회 → IK로 목표 관절각 계산 → 기존 관절 이동
+→ 정지 확인 → RGB/Depth 취득 → 다음 시점 → 통합·저장** 순서다.
+Cartesian 직선 이동(MoveL)은 아니며, IK 실패 시 해당 이동을 수행하지 않고 중단한다.
+정합은 목표값이 아니라 촬영 직후의 **실제 관절각과 Xacro TF**를 사용한다.
+
+기본 저장 위치는 `log/YYYYMMDD_HHMMSS_ffffff/`이며 실행 시 전체 경로를 출력한다.
+각 시점의 RGB·Depth·점군과 자세 로그, 통합본 `merged.ply`, `manifest.json` 등이 저장된다.
+`manifest.json`의 `status: complete`가 정상 완료를 뜻한다.
+기본 다중 프레임 모드는 시점마다 초기 30프레임을 버린 뒤 30개 Depth를 취득하고,
+픽셀별 최소 3회 유효 측정된 값의 중앙값을 사용한다(현재 YAML 설정 기준).
+
+### 5) 저장된 결과만 시각화
+
+아래 `실행결과폴더명`을 실제 생성된 폴더 이름으로 바꾼다.
+`--view`는 **다시 스캔하지 않으며 로봇·카메라에 연결하지 않는다.**
+
+```bash
+python -s three_view_scan.py --view ../log/실행결과폴더명/merged.ply
+
+# 시점별 구분색 통합본 (RGB 촬영 시 생성)
+python -s three_view_scan.py --view ../log/실행결과폴더명/merged_view_colors.ply
+
+# 특정 시점의 점군: 로봇 베이스 좌표계
+python -s three_view_scan.py --view ../log/실행결과폴더명/view_01/base.ply
+```
+
+### 선택 사항: 단일 프레임 촬영
+
+여러 프레임을 통합하지 않고 워밍업 후 한 장만 취득하려면 다음 파일을 사용한다.
+같은 YAML의 목표 자세·제어 설정을 사용하며 Cartesian 입력도 지원한다.
+아래 두 명령은 위의 다중 프레임 실행에 추가로 실행하는 것이 아니라 **대체 실행 방법**이다.
+
+```bash
+# 검사만
+python -s three_view_scan_single_frame.py --check
+
+# 실제 이동·촬영 (현장 확인 후 SCAN 입력)
+python -s three_view_scan_single_frame.py --execute
+```
+
+다른 YAML을 사용하려면 실행 명령에 `--config /절대경로/설정.yaml`을 추가한다.
+
 ## 1. 목적과 현재 결론
 
 Doosan A0912에 브라켓으로 ORBBEC Femto Bolt를 장착하여 3D Reconstruction을 테스트한다.

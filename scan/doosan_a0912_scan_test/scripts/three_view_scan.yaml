@@ -29,7 +29,23 @@ robot:
   stationary_velocity_deg_s: 0.05
   capture_drift_deg: 0.05
 
-# 펜던트로 확인한 실제 안전한 J1~J6(deg)를 각각 입력하세요.
+# Cartesian 입력 규약: base_link 기준 목표 링크의 절대 자세.
+# 위치 mm / 고정축 roll,pitch,yaw deg. R = Rz(yaw) @ Ry(pitch) @ Rx(roll).
+# 두산 펜던트의 Euler ZYZ 자세값을 그대로 RPY에 넣으면 안 됩니다.
+cartesian:
+  # link_6: 플랜지 축 / bracket_link: 브라켓 축(플랜지 대비 회전 있음)
+  # camera_depth_optical_frame: Depth 광학 원점/축. 펜던트의 활성 TCP와 무관.
+  target_frame: link_6
+  # 아래 허용 오차는 IK 수치해 검증용. 실제 촬영은 기존 정지 확인 기준을 사용.
+  position_tolerance_mm: 0.1
+  orientation_tolerance_deg: 0.1
+  max_iterations: 300
+
+# 시점마다 joint_deg 또는 pose_mm_deg 중 하나만 입력하세요(동시 지정 금지).
+# Cartesian으로 바꾸려면 해당 joint_deg 줄을 지우고 아래 형식으로 교체:
+#   pose_mm_deg: [x, y, z, roll, pitch, yaw]  # 실제 숫자 6개, mm/deg
+#   pose_mm_deg: null                       # 미입력: 실행 차단
+# 기존에 입력한 목표 관절각은 보존했습니다. 임의의 Cartesian 목표를 넣지 않습니다.
 # 시점은 1개 이상 원하는 만큼 추가할 수 있고, 아래 목록 순서대로 이동/촬영합니다.
 # name은 중복 없이 지정하세요. 문자(한글 포함), 숫자, _, - 사용 가능 (결과 폴더명).
 # 이름으로 촬영 위치/시선 방향을 자동 계산하지 않습니다.
