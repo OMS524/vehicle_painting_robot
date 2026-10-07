@@ -36,10 +36,7 @@ cartesian:
   # link_6: 플랜지 축 / bracket_link: 브라켓 축(플랜지 대비 회전 있음)
   # camera_depth_optical_frame: Depth 광학 원점/축. 펜던트의 활성 TCP와 무관.
   target_frame: link_6
-  # 아래 허용 오차는 IK 수치해 검증용. 실제 촬영은 기존 정지 확인 기준을 사용.
-  position_tolerance_mm: 0.1
-  orientation_tolerance_deg: 0.1
-  max_iterations: 300
+  # IK는 두산 SDK에서 계산합니다. 기존 Pinocchio 허용 오차/반복 횟수 설정은 사용하지 않습니다.
 
 # 시점마다 joint_deg 또는 pose_mm_deg 중 하나만 입력하세요(동시 지정 금지).
 # Cartesian으로 바꾸려면 해당 joint_deg 줄을 지우고 아래 형식으로 교체:
@@ -50,16 +47,28 @@ cartesian:
 # name은 중복 없이 지정하세요. 문자(한글 포함), 숫자, _, - 사용 가능 (결과 폴더명).
 # 이름으로 촬영 위치/시선 방향을 자동 계산하지 않습니다.
 # null 상태에서는 --execute를 붙여도 로봇에 연결하지 않습니다.
+# roll: 부품 기준 왼쪽/오른쪽 벡터 (내리면 아래 올리면 위)
+# pitch: 부품 기준 정면/후면 벡터
+# yaw: 부품 기준 위/아래 벡터
 views:
-  - name: view_01
-    joint_deg: [92.01, 2.46, 73.92, 13.92, 100.56, 20.35]
-  - name: view_02
-    # joint_deg: [8.46, -62.97, 119.27, 0.58, 133.05, -80.31]
-    joint_deg: [88.65, -40.48, 98.05, 18.19, 121.40, 9.74]
-  - name: view_03
-    # joint_deg: [-94.86, 12.75, 59.21, -13.08, 101.04, -215.96]
-    # joint_deg: [-93.65, 8.53, 74.49, -8.06, 88.31, -207.61]
-    joint_deg: [-89.93, 7.75, 62.36, -13.43, 98.00, -209.48]
+  - name: view_01_top_left
+    pose_mm_deg: [300.0, 500.0, 900.0, 160.0, 0.0, -110.0]
+  # - name: view_02_top_front
+  #   pose_mm_deg: [300.0, 0.0, 900.0, 160.0, 0.0, -90.0]
+  - name: view_03_top_right
+    pose_mm_deg: [300.0, -500.0, 900.0, 160.0, 0.0, -70.0]
+  - name: view_01_middle_left
+    pose_mm_deg: [300.0, 500.0, 500.0, 180.0, 0.0, -110.0]
+  # - name: view_01_middle_front
+  #   pose_mm_deg: [300.0, 0.0, 500.0, 180.0, 0.0, -90.0]
+  - name: view_01_middle_right
+    pose_mm_deg: [300.0, -500.0, 500.0, 180.0, 0.0, -70.0]
+  - name: view_01_bottom_left
+    pose_mm_deg: [300.0, 500.0, 200.0, 180.0, 0.0, -110.0]
+  # - name: view_01_bottom_front
+  #   pose_mm_deg: [300.0, 0.0, 200.0, 160.0, 0.0, -90.0]
+  - name: view_01_bottom_right
+    pose_mm_deg: [300.0, -500.0, 200.0, 180.0, 0.0, -70.0]
 
 
 camera:

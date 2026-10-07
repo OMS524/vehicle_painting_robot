@@ -214,7 +214,7 @@ def preflight(cfg, model, execute=False):
         print("미입력 목표 자세:", ", ".join(missing))
     if ik_request(cfg, model):
         print(f"Cartesian: base_link 기준 {cfg['cartesian']['target_frame']}, XYZ(mm)/RPY(deg). "
-              "IK 환경/모델만 검사했으며, 목표 IK는 실행 시 현재 실측 관절에서 계산합니다.")
+              "두산 SDK IK 연결부/툴 TF만 검사했으며, 목표 IK는 실행 시 컨트롤러에서 계산합니다.")
     print("Xacro 기준 flange → depth optical (translation: m):")
     frames = model.transforms([0.0] * 6)
     print(np.linalg.inv(frames["link_6"]) @ frames[DEPTH_FRAME])

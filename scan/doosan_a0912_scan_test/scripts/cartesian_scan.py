@@ -1,4 +1,4 @@
-"""스캔 목표 자세 규약과 control 환경 전용 IK. 카메라/로봇 연결은 하지 않는다."""
+"""스캔 목표 자세 변환과 두산 SDK IK 연결. 생성 시 하드웨어에 연결하지 않는다."""
 import math
 import xml.etree.ElementTree as ET
 
@@ -6,11 +6,9 @@ import numpy as np
 
 from visualize_xacro import origin_matrix
 
-JOINT_NAMES = tuple(f"joint_{i}" for i in range(1, 7))
 TARGET_FRAMES = ("link_6", "bracket_link", "camera_depth_optical_frame")
 RPY_CONVENTION = "fixed_XYZ: Rz(yaw) @ Ry(pitch) @ Rx(roll)"
-DEFAULTS = {"target_frame": "link_6", "position_tolerance_mm": 0.1,
-            "orientation_tolerance_deg": 0.1, "max_iterations": 300}
+DEFAULTS = {"target_frame": "link_6"}
 
 
 def vector6(values, label):
@@ -36,13 +34,6 @@ def validate_targets(cfg):
         settings.setdefault(key, value)
     if settings["target_frame"] not in TARGET_FRAMES:
         raise ValueError(f"cartesian.target_frame: {TARGET_FRAMES} 중 선택하세요.")
-    for key in ("position_tolerance_mm", "orientation_tolerance_deg"):
-        value = settings[key]
-        if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
-            raise ValueError(f"cartesian.{key}는 양의 유한한 숫자여야 합니다.")
-    iterations = settings["max_iterations"]
-    if type(iterations) is not int or not 1 <= iterations <= 5000:
-        raise ValueError("cartesian.max_iterations는 1~5000 정수여야 합니다.")
     for view in cfg["views"]:
         key = target_key(view)
         if view[key] is not None:
@@ -77,92 +68,76 @@ def cartesian_error(view, cfg, frames):
             "actual_cartesian_orientation_error_deg": float(np.rad2deg(np.arccos(cosine)))}
 
 
-class CartesianIK:
-    """현재 실측 관절을 seed로 쓰는 제한된 수치 IK. 자동 재시드/분기 전환 없음.
+def sdk_pose_matrix(values):
+    """두산 SDK의 [mm, mm, mm, A, B, C(deg)] / Euler ZYZ → SE(3)."""
+    values = vector6(values, "SDK pose_mm_zyz_deg")
+    a, b, c = np.deg2rad(values[3:])
+    ca, cb, cc = np.cos([a, b, c])
+    sa, sb, sc = np.sin([a, b, c])
+    transform = np.eye(4)
+    transform[:3, :3] = [
+        [ca * cb * cc - sa * sc, -ca * cb * sc - sa * cc, ca * sb],
+        [sa * cb * cc + ca * sc, -sa * cb * sc + ca * cc, sa * sb],
+        [-sb * cc, sb * sc, cb],
+    ]
+    transform[:3, 3] = values[:3] / 1000.0
+    return transform
 
-    Pinocchio는 control Python에서만 import한다. scan에서 사용한 확장 URDF를
-    그대로 받아 TCP/브라켓 TF 중복 적용과 별도 URDF 모델 불일치를 방지한다.
-    """
+
+def matrix_to_sdk_pose(transform):
+    """SE(3) → mm / Euler ZYZ. B=0,180도에서도 동등한 회전을 반환한다."""
+    r = transform[:3, :3]
+    sin_b = math.hypot(r[0, 2], r[1, 2])
+    b = math.atan2(sin_b, r[2, 2])
+    if sin_b > 1e-10:
+        a, c = math.atan2(r[1, 2], r[0, 2]), math.atan2(r[2, 1], -r[2, 0])
+    elif r[2, 2] >= 0:
+        a, c = math.atan2(r[1, 0], r[0, 0]), 0.0
+    else:
+        a, c = math.atan2(-r[1, 0], -r[0, 0]), 0.0
+    return np.concatenate((transform[:3, 3] * 1000.0, np.rad2deg([a, b, c]))).tolist()
+
+
+class DoosanSDKIK:
+    """URDF는 플랜지 이후 고정 TF에만 사용하고 관절 해는 SDK에서 구한다."""
     def __init__(self, model_xml, settings):
-        import pinocchio as pin
-
         cfg = {"cartesian": dict(settings), "views": []}
         validate_targets(cfg)
-        self.settings, self.pin = cfg["cartesian"], pin
-        self.model = pin.buildModelFromXML(model_xml)
-        model = self.model
-        if model.nq != 6 or model.nv != 6 or set(model.names[1:]) != set(JOINT_NAMES):
-            raise ValueError("IK는 A0912의 joint_1~6 회전 조인트만 지원합니다.")
-        self.indices = [model.joints[model.getJointId(name)].idx_q for name in JOINT_NAMES]
-        for name in JOINT_NAMES:
-            joint = model.joints[model.getJointId(name)]
-            if joint.nq != 1 or joint.nv != 1 or joint.idx_q != joint.idx_v:
-                raise ValueError(f"IK 관절 모델 오류: {name}")
-        for name in ("base_link", self.settings["target_frame"]):
-            if not model.existFrame(name):
-                raise ValueError(f"IK 모델에 프레임이 없습니다: {name}")
-        base_id = model.getFrameId("base_link")
-        self.frame_id = model.getFrameId(self.settings["target_frame"])
-        if model.frames[base_id].parentJoint != 0 or model.frames[self.frame_id].parentJoint != model.getJointId("joint_6"):
-            raise ValueError("base_link는 고정, 목표 프레임은 joint_6 뒤의 고정 툴이어야 합니다.")
-        self.data = model.createData()
-        pin.framesForwardKinematics(model, self.data, np.zeros(6))
-        self.world_base = self.data.oMf[base_id].copy()
-        self.lower = np.asarray(model.lowerPositionLimit).copy()
-        self.upper = np.asarray(model.upperPositionLimit).copy()
-        if not np.isfinite([self.lower, self.upper]).all() or np.any(self.lower >= self.upper):
-            raise ValueError("IK 모델의 유한한 관절 제한이 필요합니다.")
+        self.settings = cfg["cartesian"]
+        model = ET.fromstring(model_xml)
+        parents = {joint.find("child").get("link"): joint for joint in model.findall("joint")}
+        links = {link.get("name") for link in model.findall("link")}
+        child = self.settings["target_frame"]
+        if "link_6" not in links or child not in links:
+            raise ValueError("SDK IK 모델에 플랜지 또는 목표 프레임이 없습니다.")
+        self.flange_target = np.eye(4)
+        visited = set()
+        while child != "link_6":
+            if child in visited or child not in parents or parents[child].get("type") != "fixed":
+                raise ValueError("SDK IK 목표 프레임은 link_6 뒤의 고정 툴이어야 합니다.")
+            visited.add(child)
+            joint = parents[child]
+            self.flange_target = origin_matrix(joint.find("origin")) @ self.flange_target
+            child = joint.find("parent").get("link")
+        self.target_flange = np.linalg.inv(self.flange_target)
 
-    def solve(self, values, seed_deg, max_delta_deg):
-        pin, model, data = self.pin, self.model, self.data
-        desired_base = pose_matrix(values)
-        desired = self.world_base * pin.SE3(desired_base[:3, :3], desired_base[:3, 3])
-        seed = np.deg2rad(vector6(seed_deg, "현재 실측 joint_deg"))
-        q = np.empty(6)
-        q[self.indices] = seed
-        if np.any(q < self.lower) or np.any(q > self.upper):
-            raise ValueError("현재 실측 관절각이 URDF 제한 밖입니다. 영점/모델을 확인하세요.")
-        if isinstance(max_delta_deg, bool) or not math.isfinite(max_delta_deg) or max_delta_deg <= 0:
-            raise ValueError("max_move_delta_deg는 양의 유한한 숫자여야 합니다.")
-        delta = math.radians(max_delta_deg)
-        lower, upper = np.maximum(self.lower, q - delta), np.minimum(self.upper, q + delta)
-        pos_tol = self.settings["position_tolerance_mm"] / 1000
-        rot_tol = math.radians(self.settings["orientation_tolerance_deg"])
-
-        def evaluate(candidate):
-            pin.framesForwardKinematics(model, data, candidate)
-            actual = data.oMf[self.frame_id]
-            relative = actual.actInv(desired)
-            error = pin.log6(relative).vector.copy()
-            position_error = float(np.linalg.norm(desired.translation - actual.translation))
-            rotation_error = float(np.linalg.norm(pin.log3(relative.rotation)))
-            return relative, error, position_error, rotation_error
-
-        for iteration in range(self.settings["max_iterations"] + 1):
-            relative, error, position_error, rotation_error = evaluate(q)
-            if position_error <= pos_tol and rotation_error <= rot_tol:
-                return {"target_joint_deg": np.rad2deg(q[self.indices]).tolist(),
-                        "ik": {"method": "pinocchio_damped_least_squares", "seed_joint_deg": list(seed_deg),
-                               "target_frame": self.settings["target_frame"], "reference_frame": "base_link",
-                               "rpy_convention": RPY_CONVENTION, "target_pose_mm_deg": list(values),
-                               "T_base_target": desired_base.tolist(), "iterations": iteration,
-                               "position_error_mm": position_error * 1000,
-                               "orientation_error_deg": math.degrees(rotation_error)}}
-            if iteration == self.settings["max_iterations"]:
-                break
-            jacobian = pin.computeFrameJacobian(model, data, q, self.frame_id, pin.ReferenceFrame.LOCAL)
-            jacobian = -pin.Jlog6(relative.inverse()) @ jacobian
-            step = -jacobian.T @ np.linalg.solve(jacobian @ jacobian.T + 1e-6 * np.eye(6), error)
-            step *= min(1.0, math.radians(5) / max(float(np.max(np.abs(step))), 1e-12))
-            accepted = False
-            for scale in (1.0, 0.5, 0.25, 0.1):
-                candidate = np.clip(q + scale * step, lower, upper)
-                _, candidate_error, _, _ = evaluate(candidate)
-                if np.linalg.norm(candidate_error) < np.linalg.norm(error):
-                    q, accepted = candidate, True
-                    break
-            if not accepted:
-                break
-        raise ValueError("현재 자세 seed/관절 제한/최대 이동량 안에서 IK가 수렴하지 않았습니다. "
-                         "이동하지 않습니다. 목표/시작 자세를 확인하세요. "
-                         f"잔차: {position_error * 1000:.4f} mm, {math.degrees(rotation_error):.4f} deg")
+    def solve(self, robot, values, seed_deg):
+        desired = pose_matrix(values)
+        reference = vector6(seed_deg, "현재 실측 joint_deg").tolist()
+        # SDK IK uses the controller's active TCP. Derive its fixed flange offset
+        # from two SDK poses at rest; do not change the pendant's TCP selection.
+        current = robot.read_actual_cartesian_state()
+        base_flange = sdk_pose_matrix(current["flange_pose_mm_zyz_deg"])
+        base_tcp = sdk_pose_matrix(current["tcp_pose_mm_zyz_deg"])
+        flange_tcp = np.linalg.inv(base_flange) @ base_tcp
+        desired_tcp = desired @ self.target_flange @ flange_tcp
+        sdk_pose = matrix_to_sdk_pose(desired_tcp)
+        solved = robot.solve_closest_ik(sdk_pose, reference)
+        target = vector6(solved["target_joint_deg"], "SDK IK target_joint_deg").tolist()
+        return {"target_joint_deg": target,
+                "ik": {"method": "doosan_sdk_ikin", "seed_joint_deg": reference,
+                       "solution_space": solved["solution_space"],
+                       "target_frame": self.settings["target_frame"], "reference_frame": "base_link",
+                       "rpy_convention": RPY_CONVENTION, "target_pose_mm_deg": list(values),
+                       "T_base_target": desired.tolist(), "T_flange_active_tcp": flange_tcp.tolist(),
+                       "sdk_target_pose_mm_zyz_deg": sdk_pose}}

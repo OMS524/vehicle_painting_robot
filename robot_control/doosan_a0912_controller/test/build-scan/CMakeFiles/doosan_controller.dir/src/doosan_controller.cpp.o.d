@@ -2,9 +2,9 @@ CMakeFiles/doosan_controller.dir/src/doosan_controller.cpp.o: \
  /home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/src/doosan_controller.cpp \
  /usr/include/stdc-predef.h \
  /home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/include/doosan_controller.hpp \
- /home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/../API-DRFL/include/DRFLEx.h \
- /home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/../API-DRFL/include/DRFS.h \
- /home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/../API-DRFL/include/DRFC.h \
+ /home/oms/doosan_a0912_controller/API-DRFL/include/DRFLEx.h \
+ /home/oms/doosan_a0912_controller/API-DRFL/include/DRFS.h \
+ /home/oms/doosan_a0912_controller/API-DRFL/include/DRFC.h \
  /usr/include/c++/11/string \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \

@@ -22,15 +22,12 @@ cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
 
 ### 2) 목표 자세 설정
 
-현재 YAML의 `views`에는 기존 `joint_deg` 값이 남아 있다. **XYZ/RPY로 이동하려면 각 시점의
-`joint_deg`를 삭제하고 `pose_mm_deg`로 교체해야 한다.** 한 시점에 두 키를 동시에 쓰면 오류다.
+`views`에서 **XYZ/RPY 목표는 `pose_mm_deg`**, 관절 목표는 `joint_deg`로 지정한다.
+한 시점에 두 키를 동시에 쓰면 오류다.
 
 ```yaml
 cartesian:
   target_frame: link_6
-  position_tolerance_mm: 0.1
-  orientation_tolerance_deg: 0.1
-  max_iterations: 300
 
 views:
   - name: view_01
@@ -45,7 +42,8 @@ views:
 - RPY 규약은 `Rz(yaw) @ Ry(pitch) @ Rx(roll)`이다. 두산 기본 Euler ZYZ(A/B/C)를 그대로 넣지 않는다.
 - `target_frame: link_6`는 **플랜지 원점·축**이다. 브라켓 기준이면 `bracket_link`,
   Depth 광학 원점 기준이면 `camera_depth_optical_frame`을 선택한다.
-  플랜지와 브라켓은 원점이 같아도 축 방향이 다를 수 있다. 펜던트의 활성 TCP를 자동 적용하지 않는다.
+  플랜지와 브라켓은 원점이 같아도 축 방향이 다를 수 있다. SDK의 활성 TCP 오프셋을 반영해
+  지정한 목표 링크 기준을 유지하며, 펜던트의 TCP 선택은 변경하지 않는다.
 - `null`이 남아 있으면 실제 실행은 차단된다. `views`는 원하는 시점 수만큼 지정하며 목록 순서대로 이동한다.
 - 로봇 IP, 속도·이동량 제한, 장착 TF를 확인한다. `mounting_tf_confirmed: true`는 실물과 TF를 확인한 경우에만 사용한다.
 
@@ -55,7 +53,8 @@ views:
 python -s three_view_scan.py --check
 ```
 
-파일·TF·라이브러리와, Cartesian 입력 시 제어 환경의 Pinocchio/IK 모델 로딩을 검사한다.
+파일·TF·라이브러리와 두산 SDK IK 연결부를 검사한다. 라이브러리 재빌드 방법은
+[`scripts/README.md`](scripts/README.md)의 Cartesian 절을 참고한다.
 **로봇·카메라에 연결하거나 로봇을 움직이지 않는다.** 목표 미입력 여부도 출력한다.
 현재 로봇 관절각은 읽지 않으므로 실제 시작 자세에서의 IK 성공이나 충돌 안전을 보장하는 검사는 아니다.
 `--check`와 `--execute` 모두 생략한 기본 실행도 검사만 한다.
@@ -70,7 +69,7 @@ python -s three_view_scan.py --execute
 전체 이동 구간의 장애물·케이블·작업자, 장착 및 툴 설정, 비상정지를 먼저 확인한다.
 코드에 충돌 검사나 자동 회피는 없다.
 
-Cartesian 입력 시 동작은 **현재 실측 관절각 조회 → IK로 목표 관절각 계산 → 기존 관절 이동
+Cartesian 입력 시 동작은 **현재 실측 관절각 조회 → 두산 SDK IK로 목표 관절각 계산 → 기존 관절 이동
 → 정지 확인 → RGB/Depth 취득 → 다음 시점 → 통합·저장** 순서다.
 Cartesian 직선 이동(MoveL)은 아니며, IK 실패 시 해당 이동을 수행하지 않고 중단한다.
 정합은 목표값이 아니라 촬영 직후의 **실제 관절각과 Xacro TF**를 사용한다.

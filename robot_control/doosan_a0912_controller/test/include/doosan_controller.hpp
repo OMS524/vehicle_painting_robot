@@ -144,6 +144,15 @@ public:
     // Fails if either measurement is unavailable; never substitutes a target/zero.
     bool readActualJointState(JointArray &position, JointArray &velocity);
 
+    // SDK task poses: base reference, XYZ in mm, Euler ZYZ in degrees.
+    // Read both poses without changing the controller's active TCP.
+    bool readActualCartesianState(JointArray &flange_pose, JointArray &tcp_pose);
+    bool solveClosestIk(
+        const std::array<float, kNumJoints> &task_pose,
+        const JointArray &reference_joint,
+        JointArray *joint,
+        int *solution_space);
+
     static RobotSystem robotSystemFromString(const std::string &value);
 
     struct TaskTrajectoryPoint
@@ -281,11 +290,6 @@ private:
         float damping,
         float max_joint_velocity_deg_s,
         float max_joint_acceleration_deg_s2);
-    bool solveClosestIk(
-        const std::array<float, kNumJoints> &task_pose,
-        const JointArray &reference_joint,
-        JointArray *joint,
-        int *solution_space);
     void realtimeLoop();
 
     void handleAccessControl(MONITORING_ACCESS_CONTROL access);

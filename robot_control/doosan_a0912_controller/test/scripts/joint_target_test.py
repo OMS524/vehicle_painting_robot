@@ -365,6 +365,41 @@ class DoosanRobot:
         if not ok:
             raise RuntimeError("task trajectory CSV velocity control failed")
 
+    def read_actual_cartesian_state(self) -> dict:
+        """Base-frame flange and active TCP poses from the SDK (mm / Euler ZYZ deg)."""
+        if self._closed or not self._handle:
+            raise RuntimeError("robot is closed")
+        try:
+            read = self._lib.doosan_controller_read_actual_cartesian_state
+        except AttributeError as exc:
+            raise RuntimeError("Rebuild the control library to enable SDK scan IK") from exc
+        read.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)]
+        read.restype = ctypes.c_int
+        flange, tcp = Float6(), Float6()
+        if not read(self._handle, flange, tcp):
+            raise RuntimeError("SDK flange/TCP pose measurement unavailable")
+        return {"flange_pose_mm_zyz_deg": list(flange), "tcp_pose_mm_zyz_deg": list(tcp)}
+
+    def solve_closest_ik(self, task_pose: list[float], reference_joint: list[float]) -> dict:
+        """SDK IK for the active TCP; choose the closest valid solution, without motion."""
+        if self._closed or not self._handle:
+            raise RuntimeError("robot is closed")
+        if len(task_pose) != 6 or len(reference_joint) != 6:
+            raise ValueError("task_pose and reference_joint must have 6 elements")
+        try:
+            solve = self._lib.doosan_controller_solve_closest_ik
+        except AttributeError as exc:
+            raise RuntimeError("Rebuild the control library to enable SDK scan IK") from exc
+        solve.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_float),
+                          ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float),
+                          ctypes.POINTER(ctypes.c_int)]
+        solve.restype = ctypes.c_int
+        joint, solution = Float6(), ctypes.c_int(-1)
+        if not solve(self._handle, Float6(*task_pose), Float6(*reference_joint),
+                     joint, ctypes.byref(solution)):
+            raise RuntimeError("Doosan SDK IK failed; see robot_worker.log for SDK status")
+        return {"target_joint_deg": list(joint), "solution_space": solution.value}
+
     def read_actual_joint_state(self) -> dict:
         """Actual controller measurements; no connection or motion is started here."""
         if self._closed or not self._handle:

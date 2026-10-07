@@ -26,7 +26,7 @@ def load_wrapper(path):
 def check_library(path):
     library = ctypes.CDLL(str(Path(path).resolve()))
     for name in ("create", "initialize", "read_actual_joint_state",
-                 "velocity_control_to_position", "shutdown"):
+                 "velocity_control_to_position", "read_actual_cartesian_state", "solve_closest_ik", "shutdown"):
         getattr(library, "doosan_controller_" + name)
     return {"python": sys.executable, "library": str(path), "hardware_connected": False}
 
@@ -89,7 +89,7 @@ def move_cartesian_and_settle(robot, pose, settings, ik):
     state = robot.read_actual_joint_state()
     if not stationary(state, settings):
         raise RuntimeError("IK 계산 시작 전 로봇이 정지 상태가 아닙니다.")
-    solved = ik.solve(pose, state["joint_deg"], settings["max_move_delta_deg"])
+    solved = ik.solve(robot, pose, state["joint_deg"])
     print("Cartesian IK: " + json.dumps(solved, ensure_ascii=False, allow_nan=False), file=sys.stderr, flush=True)
     # IK 동안 외부 조작으로 seed 자세가 바뀌면 이전 해로 이동하지 않는다.
     current = robot.read_actual_joint_state()
@@ -104,8 +104,8 @@ def move_cartesian_and_settle(robot, pose, settings, ik):
 def make_ik(request):
     if "cartesian" not in request:
         return None
-    from cartesian_scan import CartesianIK
-    return CartesianIK(request["model_xml"], request["cartesian"])
+    from cartesian_scan import DoosanSDKIK
+    return DoosanSDKIK(request["model_xml"], request["cartesian"])
 
 
 def serve(wrapper, library, protocol):
@@ -183,7 +183,8 @@ def main():
         if args.check:
             request = json.loads(sys.stdin.read() or "{}") if not sys.stdin.isatty() else {}
             ik = make_ik(request)
-            checked["cartesian_ik_model_loaded"] = ik is not None
+            checked["cartesian_ik_backend"] = "doosan_sdk" if ik is not None else None
+            checked["cartesian_tool_tf_loaded"] = ik is not None
             protocol.write(json.dumps(checked) + "\n")
         else:
             serve(wrapper, args.library, protocol)

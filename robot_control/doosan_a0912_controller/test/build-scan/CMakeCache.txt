@@ -14,6 +14,9 @@
 # EXTERNAL cache entries
 ########################
 
+//Doosan API-DRFL SDK directory
+API_DRFL_DIR:PATH=/home/oms/doosan_a0912_controller/API-DRFL
+
 //Boost filesystem library (debug)
 Boost_FILESYSTEM_LIBRARY_DEBUG:FILEPATH=/home/oms/miniconda3/envs/vehicle_painting_robot_control/lib/libboost_filesystem.so
 

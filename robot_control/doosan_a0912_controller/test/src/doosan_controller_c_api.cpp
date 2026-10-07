@@ -150,6 +150,67 @@ int doosan_controller_read_actual_joint_state(void *handle, float *position, flo
     return 0;
 }
 
+int doosan_controller_read_actual_cartesian_state(void *handle, float *flange_pose, float *tcp_pose)
+{
+    try
+    {
+        auto *controller = asController(handle);
+        JointArray flange = {}, tcp = {};
+        if (!controller || !flange_pose || !tcp_pose ||
+            !controller->readActualCartesianState(flange, tcp))
+        {
+            return 0;
+        }
+        for (int i = 0; i < Controller::kNumJoints; ++i)
+        {
+            flange_pose[i] = flange[i];
+            tcp_pose[i] = tcp[i];
+        }
+        return 1;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[c_api] read actual cartesian state failed: " << e.what() << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "[c_api] read actual cartesian state failed with unknown exception\n";
+    }
+    return 0;
+}
+
+int doosan_controller_solve_closest_ik(
+    void *handle, const float *task_pose, const float *reference_joint,
+    float *joint, int *solution_space)
+{
+    try
+    {
+        auto *controller = asController(handle);
+        JointArray result = {};
+        if (!controller || !controller->isConnected() || !task_pose || !reference_joint ||
+            !joint || !solution_space ||
+            !controller->solveClosestIk(toJointArray(task_pose), toJointArray(reference_joint),
+                                        &result, solution_space))
+        {
+            return 0;
+        }
+        for (int i = 0; i < Controller::kNumJoints; ++i)
+        {
+            joint[i] = result[i];
+        }
+        return 1;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[c_api] solve closest IK failed: " << e.what() << '\n';
+    }
+    catch (...)
+    {
+        std::cerr << "[c_api] solve closest IK failed with unknown exception\n";
+    }
+    return 0;
+}
+
 int doosan_controller_position_control(
     void *handle,
     const float *position,

@@ -18,8 +18,8 @@ Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. �
 - `three_view_scan_single_frame.py`: 초기 프레임을 버린 뒤 한 장만 저장하는 이전 방식의 별도 버전.
 - `three_view_scan.yaml`: 촬영 목표 관절각 또는 Cartesian 자세, IP, 속도, 카메라 등의 설정.
 - `robot_scan_worker.py`: control 환경의 별도 프로세스. 기존 Python 래퍼로 이동/실제 관절 상태 조회.
-- `cartesian_scan.py`: XYZ/RPY 규약 및 제어 환경의 Pinocchio IK. SDK/C++ 제어기는 변경하지 않는다.
-- `test_cartesian_scan.py`: Cartesian 입력, IK, 이동 차단, 두 촬영 버전의 저장을 하드웨어 없이 검사.
+- `cartesian_scan.py`: XYZ/RPY·활성 TCP 변환 및 두산 SDK IK 연결.
+- `test_cartesian_scan.py`: SDK IK 좌표 변환, ctypes 연결, 두 촬영 버전의 IK 선택을 하드웨어 없이 검사.
 - `test_three_view_scan.py`: 합성 입력만 사용하는 오프라인 테스트.
 
 ### 1. 설정 입력
@@ -54,15 +54,12 @@ Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. �
 
 #### Cartesian 목표 입력 (다중/단일 프레임 공통)
 
-기존 YAML에 입력된 관절값은 보존되어 있다. Cartesian으로 사용할 시점은 `joint_deg` 줄을
-삭제하고 `pose_mm_deg`로 교체한다. 두 키를 동시에 쓰면 오류로 거부한다.
+Cartesian으로 사용할 시점은 `pose_mm_deg`를 지정한다. 기존 관절 입력을 바꾸는 경우에는
+`joint_deg` 줄을 삭제하고 `pose_mm_deg`로 교체한다. 두 키를 동시에 쓰면 오류로 거부한다.
 
 ```yaml
 cartesian:
   target_frame: link_6
-  position_tolerance_mm: 0.1
-  orientation_tolerance_deg: 0.1
-  max_iterations: 300
 
 views:
   - name: front
@@ -75,35 +72,51 @@ views:
 - `target_frame: link_6`는 로봇 플랜지 원점과 축이다. `bracket_link`는 브라켓 원점과 축,
   `camera_depth_optical_frame`는 Depth 광학 원점과 축을 대상으로 한다.
   현재 Xacro의 플랜지/브라켓 원점은 일치하지만 X축 180도 회전이 있으므로 **같은 RPY를 쓰면 안 된다**.
-  펜던트의 활성 TCP/사용자 좌표계를 자동으로 읽거나 적용하지 않는다.
-- 같은 Xacro를 확장한 URDF를 제어 프로세스로 전달하고 **Pinocchio 수치 IK**로 관절각을 구한다.
-  현재 실측 J1~J6를 seed로 사용하며 관절 제한과 `max_move_delta_deg` 안에서만 찾는다.
-  자동 무작위 재시드나 다른 로봇 자세 분기로의 재시도는 하지 않는다.
-  수렴 실패는 해당 시작 자세에서의 실패이며, 다른 자세에서도 도달 불가능하다는 뜻은 아니다.
-- IK가 허용 위치/회전 잔차를 만족한 경우에만 기존 관절 이동 함수를 호출한다.
-  **Cartesian 직선 이동(MoveL)이 아니라, IK로 정한 목표 관절각까지의 기존 관절 이동**이다.
-  IK 도중 실측 자세가 바뀌거나, IK 실패/관절 범위 초과가 있으면 이동하지 않고 스캔을 중단한다.
-- 실제 촬영 조건은 기존 정지 유지 기준이다. IK 수치 잔차와 실제 도달 오차는 별개이며,
-  촬영 직후 실측 관절 FK로 목표 위치/회전 오차를 로그에 남긴다.
-  정합 TF도 목표가 아닌 **촬영 직후 실제 관절각**으로 계속 계산한다.
+  펜던트의 활성 TCP는 변경하지 않는다. SDK에서 현재 플랜지/TCP 자세를 읽어
+  그 오프셋을 반영하므로 YAML의 목표 링크 의미는 활성 TCP와 무관하게 유지한다.
+- **두산 SDK `ikin()`**으로 관절각을 구한다. 기존 제어기의 `solveClosestIk()`를 재사용해
+  SDK가 정상 반환한 0~7번 관절 형상 중 현재 실측 관절각에 가장 가까운 해를 선택한다.
+  YAML의 RPY는 SDK의 Euler ZYZ로 변환하며, URDF는 플랜지 이후 고정 툴 TF에 사용한다.
+- 기존 관절 이동 함수를 그대로 사용한다. **Cartesian 직선 이동(MoveL)은 아니다.**
+  기존 `max_move_delta_deg`, 이동 전 정지, IK 중 실측 자세 변화 검사는 유지한다.
+  SDK IK 실패 시 해당 이동을 수행하지 않고 중단한다.
+- 실제 촬영 조건과 정합 TF는 기존처럼 정지 유지 및 **촬영 직후 실제 관절각 + URDF FK**를 사용한다.
+  SDK IK와 URDF FK는 모델/보정값 차이가 있을 수 있어 촬영 후 목표 오차가 SDK IK 잔차를 뜻하지는 않는다.
+- 이전 Pinocchio 전용 `position_tolerance_mm`, `orientation_tolerance_deg`, `max_iterations`는
+  SDK IK에서 사용하지 않는다. 별도의 안전 범위/상태 검사 기능은 이 전환에 추가하지 않았다.
+  SDK IK 성공은 펜던트의 모든 안전 설정이나 이동 경로의 통과를 보장하는 판정이 아니다.
 
-`--check`는 Pinocchio와 URDF/툴 프레임을 실제로 로딩하지만 로봇에 연결하지 않으므로
-현재 관절을 seed로 하는 목표 IK/도달 가능성/충돌 안전을 확인한 것은 아니다.
-IK는 `--execute`와 `SCAN` 확인 후, 각 이동 직전에 실제 관절을 읽어 계산한다.
-제어용 환경의 기존 Pinocchio를 사용하며 스캔 환경에 Pinocchio를 설치하거나 `.so`를 재빌드할 필요는 없다.
+`--check`는 SDK IK 연결 심볼과 고정 툴 TF를 확인하며 하드웨어에 연결하지 않는다.
+목표 IK는 `--execute`와 `SCAN` 확인 후 각 이동 직전에 컨트롤러에서 계산한다.
+스캔 Python의 Pinocchio IK 의존성은 제거됐다. 제어 라이브러리의 다른 궤적 기능은 여전히 Pinocchio를 사용한다.
+
+새 SDK IK 연결부를 사용하려면 YAML의 `control_library`에 지정한 `.so`를 재빌드해야 한다.
+저장소 루트에서, 이 PC에 설치된 SDK를 사용할 경우:
+
+```bash
+cmake -S robot_control/doosan_a0912_controller/test \
+  -B robot_control/doosan_a0912_controller/test/build-scan \
+  -DAPI_DRFL_DIR=/home/oms/doosan_a0912_controller/API-DRFL \
+  -DCMAKE_PREFIX_PATH=/home/oms/miniconda3/envs/vehicle_painting_robot_control \
+  -DCMAKE_BUILD_TYPE=Release
+cmake --build robot_control/doosan_a0912_controller/test/build-scan --target doosan_controller_c_api -j2
+```
+
+SDK 서브모듈이 준비된 환경에서는 `API_DRFL_DIR`에 해당 경로를 지정하면 된다.
 
 `manifest.json` / `pose.json`에는 입력 `command`, IK 결과 `target_joint_deg`,
-`ik`(seed, 반복 횟수, 목표 TF, 수치 잔차), 촬영 후
-`actual_cartesian_position_error_mm` / `actual_cartesian_orientation_error_deg`가 저장된다.
+`ik`의 `method: doosan_sdk_ikin`, 기준 관절각, `solution_space`, 목표 TF,
+활성 TCP 오프셋 및 SDK에 전달한 `sdk_target_pose_mm_zyz_deg`가 저장된다.
+촬영 후 `actual_cartesian_position_error_mm` / `actual_cartesian_orientation_error_deg`는 기존대로 저장한다.
 manifest의 IK 정보는 각 뷰의 `settled_state.ik`에 있다. 이동 전 해는 `robot_worker.log`에도 기록한다.
 
 ```bash
-# 로봇/카메라 연결 없는 테스트 (별도 control Python에서 실제 Pinocchio 계산 포함)
+# scripts 디렉토리에서 실행. 로봇/카메라 연결 없이 변환·SDK 호출 연결을 검증한다.
 python -sB -m unittest test_cartesian_scan -v
 ```
 
 회전 규약 참고: [두산 posx의 기본 Euler ZYZ](https://manual.doosanrobotics.com/en/programming-manual/3.4.0/publish/posx-x-0-y-0-z-0-a-0-b-0-c-0).
-IK 참고: [Pinocchio 공식 IK 예제](https://github.com/stack-of-tasks/pinocchio/blob/master/examples/inverse-kinematics.py).
+IK 참고: [두산 공식 ikin 설명](https://manual.doosanrobotics.com/ko/programming-manual/3.2.1/publish/ikin-pos-sol_space-ref-ref_pos_opt-iter_threshold).
 
 `camera.capture_color: true`이면 같은 FPS의 Depth/RGB를 함께 촬영하고 SDK로 RGB를
 native Depth 픽셀에 정렬한다. `color_width`, `color_height`가 0이면 지원 프로파일을 자동 선택하며,

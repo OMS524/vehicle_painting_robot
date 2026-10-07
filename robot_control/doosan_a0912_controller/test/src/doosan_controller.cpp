@@ -1569,6 +1569,43 @@ bool DoosanController::isRealtimeControlRunning() const
     return realtime_control_running_;
 }
 
+bool DoosanController::readActualCartesianState(JointArray &flange_pose, JointArray &tcp_pose)
+{
+    std::lock_guard<std::mutex> lock(drfl_mutex_);
+    if (!connected_ || disconnected_)
+    {
+        return false;
+    }
+    const auto *flange = drfl_.get_current_tool_flange_posx();
+    if (!flange)
+    {
+        return false;
+    }
+    // Copy SDK-owned response data before the next query.
+    JointArray measured_flange = {};
+    for (int i = 0; i < kNumJoints; ++i)
+    {
+        measured_flange[i] = flange->_fPosition[i];
+    }
+    const auto *tcp = drfl_.get_current_posx(COORDINATE_SYSTEM_BASE);
+    if (!tcp)
+    {
+        return false;
+    }
+    JointArray measured_tcp = {};
+    for (int i = 0; i < kNumJoints; ++i)
+    {
+        measured_tcp[i] = tcp->_fTargetPos[i];
+        if (!std::isfinite(measured_flange[i]) || !std::isfinite(measured_tcp[i]))
+        {
+            return false;
+        }
+    }
+    flange_pose = measured_flange;
+    tcp_pose = measured_tcp;
+    return true;
+}
+
 bool DoosanController::readActualJointState(JointArray &position, JointArray &velocity)
 {
     std::lock_guard<std::mutex> lock(drfl_mutex_);

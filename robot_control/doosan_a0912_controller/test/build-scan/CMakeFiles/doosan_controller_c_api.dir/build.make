@@ -93,9 +93,9 @@ doosan_controller_c_api_EXTERNAL_OBJECTS =
 libdoosan_controller_c_api.so: CMakeFiles/doosan_controller_c_api.dir/src/doosan_controller_c_api.cpp.o
 libdoosan_controller_c_api.so: CMakeFiles/doosan_controller_c_api.dir/build.make
 libdoosan_controller_c_api.so: libdoosan_controller.a
-libdoosan_controller_c_api.so: ../../API-DRFL/library/Linux/64bits/amd64/22.04/libDRFL.a
-libdoosan_controller_c_api.so: ../../API-DRFL/library/Linux/64bits/amd64/22.04/libPocoFoundation.so
-libdoosan_controller_c_api.so: ../../API-DRFL/library/Linux/64bits/amd64/22.04/libPocoNet.so
+libdoosan_controller_c_api.so: /home/oms/doosan_a0912_controller/API-DRFL/library/Linux/64bits/amd64/22.04/libDRFL.a
+libdoosan_controller_c_api.so: /home/oms/doosan_a0912_controller/API-DRFL/library/Linux/64bits/amd64/22.04/libPocoFoundation.so
+libdoosan_controller_c_api.so: /home/oms/doosan_a0912_controller/API-DRFL/library/Linux/64bits/amd64/22.04/libPocoNet.so
 libdoosan_controller_c_api.so: /home/oms/miniconda3/envs/vehicle_painting_robot_control/lib/libpinocchio_parsers.so.3.9.0
 libdoosan_controller_c_api.so: /home/oms/miniconda3/envs/vehicle_painting_robot_control/lib/liburdfdom_sensor.so.5.1
 libdoosan_controller_c_api.so: /home/oms/miniconda3/envs/vehicle_painting_robot_control/lib/liburdfdom_model.so.5.1
