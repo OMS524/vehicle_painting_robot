@@ -2879,6 +2879,10 @@ bool DoosanController::solveClosestIk(
     JointArray *joint,
     int *solution_space)
 {
+    if (solution_space)
+    {
+        *solution_space = -1;
+    }
     if (!joint)
     {
         return false;
@@ -2888,6 +2892,7 @@ bool DoosanController::solveClosestIk(
     double best_score = std::numeric_limits<double>::infinity();
     int best_solution = -1;
     int best_status = std::numeric_limits<int>::max();
+    bool query_error = false;
 
     std::lock_guard<std::mutex> lock(drfl_mutex_);
     for (int solution = 0; solution < 8; ++solution)
@@ -2899,12 +2904,14 @@ bool DoosanController::solveClosestIk(
             static_cast<unsigned char>(1));
         if (!response)
         {
+            query_error = true;
             continue;
         }
 
         best_status = std::min(best_status, response->_iStatus);
         if (response->_iStatus != 0)
         {
+            query_error = query_error || (response->_iStatus != 1 && response->_iStatus != 2);
             continue;
         }
 
@@ -2925,6 +2932,12 @@ bool DoosanController::solveClosestIk(
 
     if (best_solution < 0)
     {
+        // Only classify explicit SDK rejections as a retryable IK miss.
+        // A missing response or an unknown status remains an ordinary error.
+        if (solution_space && !query_error && (best_status == 1 || best_status == 2))
+        {
+            *solution_space = -1 - best_status;
+        }
         std::cerr << "[robot] closest IK failed status=" << best_status << " task_pose(mm,deg)=";
         for (int i = 0; i < kNumJoints; ++i)
         {

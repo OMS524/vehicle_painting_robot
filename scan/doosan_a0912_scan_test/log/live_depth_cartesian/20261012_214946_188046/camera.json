@@ -1,0 +1,12 @@
+{
+  "device": {
+    "name": "Orbbec Femto Bolt",
+    "serial_number": "CL8M8410004",
+    "firmware_version": "1.0.9"
+  },
+  "width": 640,
+  "height": 576,
+  "fps": 30,
+  "format": "Y16",
+  "temporal_fusion": false
+}

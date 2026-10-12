@@ -143,7 +143,17 @@ def serve(wrapper, library, protocol):
                 elif op == "move":
                     result = move_and_settle(robot, request["joint_deg"], settings)
                 elif op == "move_cartesian":
-                    result = move_cartesian_and_settle(robot, request["pose_mm_deg"], settings, ik)
+                    try:
+                        result = move_cartesian_and_settle(robot, request["pose_mm_deg"], settings, ik)
+                    except wrapper.IKNoSolutionError as error:
+                        if request.get("recover_ik_failure") is not True:
+                            raise  # Automatic scans retain their fail/servo-off behavior.
+                        print(str(error), file=sys.stderr, flush=True)
+                        protocol.write(json.dumps({"id": request["id"], "error": str(error),
+                            "error_code": "ik_no_solution", "sdk_status": error.sdk_status,
+                            "recoverable": True}, ensure_ascii=False) + "\n")
+                        protocol.flush()
+                        continue  # IK failed before motion; keep this interactive session open.
                 else:
                     raise ValueError(f"지원하지 않는 요청: {op}")
                 protocol.write(json.dumps({"id": request["id"], "result": result}, allow_nan=False) + "\n")

@@ -39,6 +39,13 @@ DEPTH_FRAME = "camera_depth_optical_frame"
 VIEW_COLORS = {"front": [1.0, 0.35, 0.25], "left": [0.25, 0.85, 0.4], "right": [0.25, 0.5, 1.0]}
 
 
+class IKNoSolutionError(RuntimeError):
+    """Explicit, recoverable no-solution response from the control worker."""
+    def __init__(self, message, sdk_status):
+        super().__init__(message)
+        self.sdk_status = sdk_status
+
+
 def view_colors(views):
     """기존 세 이름의 색은 유지하고, 다른 이름에는 목록 순서로 구분색을 배정."""
     colors = {}
@@ -202,8 +209,7 @@ def preflight(cfg, model, execute=False):
         raise RuntimeError("제어 환경 라이브러리 검사 실패:\n" + checked.stdout + checked.stderr)
     import open3d  # noqa: F401 -- 실행 전에 스캔 환경 의존성 로딩 확인
     import pyorbbecsdk  # noqa: F401 -- Context/Pipeline 생성은 하지 않음
-    if cfg["camera"]["capture_color"]:
-        import cv2  # noqa: F401 -- RGB PNG 저장용
+    import cv2  # noqa: F401 -- Depth 시각화/RGB PNG 저장용
 
     print("파일·TF·분리된 제어 라이브러리 검사 통과. 하드웨어 연결 없음.")
     print(f"촬영 시점 {len(cfg['views'])}개 (목록 순서): " + " → ".join(v["name"] for v in cfg["views"]))
@@ -257,6 +263,8 @@ class RobotClient(AbstractContextManager):
         if reply.get("id") != self.sequence:
             raise RuntimeError("로봇 worker 응답 순서 불일치")
         if "error" in reply:
+            if reply.get("error_code") == "ik_no_solution" and reply.get("recoverable") is True:
+                raise IKNoSolutionError(reply["error"], reply.get("sdk_status"))
             raise RuntimeError(reply["error"])
         return reply["result"]
 
@@ -264,8 +272,8 @@ class RobotClient(AbstractContextManager):
         return self.call("move", joint_deg=joints,
                          timeout=self.cfg["robot"]["move_timeout_sec"] + self.cfg["robot"]["settle_timeout_sec"] + 15)
 
-    def move_cartesian(self, pose):
-        return self.call("move_cartesian", pose_mm_deg=pose,
+    def move_cartesian(self, pose, *, recover_ik_failure=False):
+        return self.call("move_cartesian", pose_mm_deg=pose, recover_ik_failure=recover_ik_failure,
                          timeout=self.cfg["robot"]["move_timeout_sec"] + self.cfg["robot"]["settle_timeout_sec"] + 30)
 
     def snapshot(self):
@@ -592,6 +600,21 @@ def save_rgb(path, rgb):
         raise OSError(f"RGB 이미지 저장 실패: {path}")
 
 
+def save_depth_visualization(path, raw, scale_mm_per_unit, minimum_mm, maximum_mm):
+    """저장한 Depth와 같은 픽셀의 거리 색상 PNG. live Depth와 같은 고정 범위/JET."""
+    import cv2
+
+    depth_mm = raw.astype(np.float32) * scale_mm_per_unit
+    gray = np.clip((depth_mm - minimum_mm) / (maximum_mm - minimum_mm) * 255, 0, 255).astype(np.uint8)
+    colored = cv2.applyColorMap(gray, cv2.COLORMAP_JET)
+    colored[raw == 0] = 0
+    if not cv2.imwrite(str(path), colored):
+        raise OSError(f"Depth 시각화 이미지 저장 실패: {path}")
+    return {"file": Path(path).name, "source_file": "depth_raw.npy", "colormap": "JET",
+            "min_depth_mm": minimum_mm, "max_depth_mm": maximum_mm,
+            "out_of_range": "clipped_to_display_range", "invalid_depth_color_rgb": [0, 0, 0]}
+
+
 def capture_sequence(cfg, model, robot, camera, output):
     """주입 가능한 robot/camera를 사용하여 순서와 저장 과정을 오프라인 테스트 가능."""
     import open3d as o3d
@@ -646,6 +669,9 @@ def capture_sequence(cfg, model, robot, camera, output):
                     save_rgb(directory / "color_rgb.png", captured.color_rgb)
                 if captured.color_aligned_rgb is not None:
                     save_rgb(directory / "color_aligned_depth.png", captured.color_aligned_rgb)
+                calibration["depth_visualization"] = save_depth_visualization(
+                    directory / "depth_visualization.png", raw, calibration["depth_scale_mm_per_unit"],
+                    cfg["camera"]["min_depth_mm"], cfg["camera"]["max_depth_mm"])
                 save_json(directory / "camera.json", calibration)
                 entry.update(status="captured", before_capture=before, after_capture=after)
                 save_json(directory / "pose.json", {"before": before, "after": after, "accepted": False})

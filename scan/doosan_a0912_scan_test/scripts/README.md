@@ -210,6 +210,7 @@ scan/control 환경은 **한 프로세스에서 섞지 않는다.** `control_pyt
 ├── robot_worker.log       # Python 래퍼 및 C++ 제어 로그
 ├── <name>/                # YAML의 각 시점 이름으로 폴더 생성
 │   ├── depth_raw.npy      # 통합 Depth(uint16). 기존 소비 코드와 호환되는 이름. mm = raw × scale
+│   ├── depth_visualization.png # 저장된 Depth의 거리 색상 이미지(JET). 미측정 0은 검정색
 │   ├── depth_frames.npy   # 통합 전 수집 원본 uint16, (capture_frames, height, width)
 │   ├── depth_valid_counts.npy # 픽셀별 0이 아닌 관측 횟수(uint32), (height, width)
 │   ├── color_rgb.png      # 마지막 프레임 쌍의 원본 RGB를 디코딩한 PNG (컬러 촬영 시)
@@ -223,6 +224,14 @@ scan/control 환경은 **한 프로세스에서 섞지 않는다.** `control_pyt
 ├── merged.ply             # 통합 점군을 voxel_size_mm으로 다운샘플링
 └── merged_view_colors.ply # 시점별 구분색 비교본 (컬러 촬영 시)
 ```
+
+두 촬영 스크립트 모두 시점별 `depth_visualization.png`를 항상 저장한다(RGB 촬영 여부와 무관).
+다중 프레임 버전은 통합 Depth, 단일 프레임 버전은 촬영한 한 장의 Depth를 시각화한다.
+원본 Depth 해상도를 유지하고 `raw × depth_scale_mm_per_unit`으로 mm로 변환한 뒤,
+YAML의 `camera.min_depth_mm`~`camera.max_depth_mm`를 모든 시점에 같은 색상 범위로 적용한다.
+가까운 거리는 파랑, 먼 거리는 빨강이며, 범위 밖 유효 값은 양 끝 색으로 표시하고 미측정 0은 검정색이다.
+범위와 컬러맵 정보는 `camera.json`의 `depth_visualization`에 기록한다.
+PNG는 관찰용이며 거리 계산에는 `depth_raw.npy`와 scale을 사용한다.
 
 컬러 촬영 시 시점별 PLY와 `merged_raw.ply`, `merged.ply`에 실제 RGB 색상을 저장한다.
 Depth와 RGB의 시야가 겹치지 않아 색상을 대응시킬 수 없는 부분은 검정색이다. 시야 차이와

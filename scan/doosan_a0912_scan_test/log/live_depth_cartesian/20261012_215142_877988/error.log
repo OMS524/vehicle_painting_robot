@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/live_depth_cartesian.py", line 256, in run_live
+    result = pending.result()  # SDK/이동 오류는 다음 명령을 받지 않고 종료.
+  File "/home/oms/miniconda3/envs/vehicle_painting_robot_scan/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+    return self.__get_result()
+  File "/home/oms/miniconda3/envs/vehicle_painting_robot_scan/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/home/oms/miniconda3/envs/vehicle_painting_robot_scan/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan.py", line 268, in move_cartesian
+    return self.call("move_cartesian", pose_mm_deg=pose,
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/three_view_scan.py", line 260, in call
+    raise RuntimeError(reply["error"])
+RuntimeError: Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/robot_scan_worker.py", line 146, in serve
+    result = move_cartesian_and_settle(robot, request["pose_mm_deg"], settings, ik)
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/robot_scan_worker.py", line 92, in move_cartesian_and_settle
+    solved = ik.solve(robot, pose, state["joint_deg"])
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/cartesian_scan.py", line 135, in solve
+    solved = robot.solve_closest_ik(sdk_pose, reference)
+  File "/home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/scripts/joint_target_test.py", line 400, in solve_closest_ik
+    raise RuntimeError("Doosan SDK IK failed; see robot_worker.log for SDK status")
+RuntimeError: Doosan SDK IK failed; see robot_worker.log for SDK status
+

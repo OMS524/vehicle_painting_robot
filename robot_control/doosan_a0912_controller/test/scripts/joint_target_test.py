@@ -49,6 +49,14 @@ VELOCITY_SEQUENCE = [
 ]
 
 
+class IKNoSolutionError(RuntimeError):
+    """The SDK answered but found no usable IK solution; no move was sent."""
+    def __init__(self, sdk_status):
+        self.sdk_status = sdk_status
+        reason = {1: "동작 영역 밖", 2: "손목 특이점 영역"}[sdk_status]
+        super().__init__(f"두산 SDK IK 해 없음: {reason} (status={sdk_status}).")
+
+
 class DoosanRobot:
     def __init__(self, library_path: str | Path | None = None) -> None:
         library_path = Path(library_path) if library_path is not None else LIB_PATH
@@ -397,6 +405,8 @@ class DoosanRobot:
         joint, solution = Float6(), ctypes.c_int(-1)
         if not solve(self._handle, Float6(*task_pose), Float6(*reference_joint),
                      joint, ctypes.byref(solution)):
+            if solution.value in (-2, -3):
+                raise IKNoSolutionError(-1 - solution.value)
             raise RuntimeError("Doosan SDK IK failed; see robot_worker.log for SDK status")
         return {"target_joint_deg": list(joint), "solution_space": solution.value}
 

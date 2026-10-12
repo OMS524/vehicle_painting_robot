@@ -34,7 +34,7 @@ import yaml
 from visualize_xacro import link_transforms
 from cartesian_scan import (cartesian_error, pose_matrix, target_description, target_key,
                             validate_targets)
-from three_view_scan import ik_request
+from three_view_scan import ik_request, save_depth_visualization
 
 HERE = Path(__file__).resolve().parent
 DEFAULT_CONFIG = HERE / "three_view_scan.yaml"
@@ -200,8 +200,7 @@ def preflight(cfg, model, execute=False):
         raise RuntimeError("제어 환경 라이브러리 검사 실패:\n" + checked.stdout + checked.stderr)
     import open3d  # noqa: F401 -- 실행 전에 스캔 환경 의존성 로딩 확인
     import pyorbbecsdk  # noqa: F401 -- Context/Pipeline 생성은 하지 않음
-    if cfg["camera"]["capture_color"]:
-        import cv2  # noqa: F401 -- RGB PNG 저장용
+    import cv2  # noqa: F401 -- Depth 시각화/RGB PNG 저장용
 
     print("파일·TF·분리된 제어 라이브러리 검사 통과. 하드웨어 연결 없음.")
     print(f"촬영 시점 {len(cfg['views'])}개 (목록 순서): " + " → ".join(v["name"] for v in cfg["views"]))
@@ -577,6 +576,9 @@ def capture_sequence(cfg, model, robot, camera, output):
                     save_rgb(directory / "color_rgb.png", captured.color_rgb)
                 if captured.color_aligned_rgb is not None:
                     save_rgb(directory / "color_aligned_depth.png", captured.color_aligned_rgb)
+                calibration["depth_visualization"] = save_depth_visualization(
+                    directory / "depth_visualization.png", raw, calibration["depth_scale_mm_per_unit"],
+                    cfg["camera"]["min_depth_mm"], cfg["camera"]["max_depth_mm"])
                 save_json(directory / "camera.json", calibration)
                 entry.update(status="captured", before_capture=before, after_capture=after)
                 save_json(directory / "pose.json", {"before": before, "after": after, "accepted": False})

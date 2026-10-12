@@ -147,6 +147,8 @@ public:
     // SDK task poses: base reference, XYZ in mm, Euler ZYZ in degrees.
     // Read both poses without changing the controller's active TCP.
     bool readActualCartesianState(JointArray &flange_pose, JointArray &tcp_pose);
+    // On failure, solution_space is -2 (SDK workspace), -3 (SDK wrist
+    // singularity), or -1 (query/other error). Success remains 0..7.
     bool solveClosestIk(
         const std::array<float, kNumJoints> &task_pose,
         const JointArray &reference_joint,

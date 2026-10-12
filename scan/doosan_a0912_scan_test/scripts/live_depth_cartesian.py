@@ -33,7 +33,7 @@ import numpy as np
 
 from cartesian_scan import DoosanSDKIK, RPY_CONVENTION, vector6
 from three_view_scan import (DEFAULT_CONFIG, DepthCamera, RobotClient, ScanModel,
-                             load_config, save_json, worker_command, worker_environment)
+                             IKNoSolutionError, load_config, save_json, worker_command, worker_environment)
 
 DEPTH_STALE_SEC = 2.0
 FIRST_FRAME_TIMEOUT_SEC = 10.0
@@ -168,6 +168,7 @@ def print_help(cfg, preview_only):
     else:
         print("현장 안전·장착·속도·전체 이동 구간을 확인한 뒤 MOVE를 입력하면 제어권/서보를 활성화합니다.")
         print("그 후 숫자 6개 + Enter마다 이동합니다. 충돌 회피/직선 이동 기능은 없습니다.")
+        print("IK 해가 없으면 이동하지 않고 입력 대기로 돌아갑니다. 다른 좌표를 입력하세요.")
         print("이동/초기화 중 입력은 예약하지 않고 버립니다. 완료 안내를 본 후 다시 입력하세요.", flush=True)
 
 
@@ -253,14 +254,23 @@ def run_live(cfg, model, preview_only=False):
                 if robot is not None and robot.process.poll() is not None:
                     raise RuntimeError("제어 프로세스가 종료되었습니다. robot_worker.log와 실제 로봇 정지를 확인하세요.")
                 if pending is not None and pending.done():
-                    result = pending.result()  # SDK/이동 오류는 다음 명령을 받지 않고 종료.
-                    log(operation + "_complete", result=result)
-                    print(f"\n{operation} 완료 / 실제 관절각: {result['joint_deg']}", flush=True)
-                    if operation == "move":
-                        print(f"목표 관절각과 최대 차이: {result['max_target_error_deg']:.4f} deg (기록용)", flush=True)
+                    try:
+                        result = pending.result()
+                    except IKNoSolutionError as error:
+                        if operation != "move":
+                            raise
+                        log("move_rejected", reason="ik_no_solution", error=str(error), sdk_status=error.sdk_status)
+                        print(f"\nIK 실패: {error} 이동하지 않았습니다.", flush=True)
+                        status = "IK FAILED - READY for another pose"
+                    else:
+                        log(operation + "_complete", result=result)
+                        print(f"\n{operation} 완료 / 실제 관절각: {result['joint_deg']}", flush=True)
+                        if operation == "move":
+                            print(f"목표 관절각과 최대 차이: {result['max_target_error_deg']:.4f} deg (기록용)", flush=True)
+                        status = "READY - enter next pose in terminal"
                     print("다음 x,y,z,roll,pitch,yaw 입력 대기 (q: 종료)", flush=True)
                     pending, operation = None, None
-                    ready_since, status = time.monotonic(), "READY - enter next pose in terminal"
+                    ready_since = time.monotonic()
                 for _ in range(32):
                     try:
                         entered_at, text = terminal.lines.get_nowait()
@@ -300,7 +310,7 @@ def run_live(cfg, model, preview_only=False):
                     log("move_requested", pose_mm_deg=pose, target_frame=cfg["cartesian"]["target_frame"])
                     print(f"이동 요청: {pose} (base_link 기준 mm/deg)", flush=True)
                     operation, status = "move", "MOVING / SETTLING - inputs discarded"
-                    pending = pool.submit(robot.move_cartesian, pose)
+                    pending = pool.submit(robot.move_cartesian, pose, recover_ik_failure=True)
     except StopRequested as error:
         print(str(error), flush=True)
         return output

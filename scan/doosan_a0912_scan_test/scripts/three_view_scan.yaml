@@ -51,24 +51,44 @@ cartesian:
 # pitch: 부품 기준 정면/후면 벡터
 # yaw: 부품 기준 위/아래 벡터
 views:
-  - name: view_01_top_left
-    pose_mm_deg: [300.0, 500.0, 900.0, 160.0, 0.0, -110.0]
+  # ========== 사선 뷰 ==========
+  # - name: view_01_top_left
+  #   pose_mm_deg: [500.0, 500.0, 850.0, 160.0, 0.0, -110.0]
   # - name: view_02_top_front
-  #   pose_mm_deg: [300.0, 0.0, 900.0, 160.0, 0.0, -90.0]
-  - name: view_03_top_right
-    pose_mm_deg: [300.0, -500.0, 900.0, 160.0, 0.0, -70.0]
-  - name: view_01_middle_left
-    pose_mm_deg: [300.0, 500.0, 500.0, 180.0, 0.0, -110.0]
+  #   pose_mm_deg: [500.0, 0.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_03_top_right
+  #   pose_mm_deg: [500.0, -500.0, 850.0, 160.0, 0.0, -70.0]
+  # - name: view_01_middle_left
+  #   pose_mm_deg: [500.0, 600.0, 500.0, 180.0, 0.0, -120.0]
   # - name: view_01_middle_front
-  #   pose_mm_deg: [300.0, 0.0, 500.0, 180.0, 0.0, -90.0]
-  - name: view_01_middle_right
-    pose_mm_deg: [300.0, -500.0, 500.0, 180.0, 0.0, -70.0]
-  - name: view_01_bottom_left
-    pose_mm_deg: [300.0, 500.0, 200.0, 180.0, 0.0, -110.0]
+  #   pose_mm_deg: [500.0, 0.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_middle_right
+  #   pose_mm_deg: [500.0, -700.0, 500.0, 180.0, 0.0, -60.0]
+  # - name: view_01_bottom_left
+  #   pose_mm_deg: [500.0, 500.0, 200.0, 180.0, 0.0, -110.0]
   # - name: view_01_bottom_front
-  #   pose_mm_deg: [300.0, 0.0, 200.0, 160.0, 0.0, -90.0]
+  #   pose_mm_deg: [500.0, 0.0, 200.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_right
+  #   pose_mm_deg: [500.0, -500.0, 200.0, 180.0, 0.0, -70.0]
+  # ========== 정면 뷰 ==========
+  - name: view_01_top_left
+    pose_mm_deg: [500.0, 250.0, 850.0, 160.0, 0.0, -90.0]
+  - name: view_02_top_front
+    pose_mm_deg: [500.0, 0.0, 850.0, 160.0, 0.0, -90.0]
+  - name: view_03_top_right
+    pose_mm_deg: [500.0, -250.0, 850.0, 160.0, 0.0, -90.0]
+  - name: view_01_middle_left
+    pose_mm_deg: [500.0, 250.0, 500.0, 180.0, 0.0, -90.0]
+  - name: view_01_middle_front
+    pose_mm_deg: [500.0, 0.0, 500.0, 180.0, 0.0, -90.0]
+  - name: view_01_middle_right
+    pose_mm_deg: [500.0, -250.0, 500.0, 180.0, 0.0, -90.0]
+  - name: view_01_bottom_left
+    pose_mm_deg: [500.0, 250.0, 200.0, 180.0, 0.0, -90.0]
+  - name: view_01_bottom_front
+    pose_mm_deg: [500.0, 0.0, 200.0, 180.0, 0.0, -90.0]
   - name: view_01_bottom_right
-    pose_mm_deg: [300.0, -500.0, 200.0, 180.0, 0.0, -70.0]
+    pose_mm_deg: [500.0, -250.0, 200.0, 180.0, 0.0, -90.0]
 
 
 camera:
