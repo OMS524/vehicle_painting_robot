@@ -1,5 +1,54 @@
 # Doosan A0912 + ORBBEC Femto Bolt 스캔 테스트
 
+## Depth를 보며 터미널로 반복 이동 (2026-10-12)
+
+[`scripts/live_depth_cartesian.py`](scripts/live_depth_cartesian.py)는 여러 촬영 시점을 잡기 위한
+관찰 도구다. Depth를 연속 표시하면서 터미널로 입력한 자세로 이동한다.
+**`three_view_scan.yaml`의 `views` 목록은 실행하지 않으며**, 스캔 영상 파일이나 통합 점군도
+만들지 않는다. 실시간 Depth는 프레임 통합 없이 단일 프레임씩 표시한다.
+
+```bash
+conda activate vehicle_painting_robot_scan
+cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
+
+# 하드웨어 연결 없는 환경 검사 (인자 없이 실행해도 검사만 함)
+python -s live_depth_cartesian.py --check
+
+# 연속 Depth + 터미널 반복 이동
+python -s live_depth_cartesian.py --execute
+```
+
+1. Depth 창이 나타난다. 기본 색상 범위는 YAML의 `min_depth_mm`~`max_depth_mm`이며,
+   측정값 0은 검정색이다. 중앙 십자선의 깊이(mm), 수신 FPS, 최신 프레임 경과 시간을 표시한다.
+2. 현장의 전체 이동 구간·장애물·케이블·장착·속도·비상정지를 확인한 뒤 **터미널에 `MOVE`**를 입력한다.
+   이때 로봇 제어권/서보를 활성화한다. `MOVE` 전에는 로봇에 연결하지 않는다.
+3. 활성화 완료 후 **`x,y,z,roll,pitch,yaw`에 해당하는 숫자 6개**를 쉼표나 공백으로 구분해 입력한다.
+   숫자 입력 후 Enter가 실제 이동 명령이다. 절대 `base_link` 기준 위치 **mm**, 고정축 RPY **deg**다.
+   목표 링크는 YAML의 `cartesian.target_frame`을 사용하며 기본값은 플랜지 `link_6`다.
+4. RPY를 두산 SDK의 ZYZ 표현으로 변환하고 활성 TCP 오프셋을 반영한 뒤 **두산 SDK `ikin`**으로
+   목표 관절각을 계산한다. 기존 속도·가속도·최대 관절 변화량 제한으로 이동하고 정지를 확인한다.
+   Pinocchio IK가 아니며, Cartesian 직선 이동(MoveL)이나 충돌 회피도 아니다.
+5. 완료 안내 후 다음 자세를 계속 입력할 수 있다. 입력 대기·이동 중에도 Depth 화면은 계속 갱신된다.
+   **초기화/이동 중 입력한 좌표는 예약하지 않고 버린다.** 잘못된 숫자 형식은 다시 입력할 수 있다.
+6. 터미널 `q`/`quit`/`exit`, Ctrl+C, 창의 Q/ESC/닫기로 종료한다. 터미널 `help`로 입력 도움말을 본다.
+
+SDK·이동 오류는 다음 명령을 받지 않고 종료한다. 최초 10초 내 Depth가 없거나 수신 중 새 프레임이
+2초 이상 없으면 종료하며, 연결된 로봇에 종료/servo-off를 요청한다.
+**소프트웨어 종료는 물리적 정지를 보장하지 않으므로 현장에서 정지 상태를 확인한다.**
+사용 중 펜던트나 다른 프로그램으로 동시 제어/TCP 변경을 하지 않는다.
+
+로봇 없이 카메라만 보려면 아래 명령을 사용한다.
+
+```bash
+python -s live_depth_cartesian.py --preview-only
+```
+
+설정은 같은 `scripts/three_view_scan.yaml`을 읽는다(`--config`로 다른 YAML 지정 가능).
+카메라는 Depth Y16만 켜며 RGB는 켜지 않는다. 다른 카메라 뷰어/스캔 프로그램은 먼저 종료한다.
+제어용 Python은 YAML의 `control_python`에서 별도로 실행된다.
+입력 자세, 완료 결과, 오류는 기본 `log/live_depth_cartesian/실행시각/`의
+`events.jsonl`, `robot_worker.log`, 오류 시 `error.log`에 남는다. 영상/점군 파일은 저장하지 않는다.
+
 ## 실행 방법 (2026-10-07)
 
 실행 파일은 `scripts/three_view_scan.py`, 설정 파일은
@@ -65,7 +114,7 @@ python -s three_view_scan.py --check
 python -s three_view_scan.py --execute
 ```
 
-출력된 목표 자세와 현장 안전을 확인하고, 터미널에서 **`SCAN`**을 입력하면 시작한다.
+출력된 목표 자세와 현장 안전을 확인하고, 터미널에서 **Enter**를 누르면 시작한다. 다른 문자를 입력하면 취소한다.
 전체 이동 구간의 장애물·케이블·작업자, 장착 및 툴 설정, 비상정지를 먼저 확인한다.
 코드에 충돌 검사나 자동 회피는 없다.
 

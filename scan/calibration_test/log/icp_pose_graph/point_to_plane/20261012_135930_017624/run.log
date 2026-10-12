@@ -1,0 +1,81 @@
+ICP + Pose Graph: point_to_plane
+입력: /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20261007_220005_013041
+저장: /home/oms/vehicle_painting_robot/scan/calibration_test/log/icp_pose_graph/point_to_plane/20261012_135930_017624
+ICP 쌍: view_01_top_left -> view_03_top_right
+  voxel 10 mm: fitness=0.5458, RMSE=10.093 mm, 0.100초
+  voxel 5 mm: fitness=0.4961, RMSE=4.872 mm, 0.243초
+  voxel 2 mm: fitness=0.4585, RMSE=2.461 mm, 1.153초
+  accepted: 
+ICP 쌍: view_01_top_left -> view_01_middle_left
+  voxel 10 mm: fitness=0.5454, RMSE=10.116 mm, 0.053초
+  voxel 5 mm: fitness=0.4991, RMSE=5.061 mm, 0.306초
+  voxel 2 mm: fitness=0.5091, RMSE=2.552 mm, 1.260초
+  accepted: 
+ICP 쌍: view_01_top_left -> view_01_middle_right
+  voxel 10 mm: fitness=0.4098, RMSE=10.996 mm, 0.055초
+  voxel 5 mm: fitness=0.3539, RMSE=5.407 mm, 0.350초
+  voxel 2 mm: fitness=0.2948, RMSE=2.609 mm, 0.812초
+  accepted: 
+ICP 쌍: view_01_top_left -> view_01_bottom_left
+  voxel 10 mm: fitness=0.4260, RMSE=11.923 mm, 0.039초
+  voxel 5 mm: fitness=0.3331, RMSE=5.920 mm, 0.576초
+  voxel 2 mm: fitness=0.2328, RMSE=2.837 mm, 1.639초
+  accepted: 
+ICP 쌍: view_01_top_left -> view_01_bottom_right
+  voxel 10 mm: fitness=0.2218, RMSE=12.732 mm, 0.102초
+  voxel 5 mm: fitness=0.1636, RMSE=6.398 mm, 0.225초
+  voxel 2 mm: fitness=0.0933, RMSE=3.118 mm, 1.010초
+  rejected: source_to_reference: 대응점/겹침 비율 부족
+ICP 쌍: view_03_top_right -> view_01_middle_left
+  voxel 10 mm: fitness=0.4004, RMSE=11.319 mm, 0.086초
+  voxel 5 mm: fitness=0.3575, RMSE=5.705 mm, 0.412초
+  voxel 2 mm: fitness=0.2947, RMSE=2.720 mm, 1.237초
+  accepted: 
+ICP 쌍: view_03_top_right -> view_01_middle_right
+  voxel 10 mm: fitness=0.5951, RMSE=9.622 mm, 0.045초
+  voxel 5 mm: fitness=0.5659, RMSE=4.904 mm, 0.151초
+  voxel 2 mm: fitness=0.5830, RMSE=2.453 mm, 0.492초
+  accepted: 
+ICP 쌍: view_03_top_right -> view_01_bottom_left
+  voxel 10 mm: fitness=0.1985, RMSE=13.155 mm, 0.115초
+  voxel 5 mm: fitness=0.1793, RMSE=5.860 mm, 0.407초
+  voxel 2 mm: fitness=0.1229, RMSE=2.422 mm, 0.988초
+  rejected: 점군 중심 보정 이동량 한도 초과, 회전 보정량 한도 초과
+ICP 쌍: view_03_top_right -> view_01_bottom_right
+  voxel 10 mm: fitness=0.3872, RMSE=12.081 mm, 0.141초
+  voxel 5 mm: fitness=0.3035, RMSE=6.111 mm, 0.326초
+  voxel 2 mm: fitness=0.2444, RMSE=2.695 mm, 0.685초
+  rejected: 점군 중심 보정 이동량 한도 초과, 회전 보정량 한도 초과
+ICP 쌍: view_01_middle_left -> view_01_middle_right
+  voxel 10 mm: fitness=0.4493, RMSE=10.838 mm, 0.053초
+  voxel 5 mm: fitness=0.3741, RMSE=5.146 mm, 0.207초
+  voxel 2 mm: fitness=0.2767, RMSE=2.651 mm, 0.636초
+  accepted: 
+ICP 쌍: view_01_middle_left -> view_01_bottom_left
+  voxel 10 mm: fitness=0.4785, RMSE=10.498 mm, 0.034초
+  voxel 5 mm: fitness=0.4192, RMSE=5.069 mm, 0.159초
+  voxel 2 mm: fitness=0.4096, RMSE=2.403 mm, 0.447초
+  accepted: 
+ICP 쌍: view_01_middle_left -> view_01_bottom_right
+  voxel 10 mm: fitness=0.1373, RMSE=15.106 mm, 0.114초
+  voxel 5 mm: fitness=0.0823, RMSE=6.835 mm, 0.347초
+  voxel 2 mm: fitness=0.0476, RMSE=2.833 mm, 0.180초
+  rejected: source_to_reference: 대응점/겹침 비율 부족, reference_to_source: 대응점/겹침 비율 부족, 점군 중심 보정 이동량 한도 초과, 회전 보정량 한도 초과
+ICP 쌍: view_01_middle_right -> view_01_bottom_left
+  rejected: reference_to_source: 대응점/겹침 비율 부족
+ICP 쌍: view_01_middle_right -> view_01_bottom_right
+  voxel 10 mm: fitness=0.3941, RMSE=11.279 mm, 0.069초
+  voxel 5 mm: fitness=0.3574, RMSE=5.381 mm, 0.143초
+  voxel 2 mm: fitness=0.4226, RMSE=2.518 mm, 0.526초
+  rejected: 점군 중심 보정 이동량 한도 초과, 회전 보정량 한도 초과
+ICP 쌍: view_01_bottom_left -> view_01_bottom_right
+  rejected: source_to_reference: 대응점/겹침 비율 부족
+Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/calibration_test/scripts/icp_pose_graph.py", line 273, in run
+    graph = make_graph(len(views), pairs, o3d)
+  File "/home/oms/vehicle_painting_robot/scan/calibration_test/scripts/icp_pose_graph.py", line 114, in make_graph
+    tree = spanning_tree(node_count, pairs)
+  File "/home/oms/vehicle_painting_robot/scan/calibration_test/scripts/icp_pose_graph.py", line 108, in spanning_tree
+    raise ValueError(f"검사 통과 간선으로 모든 뷰가 연결되지 않습니다: {list(groups.values())}. "
+ValueError: 검사 통과 간선으로 모든 뷰가 연결되지 않습니다: [[0, 1, 2, 3, 4], [5]]. 겹침/TF/ROI를 확인하세요. 미연결 뷰를 버리거나 강제로 연결하지 않습니다.
+

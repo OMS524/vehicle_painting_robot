@@ -87,7 +87,7 @@ views:
   SDK IK 성공은 펜던트의 모든 안전 설정이나 이동 경로의 통과를 보장하는 판정이 아니다.
 
 `--check`는 SDK IK 연결 심볼과 고정 툴 TF를 확인하며 하드웨어에 연결하지 않는다.
-목표 IK는 `--execute`와 `SCAN` 확인 후 각 이동 직전에 컨트롤러에서 계산한다.
+목표 IK는 `--execute`와 시작 확인(기본 스크립트는 Enter, 단일 프레임 스크립트는 `SCAN`) 후 각 이동 직전에 컨트롤러에서 계산한다.
 스캔 Python의 Pinocchio IK 의존성은 제거됐다. 제어 라이브러리의 다른 궤적 기능은 여전히 Pinocchio를 사용한다.
 
 새 SDK IK 연결부를 사용하려면 YAML의 `control_library`에 지정한 `.so`를 재빌드해야 한다.
@@ -154,7 +154,7 @@ cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
 # 하드웨어 연결 없이 파일/TF/환경/.so만 검사. 기본 실행도 검사만 한다.
 python -s three_view_scan.py --check
 
-# 실제 로봇 이동 + Depth 취득 + 통합/저장. 터미널에 SCAN 입력 시 시작한다.
+# 실제 로봇 이동 + Depth 취득 + 통합/저장. 터미널에서 Enter를 누르면 시작한다.
 python -s three_view_scan.py --execute
 ```
 

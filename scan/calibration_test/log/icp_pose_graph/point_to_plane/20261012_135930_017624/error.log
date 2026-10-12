@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/calibration_test/scripts/icp_pose_graph.py", line 273, in run
+    graph = make_graph(len(views), pairs, o3d)
+  File "/home/oms/vehicle_painting_robot/scan/calibration_test/scripts/icp_pose_graph.py", line 114, in make_graph
+    tree = spanning_tree(node_count, pairs)
+  File "/home/oms/vehicle_painting_robot/scan/calibration_test/scripts/icp_pose_graph.py", line 108, in spanning_tree
+    raise ValueError(f"검사 통과 간선으로 모든 뷰가 연결되지 않습니다: {list(groups.values())}. "
+ValueError: 검사 통과 간선으로 모든 뷰가 연결되지 않습니다: [[0, 1, 2, 3, 4], [5]]. 겹침/TF/ROI를 확인하세요. 미연결 뷰를 버리거나 강제로 연결하지 않습니다.

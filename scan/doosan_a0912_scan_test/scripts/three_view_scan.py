@@ -754,7 +754,7 @@ def main():
         print(f"{view['name']}: {target_description(view, cfg)}")
     print("주의: 실제 로봇의 서보/자동 제어가 활성화됩니다. 이동 구간 충돌 검사는 없습니다.\n"
           "툴 무게·장착·전체 이동 경로·주변 안전·비상정지를 확인하세요. 종료 시 servo-off 합니다.")
-    if input("실제 이동/촬영을 시작하려면 SCAN 입력: ").strip() != "SCAN":
+    if input("실제 이동/촬영을 시작하려면 Enter를 누르세요 (다른 문자 입력 시 취소): ").strip():
         print("취소했습니다. 하드웨어에 연결하지 않았습니다.")
         return 0
     output = Path(cfg["output_dir"]) / datetime.now().strftime("%Y%m%d_%H%M%S_%f")
