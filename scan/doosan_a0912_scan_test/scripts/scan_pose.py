@@ -55,7 +55,13 @@ class ScanPoseSource:
                 raise ValueError("SDK 실측 플랜지 기준·위치 단위 m인 핸드아이 결과가 필요합니다.")
             if "T_flange_depth" not in report:
                 raise ValueError("핸드아이 결과에 T_flange_depth가 없습니다. RGB 결과만으로 Depth TF를 대체하지 않습니다.")
-            self.flange_depth = validate_transform(report["T_flange_depth"])
+            # 점군에는 파일의 행렬을 그대로 적용한다(원본 SDK의 축 길이 오차도 비교 가능).
+            # 로봇 IK 툴 TF에 대한 SE(3) 검사는 cartesian_scan에서 별도로 수행한다.
+            tf = np.asarray(report["T_flange_depth"], dtype=float)
+            if (tf.shape != (4, 4) or not np.isfinite(tf).all()
+                    or not np.allclose(tf[3], [0, 0, 0, 1], atol=1e-8, rtol=0)):
+                raise ValueError("T_flange_depth는 유한한 4×4 동차행렬이어야 합니다.")
+            self.flange_depth = tf
             self.metadata.update(hand_eye_calibration_file=str(filename),
                 source_sha256=hashlib.sha256(self.report_bytes).hexdigest(),
                 calibration_method=report.get("method"),

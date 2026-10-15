@@ -1,0 +1,363 @@
+{
+  "control_python": "/home/oms/miniconda3/envs/vehicle_painting_robot_control/bin/python3.10",
+  "control_wrapper": "/home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/scripts/joint_target_test.py",
+  "control_library": "/home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/build-scan/libdoosan_controller_c_api.so",
+  "xacro": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/description/xacro/a0912_to_tool_scan.xacro",
+  "output_dir": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log",
+  "mounting_tf_confirmed": true,
+  "pose_estimation": {
+    "source": "urdf",
+    "hand_eye_calibration_file": null
+  },
+  "robot": {
+    "ip": "192.168.137.100",
+    "port": 12345,
+    "rt_port": 12347,
+    "connect_timeout_sec": 15,
+    "move_timeout_sec": 120,
+    "max_velocity_deg_s": 10.0,
+    "acceleration_deg_s2": 10.0,
+    "target_tolerance_deg": 0.1,
+    "command_time_sec": 0.01,
+    "max_move_delta_deg": 120.0,
+    "settle_sec": 1.0,
+    "settle_timeout_sec": 10.0,
+    "stationary_velocity_deg_s": 0.05,
+    "capture_drift_deg": 0.05
+  },
+  "cartesian": {
+    "target_frame": "link_6"
+  },
+  "views": [
+    {
+      "name": "pose_01",
+      "pose_mm_deg": [
+        -225.0,
+        400.0,
+        400.0,
+        136.0,
+        0.0,
+        -24.0
+      ]
+    },
+    {
+      "name": "pose_02",
+      "pose_mm_deg": [
+        -125.0,
+        400.0,
+        400.0,
+        136.0,
+        0.0,
+        -12.0
+      ]
+    },
+    {
+      "name": "pose_03",
+      "pose_mm_deg": [
+        -25.0,
+        400.0,
+        400.0,
+        136.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pose_04",
+      "pose_mm_deg": [
+        75.0,
+        400.0,
+        400.0,
+        136.0,
+        0.0,
+        14.0
+      ]
+    },
+    {
+      "name": "pose_05",
+      "pose_mm_deg": [
+        175.0,
+        400.0,
+        400.0,
+        136.0,
+        0.0,
+        26.0
+      ]
+    },
+    {
+      "name": "pose_06",
+      "pose_mm_deg": [
+        -225.0,
+        400.0,
+        400.0,
+        134.0,
+        20.0,
+        -40.0
+      ]
+    },
+    {
+      "name": "pose_07",
+      "pose_mm_deg": [
+        -125.0,
+        400.0,
+        400.0,
+        134.0,
+        10.0,
+        -20.0
+      ]
+    },
+    {
+      "name": "pose_08",
+      "pose_mm_deg": [
+        75.0,
+        400.0,
+        400.0,
+        132.0,
+        -10.0,
+        24.0
+      ]
+    },
+    {
+      "name": "pose_09",
+      "pose_mm_deg": [
+        175.0,
+        400.0,
+        400.0,
+        130.0,
+        -20.0,
+        44.0
+      ]
+    },
+    {
+      "name": "pose_10",
+      "pose_mm_deg": [
+        -225.0,
+        500.0,
+        400.0,
+        129.0,
+        0.0,
+        -28.0
+      ]
+    },
+    {
+      "name": "pose_11",
+      "pose_mm_deg": [
+        -125.0,
+        450.0,
+        400.0,
+        131.0,
+        0.0,
+        -14.0
+      ]
+    },
+    {
+      "name": "pose_12",
+      "pose_mm_deg": [
+        -25.0,
+        500.0,
+        400.0,
+        128.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pose_13",
+      "pose_mm_deg": [
+        75.0,
+        450.0,
+        400.0,
+        131.0,
+        0.0,
+        16.0
+      ]
+    },
+    {
+      "name": "pose_14",
+      "pose_mm_deg": [
+        175.0,
+        500.0,
+        400.0,
+        127.0,
+        0.0,
+        30.0
+      ]
+    },
+    {
+      "name": "pose_15",
+      "pose_mm_deg": [
+        -225.0,
+        500.0,
+        500.0,
+        123.0,
+        0.0,
+        -28.0
+      ]
+    },
+    {
+      "name": "pose_16",
+      "pose_mm_deg": [
+        -125.0,
+        500.0,
+        500.0,
+        123.0,
+        0.0,
+        -16.0
+      ]
+    },
+    {
+      "name": "pose_17",
+      "pose_mm_deg": [
+        -25.0,
+        500.0,
+        500.0,
+        123.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pose_18",
+      "pose_mm_deg": [
+        75.0,
+        500.0,
+        500.0,
+        123.0,
+        0.0,
+        18.0
+      ]
+    },
+    {
+      "name": "pose_19",
+      "pose_mm_deg": [
+        175.0,
+        500.0,
+        500.0,
+        123.0,
+        0.0,
+        30.0
+      ]
+    },
+    {
+      "name": "pose_20",
+      "pose_mm_deg": [
+        -225.0,
+        500.0,
+        500.0,
+        121.0,
+        20.0,
+        -54.0
+      ]
+    },
+    {
+      "name": "pose_21",
+      "pose_mm_deg": [
+        -125.0,
+        500.0,
+        500.0,
+        122.0,
+        10.0,
+        -30.0
+      ]
+    },
+    {
+      "name": "pose_22",
+      "pose_mm_deg": [
+        75.0,
+        500.0,
+        500.0,
+        119.0,
+        -10.0,
+        32.0
+      ]
+    },
+    {
+      "name": "pose_23",
+      "pose_mm_deg": [
+        175.0,
+        500.0,
+        500.0,
+        117.0,
+        -20.0,
+        60.0
+      ]
+    },
+    {
+      "name": "pose_24",
+      "pose_mm_deg": [
+        -225.0,
+        600.0,
+        500.0,
+        118.0,
+        0.0,
+        -32.0
+      ]
+    },
+    {
+      "name": "pose_25",
+      "pose_mm_deg": [
+        -125.0,
+        550.0,
+        500.0,
+        118.0,
+        0.0,
+        -16.0
+      ]
+    },
+    {
+      "name": "pose_26",
+      "pose_mm_deg": [
+        -25.0,
+        600.0,
+        500.0,
+        118.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "pose_27",
+      "pose_mm_deg": [
+        75.0,
+        550.0,
+        500.0,
+        118.0,
+        0.0,
+        20.0
+      ]
+    },
+    {
+      "name": "pose_28",
+      "pose_mm_deg": [
+        175.0,
+        600.0,
+        500.0,
+        117.0,
+        0.0,
+        32.0
+      ]
+    }
+  ],
+  "camera": {
+    "serial_number": "",
+    "capture_color": true,
+    "color_width": 0,
+    "color_height": 0,
+    "color_max_time_delta_ms": 50.0,
+    "width": 0,
+    "height": 0,
+    "fps": 0,
+    "warmup_frames": 30,
+    "capture_frames": 30,
+    "min_valid_frames": 3,
+    "capture_timeout_sec": 20.0,
+    "min_depth_mm": 200.0,
+    "max_depth_mm": 3000.0,
+    "min_points": 1000
+  },
+  "reconstruction": {
+    "voxel_size_mm": 2.0,
+    "roi_min_mm": null,
+    "roi_max_mm": null
+  }
+}

@@ -7,14 +7,14 @@ output_dir: ../log
 board:
   inner_corners: [13, 8]  # 가로/세로 내부 코너 수. 14×9칸 체커보드, 총 104개
   square_size_mm: 40.0  # 실측 한 칸 길이: 4 cm = 40 mm
-  fixed_board_confirmed: false
+  fixed_board_confirmed: true
 
 motion:
-  plan_confirmed: false  # 툴 설정, 시작 자세부터 모든 이동 구간, 보정판 시야 확인 후 true
+  plan_confirmed: true  # 툴 설정, 시작 자세부터 모든 이동 구간, 보정판 시야 확인 후 true
   confirm_each_pose: true  # 각 이동 전에 Enter. q/다른 문자/Ctrl+C는 종료
-  max_velocity_deg_s: 5.0
-  acceleration_deg_s2: 5.0
-  max_move_delta_deg: 45.0  # 현재 자세 대비 관절별 이동 제한. 충돌 검사를 대신하지 않음
+  max_velocity_deg_s: 10.0
+  acceleration_deg_s2: 10.0
+  max_move_delta_deg: 120.0  # 현재 자세 대비 관절별 이동 제한. 충돌 검사를 대신하지 않음
 
 camera:
   serial_number: ""
@@ -41,11 +41,82 @@ calibration:
 # RGB에서 보정판 중심을 거의 수직 아래로 바라보는 기준 자세 하나를 입력합니다.
 # 기준 1개 + tilt/2 원주 8개 + tilt 원주 8개 = 17개 촬영 자세 자동 생성.
 # Xacro의 명목 RGB 장착 TF와 아래 높이는 촬영 위치 생성 전용이며 보정 계산에는 넣지 않습니다.
-pose_generation:
-  reference_pose_mm_deg: [0.0, 500.0, 500.0, 90.0, 0.0, 0.0]  # base_link -> link_6 [x,y,z,roll,pitch,yaw], mm/deg
-  # 고정축 RPY: Rz(yaw) @ Ry(pitch) @ Rx(roll). 펜던트 ZYZ가 아님!
-  board_height_mm: 0.0  # base_link 기준 보정판의 대략적인 높이. 실제 높이를 알아야만 계산 가능한 것은 아님
-  tilt_deg: 15.0  # 최대 기울기 변화. 0 초과 ~ 30도; 기본 작은 원주 7.5도, 큰 원주 15도
-  min_camera_height_mm: 200.0  # 추정 평면에서 명목 RGB 원점까지 최소 수직 높이. 충돌 검사 아님
-# --check로 생성 목록 확인 후 전체 관절 이동 구간/시야를 확인하세요.
-# 참고: 과거 수동 poses 설정/저장 세션도 지원. 수동 목록을 쓰려면 pose_generation을 제거합니다.
+# pose_generation:
+#   reference_pose_mm_deg: [0.0, 400.0, 500.0, 120.0, 0.0, 0.0]  # base_link -> link_6 [x,y,z,roll,pitch,yaw], mm/deg
+#   # 고정축 RPY: Rz(yaw) @ Ry(pitch) @ Rx(roll). 펜던트 ZYZ가 아님!
+#   board_height_mm: 0.0  # base_link 기준 보정판의 대략적인 높이. 실제 높이를 알아야만 계산 가능한 것은 아님
+#   tilt_deg: 15.0  # 최대 기울기 변화. 0 초과 ~ 30도; 기본 작은 원주 7.5도, 큰 원주 15도
+#   min_camera_height_mm: 200.0  # 추정 평면에서 명목 RGB 원점까지 최소 수직 높이. 충돌 검사 아님
+# # --check로 생성 목록 확인 후 전체 관절 이동 구간/시야를 확인하세요.
+# # 참고: 과거 수동 poses 설정/저장 세션도 지원. 수동 목록을 쓰려면 pose_generation을 제거합니다.
+
+# base_link 기준 link_6 자세
+# [x, y, z, roll, pitch, yaw] — 위치 mm, 고정축 RPY deg
+poses:
+  # y400, z400 기준 왼/오
+  - name: pose_01
+    pose_mm_deg: [-225.0, 400.0, 400.0, 136.0, 0.0, -24.0]
+  - name: pose_02
+    pose_mm_deg: [-125.0, 400.0, 400.0, 136.0, 0.0, -12.0]
+  - name: pose_03
+    pose_mm_deg: [-25.0, 400.0, 400.0, 136.0, 0.0, 0.0]
+  - name: pose_04
+    pose_mm_deg: [75.0, 400.0, 400.0, 136.0, 0.0, 14.0]
+  - name: pose_05
+    pose_mm_deg: [175.0, 400.0, 400.0, 136.0, 0.0, 26.0]
+
+  # y400, z400 기준 왼/오 pitch 변화
+  - name: pose_06
+    pose_mm_deg: [-225.0, 400.0, 400.0, 134.0, 20.0, -40.0]
+  - name: pose_07
+    pose_mm_deg: [-125.0, 400.0, 400.0, 134.0, 10.0, -20.0]
+  - name: pose_08
+    pose_mm_deg: [75.0, 400.0, 400.0, 132.0, -10.0, 24.0]
+  - name: pose_09
+    pose_mm_deg: [175.0, 400.0, 400.0, 130.0, -20.0, 44.0]
+
+  # y400, z400 기준 전진 및 왼/오 사선
+  - name: pose_10
+    pose_mm_deg: [-225.0, 500.0, 400.0, 129.0, 0.0, -28.0]
+  - name: pose_11
+    pose_mm_deg: [-125.0, 450.0, 400.0, 131.0, 0.0, -14.0]
+  - name: pose_12
+    pose_mm_deg: [-25.0, 500.0, 400.0, 128.0, 0.0, 0.0]
+  - name: pose_13
+    pose_mm_deg: [75.0, 450.0, 400.0, 131.0, 0.0, 16.0]
+  - name: pose_14
+    pose_mm_deg: [175.0, 500.0, 400.0, 127.0, 0.0, 30.0]
+
+  # y500, z500 기준 왼/오
+  - name: pose_15
+    pose_mm_deg: [-225.0, 500.0, 500.0, 123.0, 0.0, -28.0]
+  - name: pose_16
+    pose_mm_deg: [-125.0, 500.0, 500.0, 123.0, 0.0, -16.0]
+  - name: pose_17
+    pose_mm_deg: [-25.0, 500.0, 500.0, 123.0, 0.0, 0.0]
+  - name: pose_18
+    pose_mm_deg: [75.0, 500.0, 500.0, 123.0, 0.0, 18.0]
+  - name: pose_19
+    pose_mm_deg: [175.0, 500.0, 500.0, 123.0, 0.0, 30.0]
+
+  # y500, z500 기준 왼/오 pitch 변화
+  - name: pose_20
+    pose_mm_deg: [-225.0, 500.0, 500.0, 121.0, 20.0, -54.0]
+  - name: pose_21
+    pose_mm_deg: [-125.0, 500.0, 500.0, 122.0, 10.0, -30.0]
+  - name: pose_22
+    pose_mm_deg: [75.0, 500.0, 500.0, 119.0, -10.0, 32.0]
+  - name: pose_23
+    pose_mm_deg: [175.0, 500.0, 500.0, 117.0, -20.0, 60.0]
+
+  # y500, z500 기준 전진 및 왼/오 사선
+  - name: pose_24
+    pose_mm_deg: [-225.0, 600.0, 500.0, 118.0, 0.0, -32.0]
+  - name: pose_25
+    pose_mm_deg: [-125.0, 550.0, 500.0, 118.0, 0.0, -16.0]
+  - name: pose_26
+    pose_mm_deg: [-25.0, 600.0, 500.0, 118.0, 0.0, 0.0]
+  - name: pose_27
+    pose_mm_deg: [75.0, 550.0, 500.0, 118.0, 0.0, 20.0]
+  - name: pose_28
+    pose_mm_deg: [175.0, 600.0, 500.0, 117.0, 0.0, 32.0]

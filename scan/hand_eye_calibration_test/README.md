@@ -123,6 +123,47 @@ python -s hand_eye_calibration.py --solve ../log/촬영_디렉토리 --exclude p
 미완료 세션도 이미 accepted로 저장된 표본이 충분하다면 계산 가능하다.
 검출 실패 시점의 원본은 보존하지만, 자동으로 다음 자세로 진행하지 않는다.
 
+### 원본/축 길이 보정 Depth TF를 포함한 calibration.json 저장
+
+이미 계산한 RGB 핸드아이 값(`T_flange_color`)에 SDK의 Depth→RGB 행렬을 곱해
+플랜지 기준 Depth 좌표계(`T_flange_depth`)를 계산한다. 기존 보정 결과 전체를 유지하고
+이 행렬을 추가한 `calibration.json` 두 개를 저장한다. 로봇·카메라 연결이나 RGB 코너
+재검출 없이 저장된 JSON만 사용한다.
+
+```bash
+python -s hand_eye_calibration.py --export-depth-variants ../log/20261015_202951_112921
+
+# 세션 내 특정 계산 결과를 지정할 수도 있다.
+python -s hand_eye_calibration.py --export-depth-variants \
+  ../log/20261015_202951_112921/calibration_20261015_203609_885625/calibration.json
+```
+
+세션 폴더를 지정하면 가장 최근에 완료된 `calibration_*/calibration.json`을 선택하고
+선택한 경로를 출력한다. 계산 결과 폴더도 입력 가능하다. 원본 외부 파라미터는 같은 세션의
+`camera.json`에서 `T_color_depth_sdk_raw`를 우선 사용하며, 없는 경우 `T_color_depth`를 사용한다.
+
+결과는 세션의 새 `depth_tf_variants_일시/` 폴더에 저장한다.
+
+- `raw/calibration.json`: 길이/직교성 검사에 실패해도 SDK 행렬을 그대로 곱한 결과.
+- `unit_axis/calibration.json`: 기본 **X축(회전행렬 첫 번째 열)** 벡터를 자신의 길이로 나눠
+  길이 1로 만든 뒤 곱한 결과. 다른 축을 비교하려면 `--normalize-axis y` 또는 `z`를 추가한다.
+
+두 JSON 모두 기존 `T_flange_color`, 계산 방법, 촬영 표본, 사용/제외 목록, 오차·품질 결과,
+`status`, `robot_pose_source`를 보존하고 `T_color_depth`, `T_flange_depth`를 추가한다.
+`depth_tf_export`에는 원본 경로, 보정 방법, 축 길이, 축 사이 내적, 직교 오차,
+determinant, SE(3) 허용오차 통과 여부를 기록한다. 위치 단위는 m다.
+보정본은 선택한 벡터의 방향과 나머지 축·이동량을 유지한다. SVD 직교화나 특정 원소 교체는
+적용하지 않으므로 축 간 직교 오차가 남을 수 있다.
+
+이는 **Depth TF가 포함된 전체 핸드아이 보정 결과**이며 Depth 이미지나 점군을 생성하는 기능은 아니다.
+기존 파일을 덮어쓰지 않으며 새 파일도 기존과 같은 `computed_requires_physical_validation` 상태를 유지한다.
+`quality_checks_passed`는 원본 RGB 보정의 품질 결과를 그대로 유지하며, Depth TF의 진단값은 별도로 기록한다.
+이미 출력한 Depth TF에 대한 과거 "미출력" 경고는 출처 정보에 보관하고 현재 상태에 맞는 경고를 기록한다.
+스캔에서 비교하려면 기존 `pose_estimation.source: hand_eye`를 사용하고
+`hand_eye_calibration_file`에 둘 중 하나를 지정한다. 원본/보정본은 파일 경로로 선택하며,
+설정 예시는 [스캔 스크립트 README](../doosan_a0912_scan_test/scripts/README.md)의
+"SDK 원본/축 길이 보정 TF로 정합 비교"를 참고한다.
+
 ## 계산과 좌표계
 
 1. 생성한 각 플랜지 목표로 SDK IK/관절 이동 후 기존 정지 유지 조건을 확인한다.
@@ -145,7 +186,8 @@ SDK 로봇 자세(mm/Euler ZYZ)는 m/회전행렬로 변환하고,
 체커보드 좌표 역시 mm → m로 변환하여 단위를 맞춘다.
 Depth->RGB TF는 SDK `depth_profile.get_extrinsic_to(color_profile)`에서 읽는다.
 이 TF가 없거나 회전행렬 검증에 실패하면 **RGB 보정만 저장**하고 Depth TF 미출력 경고를 남긴다.
-검증 실패한 회전행렬을 임의로 정규화하거나 transpose/부호 변경하지 않는다.
+기본 촬영/`--solve`에서는 검증 실패한 회전행렬을 임의로 정규화하거나 transpose/부호 변경하지 않는다.
+위의 `--export-depth-variants`를 명시한 경우에만 원본/축 길이 보정 비교 파일을 별도로 만든다.
 
 **이 결과는 SDK 플랜지 자세 모델 기준**이다.
 스캔의 `multi_view_scan.yaml`에서 `pose_estimation.source: hand_eye`와

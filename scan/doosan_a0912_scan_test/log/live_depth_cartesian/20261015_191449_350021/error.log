@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/live_rgbd_cartesian.py", line 287, in run_live
+    key = cv.waitKey(10) & 0xFF
+KeyboardInterrupt

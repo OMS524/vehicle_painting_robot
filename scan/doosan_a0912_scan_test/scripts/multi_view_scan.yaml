@@ -10,12 +10,14 @@ mounting_tf_confirmed: true
 
 # 두 스캔 스크립트 공통. 원본 Depth 취득은 동일하며 베이스 좌표 변환에 사용할 TF를 선택.
 pose_estimation:
-  source: urdf  # urdf / hand_eye
+  source: hand_eye  # urdf / hand_eye
   # urdf: 실측 관절각 + Xacro FK/장착 TF (기존 방식)
   # hand_eye: SDK 실측 플랜지 자세 × 아래 결과 JSON의 T_flange_depth
   # hand_eye_calibration_test/log/<촬영시각>/calibration_<계산시각>/calibration.json 지정.
   # 상대 경로는 이 YAML 기준. 핸드아이 품질 검사 통과 결과만 허용하며 누락/실패 시 실행 차단.
-  hand_eye_calibration_file: null
+  # 원본/길이 보정본 모두 전체 calibration.json: raw/ 또는 unit_axis/ 폴더로 선택.
+  # 파일의 T_flange_depth를 추가 보정 없이 점군 변환에 적용.
+  hand_eye_calibration_file: ../../hand_eye_calibration_test/log/20261015_202951_112921/depth_tf_variants_20261015_215240_124624/unit_axis/calibration.json
   # hand_eye + target_frame=camera_depth_optical_frame이면 IK 목표 변환에도 동일 보정 TF 적용.
 
 robot:

@@ -38,6 +38,7 @@
    선택한 TF를 확인한 뒤에만 `mounting_tf_confirmed: true`로 변경한다.
    Xacro는 mesh 정렬/카메라 내부 nominal TF이며 핸드아이 결과가 아니다.
    `hand_eye`는 `hand_eye_calibration_file`에 별도 보정 결과 JSON 경로를 지정한다.
+   원본/축 길이 보정본 모두 같은 `calibration.json` 형식이며 파일 경로로 선택한다(아래 비교 설정 참고).
    자세한 설정은 [상위 README의 정합 TF 선택](../README.md)을 참고한다.
 4. `camera.min_depth_mm`, `max_depth_mm`를 대상 거리에 맞춘다. 배경/로봇 점이 포함되면
    `reconstruction.roi_min_mm`, `roi_max_mm`에 **base_link 기준** 관심 영역을 지정한다.
@@ -296,12 +297,44 @@ Depth raw scale을 점군에 중복해서 적용하지 않는다.
 관절 상태 두 조회와 카메라 타임스탬프는 별도 저장하며 원자적인 동시 측정으로 취급하지 않는다.
 
 핸드아이 결과는 본 저장소 캘리브레이션 코드의 `calibration.json`을 사용한다.
-위치 단위 m, SDK 실측 플랜지 기준, 품질 검사 통과, 유효한 `T_flange_depth`를 확인한다.
+위치 단위 m, SDK 실측 플랜지 기준, 품질 검사 통과, 유한한 4×4 `T_flange_depth`를 확인한다.
 RGB TF만 있는 결과는 사용할 수 없다. 선택한 결과는 실행 전에 한 번 읽어 고정하고,
 출력 폴더에 `hand_eye_calibration.json`으로 원본 바이트를 복사한다.
 `manifest.json`과 `pose.json`의 `pose_estimation`에는 모드, 원본 경로, SHA-256,
 보정 방법과 사용한 Depth TF가 저장된다. 실제 카메라·장착 상태 일치와 실물 정확도는 별도 확인해야 한다.
 기존 `T_base_depth`, 단위, PLY 구조는 유지하므로 ICP/클러스터링/SAM 후처리에 그대로 사용할 수 있다.
+
+#### SDK 원본/축 길이 보정 TF로 정합 비교
+
+`hand_eye_calibration.py --export-depth-variants`는 기존 RGB 해·촬영 표본·품질 정보를 유지하고
+원본/축 길이 보정 Depth TF를 각각 추가한 전체 `calibration.json`을 저장한다.
+스캔은 기존 `source: hand_eye`에서 같은 필드(`status`, `quality_checks_passed`, `robot_pose_source`,
+`T_flange_depth` 등)를 읽는다. 단일/다중 프레임 스크립트 모두 같은 설정을 사용한다.
+파일의 `T_flange_depth`를 SDK 실측 플랜지 자세와 곱하며, 원본의 짧은 축이나
+남아 있는 직교 오차를 추가로 보정하지 않는다.
+
+```yaml
+pose_estimation:
+  source: hand_eye
+  hand_eye_calibration_file: ../../hand_eye_calibration_test/log/20261015_202951_112921/depth_tf_variants_20261015_214838_096910/raw/calibration.json
+```
+
+보정본을 테스트할 때는 위 경로의 `raw/calibration.json`을 `unit_axis/calibration.json`으로 바꾼다.
+실행 한 번에 파일 하나를 사용한다. 경로는 YAML 위치 기준이며 절대 경로도 가능하다.
+현재 `cartesian.target_frame: link_6`과 `views`를 유지하면 두 TF로 같은 이동 목표를 테스트한다.
+이 비교에서는 Cartesian 목표 프레임을 현재의 `link_6`으로 유지한다. `bracket_link`와
+`joint_deg` 목표도 사용 가능하다. 원본처럼 비강체인 행렬은 카메라 목표 자세의 IK 툴 TF 검사에서 거부된다.
+
+```bash
+python -s multi_view_scan_single_frame.py --check
+python -s multi_view_scan_single_frame.py --execute
+```
+
+스캔 로그의 `hand_eye_calibration.json`에 선택한 파일을 그대로 복사하고,
+`manifest.json`/`pose.json`에는 `hand_eye`, 원본 경로, SHA-256, 적용 행렬을 기록한다.
+원본/보정본 구분과 행렬 진단값은 복사된 보정 파일의 `depth_tf_export`에 남는다.
+이 비교는 점군을 로봇 베이스 좌표로 옮기는 TF에 적용된다. 카메라 SDK의 RGB–Depth 색상 정렬에는
+원래 SDK 외부 파라미터가 사용되므로 색상 경계 보정까지 비교하는 기능은 아니다.
 
 단위/광학 좌표계/카메라 보정 처리 참고:
 [Orbbec PointCloudFilter 구현](https://github.com/orbbec/OrbbecSDK_v2/blob/main/src/filter/publicfilters/PointCloudProcess.cpp),

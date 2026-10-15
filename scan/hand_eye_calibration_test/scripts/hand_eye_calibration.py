@@ -3,6 +3,7 @@
 
 기본/--check: 하드웨어 연결 없는 검사. --preview: 카메라만 사용.
 --execute: 기준 자세로 생성한 촬영 자세에서 촬영 후 계산. --solve SESSION: 저장 데이터로 재계산.
+--export-depth-variants LOG: 원본/축 길이 보정 Depth TF를 포함한 calibration.json 두 개 저장.
 출력 T_parent_child는 child 좌표를 parent 좌표로 변환합니다. 위치 단위 m.
 기존 Xacro/로봇 TCP/스캔 알고리즘에 보정값을 자동 적용하지 않습니다.
 """
@@ -519,6 +520,121 @@ def solve_session(session, excluded=()):
     return output
 
 
+def depth_variant_sources(path):
+    """세션은 최근 완료 계산을, 계산 폴더/JSON은 지정한 계산을 사용한다."""
+    path = Path(path).expanduser().resolve()
+    if path.is_dir() and (path / "calibration.json").is_file():
+        path = path / "calibration.json"
+    elif path.is_dir():
+        for candidate in sorted(path.glob("calibration_*/calibration.json"), reverse=True):
+            report = read_json(candidate)
+            if (report.get("status") == "computed_requires_physical_validation"
+                    and "T_flange_color" in report):
+                path = candidate
+                break
+        else:
+            raise ValueError("완료된 calibration_*/calibration.json이 없습니다. 먼저 --solve LOG를 실행하세요.")
+    report = read_json(path)
+    if report.get("status") != "computed_requires_physical_validation":
+        raise ValueError("완료된 RGB 핸드아이 calibration.json을 지정하세요.")
+    if report.get("translation_unit") != "m":
+        raise ValueError("위치 단위가 m인 핸드아이 결과가 필요합니다.")
+    # 로그를 옮긴 경우에도 현재 계산 파일 주변의 camera.json을 먼저 사용한다.
+    folders = [path.parent, path.parent.parent, path.parent.parent.parent]
+    if report.get("source_session"):
+        folders.append(Path(report["source_session"]).expanduser().resolve())
+    for session in folders:
+        if (session / "camera.json").is_file():
+            return session, path, report, read_json(session / "camera.json")
+    raise ValueError("계산에 대응하는 세션의 camera.json을 찾을 수 없습니다.")
+
+
+def depth_tf_variants(flange_color, color_depth_raw, axis="x"):
+    """비교용: 원본을 보존하고 지정한 열 벡터만 정규화한다. 직교화는 하지 않는다."""
+    flange_color = validate_transform(flange_color)
+    raw = np.asarray(color_depth_raw, dtype=float)
+    if (raw.shape != (4, 4) or not np.isfinite(raw).all()
+            or not np.allclose(raw[3], [0, 0, 0, 1], atol=1e-8, rtol=0)):
+        raise ValueError("SDK 원본은 유한한 4×4 동차행렬이어야 합니다.")
+    if axis not in ("x", "y", "z"):
+        raise ValueError("보정할 축은 x / y / z 중 하나여야 합니다.")
+    column = ("x", "y", "z").index(axis)
+    length = float(np.linalg.norm(raw[:3, column]))
+    if not np.isfinite(length) or length <= 1e-12:
+        raise ValueError(f"{axis}축 벡터 길이가 0 또는 너무 작아 정규화할 수 없습니다.")
+    normalized = raw.copy()
+    normalized[:3, column] /= length
+
+    def diagnostics(t):
+        r = t[:3, :3]
+        gram = r.T @ r
+        try:
+            validate_transform(t)
+            valid = True
+        except ValueError:
+            valid = False
+        return {"axis_lengths_xyz": np.linalg.norm(r, axis=0).tolist(),
+                "axis_dot_products": gram.tolist(),
+                "max_abs_RtR_minus_I": float(np.max(np.abs(gram - np.eye(3)))),
+                "determinant": float(np.linalg.det(r)), "passes_se3_tolerance": valid}
+
+    variants = {}
+    for name, tf in (("raw", raw), ("unit_axis", normalized)):
+        flange_depth = flange_color @ tf
+        variants[name] = {
+            "variant": name, "T_flange_color": flange_color.tolist(),
+            "T_color_depth": tf.tolist(), "T_flange_depth": flange_depth.tolist(),
+            "normalization": {"method": "none" if name == "raw" else "divide_selected_column_by_its_norm",
+                              "axis": axis, "column_index": column,
+                              "original_axis_length": length,
+                              "scale_factor": 1.0 if name == "raw" else 1.0 / length,
+                              "orthogonalization_applied": False},
+            "diagnostics": {"T_color_depth": diagnostics(tf),
+                            "T_flange_depth": diagnostics(flange_depth)},
+        }
+    return variants
+
+
+def export_depth_variants(path, axis="x"):
+    """기존 보정 보고서 전체에 원본/축 길이 보정 Depth TF를 추가해 각각 저장한다."""
+    session, calibration_file, report, camera = depth_variant_sources(path)
+    source_key = next((key for key in ("T_color_depth_sdk_raw", "T_color_depth") if key in camera), None)
+    if source_key is None:
+        raise ValueError("camera.json에 저장된 SDK Depth->RGB 행렬이 없습니다. 로그만으로 계산할 수 없습니다.")
+    variants = depth_tf_variants(report["T_flange_color"], camera[source_key], axis)
+    provenance = {
+        "source_calibration_file": str(calibration_file),
+        "source_camera_file": str(session / "camera.json"), "source_camera_transform_key": source_key,
+        "source_warnings": report.get("warnings", []), "source_notes": report.get("notes", []),
+        "composition": "T_flange_depth = T_flange_color @ T_color_depth",
+    }
+    output = session / ("depth_tf_variants_" + stamp())
+    output.mkdir()
+    print(f"사용한 RGB 보정값: {calibration_file}")
+    for name, result in variants.items():
+        folder = output / name
+        folder.mkdir()
+        filename = folder / "calibration.json"
+        # RGB 해, 표본, 방법, 오차, 품질 플래그와 기존 최상위 형식을 유지한다.
+        derived = {**report, "T_color_depth": result["T_color_depth"],
+                   "T_flange_depth": result["T_flange_depth"],
+                   "depth_tf_export": {**provenance, "variant": name,
+                                       "normalization": result["normalization"],
+                                       "diagnostics": result["diagnostics"]}}
+        derived["warnings"] = [w for w in report.get("warnings", []) if not w.startswith("Depth TF 미출력:")]
+        if not result["diagnostics"]["T_flange_depth"]["passes_se3_tolerance"]:
+            derived["warnings"].append("Depth TF 회전행렬 검사 실패: 원본 값을 보존한 정합 비교용 결과입니다.")
+        derived["notes"] = [n for n in report.get("notes", [])
+                            if not n.startswith("T_flange_color는 RGB 광학 프레임.")]
+        derived["notes"].append("Depth TF 추가 저장: " + ("SDK 원본 행렬 그대로 사용." if name == "raw" else
+                                  f"SDK 행렬의 {axis.upper()}축 열 벡터 길이만 1로 보정. 방향/다른 축/이동량 유지, 직교화 없음."))
+        scan.save_json(filename, derived)
+        print(f"[{name}] T_flange_depth (위치 m):\n", np.asarray(result["T_flange_depth"]))
+        print("Depth->RGB 축 길이:", result["diagnostics"]["T_color_depth"]["axis_lengths_xyz"])
+        print(f"저장: {filename}")
+    return output
+
+
 def capture_session(cfg, robot_cfg, model):
     validate_settings(cfg, execute=True)  # SDK Context/로봇 생성보다 먼저 차단
     if cfg.get("pose_generation") is not None and robot_cfg["mounting_tf_confirmed"] is not True:
@@ -617,12 +733,20 @@ def main():
     modes.add_argument("--execute", action="store_true")
     modes.add_argument("--preview", action="store_true")
     modes.add_argument("--solve", type=Path, metavar="SESSION")
+    modes.add_argument("--export-depth-variants", type=Path, metavar="LOG",
+                       help="Depth TF를 포함한 calibration.json 두 개 저장: 세션/계산 폴더 또는 calibration.json")
+    parser.add_argument("--normalize-axis", choices=("x", "y", "z"),
+                        help="--export-depth-variants에서 길이를 1로 만들 열 벡터 (기본 x)")
     parser.add_argument("--exclude", nargs="*", default=[], help="--solve에서만 사용: 제외할 pose 이름")
     args = parser.parse_args()
     if args.exclude and args.solve is None:
         parser.error("--exclude는 --solve와 함께 사용하세요.")
+    if args.normalize_axis and args.export_depth_variants is None:
+        parser.error("--normalize-axis는 --export-depth-variants와 함께 사용하세요.")
     try:
-        if args.solve:
+        if args.export_depth_variants:
+            export_depth_variants(args.export_depth_variants, args.normalize_axis or "x")
+        elif args.solve:
             solve_session(args.solve, args.exclude)
         else:
             cfg = load_settings(args.config)
