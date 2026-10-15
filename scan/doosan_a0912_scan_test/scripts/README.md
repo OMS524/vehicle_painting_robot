@@ -2,29 +2,29 @@
 
 ## 여러 시점 촬영 및 통합
 
-`three_view_scan.py`가 YAML의 `views`에 적힌 순서로 이동하고, **이동 명령 종료와
+`multi_view_scan.py`가 YAML의 `views`에 적힌 순서로 이동하고, **이동 명령 종료와
 실제 자세의 정지 유지가 확인된 뒤** 각 위치에서 여러 Depth 프레임의 유효 측정값을 통합하고
-마지막 동기 RGB 한 장과 함께 저장한다. 마지막에는 실제 관절각과
-Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. 시점은 1개 이상 원하는 만큼
+마지막 동기 RGB 한 장과 함께 저장한다. 마지막에는 촬영 직후 실측 자세와
+선택한 URDF/핸드아이 TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. 시점은 1개 이상 원하는 만큼
 지정할 수 있다. ROS는 사용하지 않는다.
 
 촬영 목표각은 여러 시점을 잡기 위한 이동 명령이다. **목표각과의 오차로 촬영을 거부하지 않으며**,
-정합에는 촬영 직후 읽은 실제 관절각을 사용한다. 정지 확인은 `motion_running: false`,
+정합에는 촬영 직후 읽은 실제 자세를 사용한다. 정지 확인은 `motion_running: false`,
 관절 속도 `stationary_velocity_deg_s` 이하, 자세 변화 `capture_drift_deg` 이내가
 `settle_sec` 동안 유지되는 조건이다. 정지 확인 시간 초과와 촬영 전후 움직임은 계속 오류 처리한다.
 `target_tolerance_deg`는 기존 속도 제어기의 이동 프로파일 계산에만 전달되며 촬영 허용 기준이 아니다.
 
-- `three_view_scan.py`: scan 환경에서 카메라 취득, FK/TF 계산, 저장, 점군 통합.
-- `three_view_scan_single_frame.py`: 초기 프레임을 버린 뒤 한 장만 저장하는 이전 방식의 별도 버전.
-- `three_view_scan.yaml`: 촬영 목표 관절각 또는 Cartesian 자세, IP, 속도, 카메라 등의 설정.
+- `multi_view_scan.py`: scan 환경에서 카메라 취득, FK/TF 계산, 저장, 점군 통합.
+- `multi_view_scan_single_frame.py`: 초기 프레임을 버린 뒤 한 장만 저장하는 이전 방식의 별도 버전.
+- `multi_view_scan.yaml`: 촬영 목표 관절각 또는 Cartesian 자세, IP, 속도, 카메라 등의 설정.
 - `robot_scan_worker.py`: control 환경의 별도 프로세스. 기존 Python 래퍼로 이동/실제 관절 상태 조회.
 - `cartesian_scan.py`: XYZ/RPY·활성 TCP 변환 및 두산 SDK IK 연결.
-- `test_cartesian_scan.py`: SDK IK 좌표 변환, ctypes 연결, 두 촬영 버전의 IK 선택을 하드웨어 없이 검사.
-- `test_three_view_scan.py`: 합성 입력만 사용하는 오프라인 테스트.
+- `scan_pose.py`: 두 촬영 버전의 URDF/핸드아이 TF 선택 및 보정 결과 검증.
+- `test_scan_pose.py`: TF 선택, SDK IK 툴 변환, 두 버전의 점군 저장을 하드웨어 없이 검사.
 
 ### 1. 설정 입력
 
-`three_view_scan.yaml`에서 아래 항목을 먼저 수정한다. 상대 파일 경로는 YAML 위치 기준이다.
+`multi_view_scan.yaml`에서 아래 항목을 먼저 수정한다. 상대 파일 경로는 YAML 위치 기준이다.
 
 1. `views`에 원하는 만큼 `name`과 목표 자세를 입력한다.
    `pose_mm_deg: [x, y, z, roll, pitch, yaw]` 또는 기존
@@ -34,9 +34,11 @@ Xacro TF로 모든 시점의 점군을 `base_link` 좌표계에 통합한다. �
    이름에는 문자(한글 포함), 숫자, `_`, `-`를 사용할 수 있고 255바이트 이내여야 한다.
    촬영 위치/시선 방향을 이름으로 자동 계산하지 않는다.
 2. `robot.ip`, 필요하면 포트, 이동 속도와 허용 이동량을 확인한다.
-3. 실제 로봇/브라켓/카메라와 Xacro의 원점·축·장착 TF가 일치하는지 확인한 뒤에만
-   `mounting_tf_confirmed: true`로 변경한다. 현재 Xacro에는 mesh 정렬 기반 장착값과
-   카메라 내부 **nominal TF**가 들어 있으며 hand-eye 캘리브레이션 결과가 아니다.
+3. `pose_estimation.source`를 `urdf` 또는 `hand_eye`로 선택한다. 실제 장착 상태와
+   선택한 TF를 확인한 뒤에만 `mounting_tf_confirmed: true`로 변경한다.
+   Xacro는 mesh 정렬/카메라 내부 nominal TF이며 핸드아이 결과가 아니다.
+   `hand_eye`는 `hand_eye_calibration_file`에 별도 보정 결과 JSON 경로를 지정한다.
+   자세한 설정은 [상위 README의 정합 TF 선택](../README.md)을 참고한다.
 4. `camera.min_depth_mm`, `max_depth_mm`를 대상 거리에 맞춘다. 배경/로봇 점이 포함되면
    `reconstruction.roi_min_mm`, `roi_max_mm`에 **base_link 기준** 관심 영역을 지정한다.
    여러 카메라가 연결되어 있으면 `serial_number`도 지정한다.
@@ -77,11 +79,13 @@ views:
 - **두산 SDK `ikin()`**으로 관절각을 구한다. 기존 제어기의 `solveClosestIk()`를 재사용해
   SDK가 정상 반환한 0~7번 관절 형상 중 현재 실측 관절각에 가장 가까운 해를 선택한다.
   YAML의 RPY는 SDK의 Euler ZYZ로 변환하며, URDF는 플랜지 이후 고정 툴 TF에 사용한다.
+  단, `hand_eye` 모드의 Depth 카메라 목표는 보정된 `T_flange_depth`로 툴 TF를 대체한다.
 - 기존 관절 이동 함수를 그대로 사용한다. **Cartesian 직선 이동(MoveL)은 아니다.**
   기존 `max_move_delta_deg`, 이동 전 정지, IK 중 실측 자세 변화 검사는 유지한다.
   SDK IK 실패 시 해당 이동을 수행하지 않고 중단한다.
-- 실제 촬영 조건과 정합 TF는 기존처럼 정지 유지 및 **촬영 직후 실제 관절각 + URDF FK**를 사용한다.
-  SDK IK와 URDF FK는 모델/보정값 차이가 있을 수 있어 촬영 후 목표 오차가 SDK IK 잔차를 뜻하지는 않는다.
+- 정지 유지 조건은 두 모드가 같다. `urdf`는 **실제 관절각 + URDF FK**,
+  `hand_eye`는 **SDK 실제 플랜지 자세 + 핸드아이 Depth TF**로 정합한다.
+  URDF와 SDK 모델 차이, 실제 정지 오차 등이 포함되므로 촬영 후 목표 오차가 IK 계산 잔차만을 뜻하지는 않는다.
 - 이전 Pinocchio 전용 `position_tolerance_mm`, `orientation_tolerance_deg`, `max_iterations`는
   SDK IK에서 사용하지 않는다. 별도의 안전 범위/상태 검사 기능은 이 전환에 추가하지 않았다.
   SDK IK 성공은 펜던트의 모든 안전 설정이나 이동 경로의 통과를 보장하는 판정이 아니다.
@@ -152,25 +156,25 @@ conda activate vehicle_painting_robot_scan
 cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
 
 # 하드웨어 연결 없이 파일/TF/환경/.so만 검사. 기본 실행도 검사만 한다.
-python -s three_view_scan.py --check
+python -s multi_view_scan.py --check
 
 # 실제 로봇 이동 + Depth 취득 + 통합/저장. 터미널에서 Enter를 누르면 시작한다.
-python -s three_view_scan.py --execute
+python -s multi_view_scan.py --execute
 ```
 
 이전의 **초기 30프레임 버림 → 다음 유효 1프레임 저장** 방식은 별도 파일로 실행한다.
-`three_view_scan_single_frame.py`는 다중 프레임 통합 전 버전(`deec341`)을 복원한 코드이며,
-같은 `three_view_scan.yaml`의 자세·속도·카메라·저장 경로를 사용한다.
+`multi_view_scan_single_frame.py`는 다중 프레임 통합 전 버전(`deec341`)을 복원한 코드이며,
+같은 `multi_view_scan.yaml`의 자세·속도·카메라·저장 경로를 사용한다.
 `warmup_frames`는 YAML 값을 따르고 현재 값은 30이다. `capture_frames`와
 `min_valid_frames`는 YAML 값에 관계없이 실행 중 1로 고정하며 원본 YAML은 변경하지 않는다.
 
 ```bash
 # 단일 프레임 버전: 검사 → 실제 촬영
-python -s three_view_scan_single_frame.py --check
-python -s three_view_scan_single_frame.py --execute
+python -s multi_view_scan_single_frame.py --check
+python -s multi_view_scan_single_frame.py --execute
 
 # 결과 시각화
-python -s three_view_scan_single_frame.py --view ../log/촬영디렉토리/merged.ply
+python -s multi_view_scan_single_frame.py --view ../log/촬영디렉토리/merged.ply
 ```
 
 각 시점에서 스트림을 새로 시작하고, 중복 수신을 제외한 유효 프레임 30개를 버린 뒤
@@ -182,10 +186,10 @@ python -s three_view_scan_single_frame.py --view ../log/촬영디렉토리/merge
 `settings.json`에는 실제 적용한 `capture_frames: 1`, `min_valid_frames: 1`을 기록한다.
 두 버전 모두 `output_dir` 아래에 실행마다 새 시각 이름의 폴더를 만든다.
 
-단일 프레임 동작은 장치 연결 없이 SDK 메모리 프레임으로 검사할 수 있다.
+두 촬영 버전의 TF 선택과 점군 저장은 장치 연결 없이 합성 데이터로 검사할 수 있다.
 
 ```bash
-python -sB test_three_view_scan_single_frame.py -v
+python -sB test_scan_pose.py -v
 ```
 
 `--execute`는 로봇 제어권/서보를 활성화한다. 성공·실패·Ctrl+C 시 기존 제어기의
@@ -255,23 +259,23 @@ Depth는 보존하되 `pose.json`의 `accepted: false`로 기록하고 통합에
 
 ```bash
 # 저장한 결과만 보기. 로봇/카메라 연결 없음.
-python -s three_view_scan.py --view ../log/촬영디렉토리/merged.ply
+python -s multi_view_scan.py --view ../log/촬영디렉토리/merged.ply
 
 # 컬러 촬영 결과의 시점별 구분색 비교본
-python -s three_view_scan.py --view ../log/촬영디렉토리/merged_view_colors.ply
+python -s multi_view_scan.py --view ../log/촬영디렉토리/merged_view_colors.ply
 ```
 
 ### TF 및 촬영 시점 기준
 
 ```text
 Depth 광학 좌표계 점(m)
-  → T_flange_depth (Xacro 고정 TF)
-  → T_base_flange (촬영 직후 실제 관절각으로 URDF FK)
+  → T_flange_depth (urdf: Xacro / hand_eye: 보정 JSON)
+  → T_base_flange (urdf: 실제 관절각의 FK / hand_eye: SDK 실제 플랜지 자세)
   → base_link 좌표계 점(m)
 ```
 
 XYZ는 SDK의 native Depth로 계산하고, RGB 영상만 Depth 픽셀로 정렬한다(C2D).
-따라서 점군의 기준은 계속 `camera_depth_optical_frame`이며 기존 Xacro TF를 적용한다.
+따라서 점군의 기준은 계속 `camera_depth_optical_frame`이며 선택한 모드의 TF를 적용한다.
 색상 정렬에는 SDK가 제공하는 내부 보정값과 Depth → Color extrinsics를 사용하고
 이 값 및 컬러 타임스탬프를 `camera.json`에 저장한다. Depth 광학 좌표축은
 X=오른쪽, Y=아래, Z=렌즈 전방이다. PointCloudFilter의 출력은 프레임에 저장된
@@ -288,8 +292,16 @@ Depth raw scale을 점군에 중복해서 적용하지 않는다.
 `filled_pixels_vs_reference`는 마지막 Depth에서는 0이었지만 다른 프레임의 측정값으로 유지된 픽셀 수다.
 촬영 전후 실제 관절각/속도를 확인하며, 허용 범위보다 움직였으면 그 촬영은 거부한다.
 이는 **정지 촬영 방식**이고 카메라-로봇 하드웨어 동기화나 이동 중 스캔이 아니다.
-`T_base_flange`는 목표 자세나 펜던트의 사용자 TCP 값이 아니라 **실제 관절각의 FK 계산값**이다.
+`T_base_flange`는 목표 자세나 펜던트 사용자 TCP가 아니라 **URDF FK 또는 SDK 실측 플랜지 자세**다.
 관절 상태 두 조회와 카메라 타임스탬프는 별도 저장하며 원자적인 동시 측정으로 취급하지 않는다.
+
+핸드아이 결과는 본 저장소 캘리브레이션 코드의 `calibration.json`을 사용한다.
+위치 단위 m, SDK 실측 플랜지 기준, 품질 검사 통과, 유효한 `T_flange_depth`를 확인한다.
+RGB TF만 있는 결과는 사용할 수 없다. 선택한 결과는 실행 전에 한 번 읽어 고정하고,
+출력 폴더에 `hand_eye_calibration.json`으로 원본 바이트를 복사한다.
+`manifest.json`과 `pose.json`의 `pose_estimation`에는 모드, 원본 경로, SHA-256,
+보정 방법과 사용한 Depth TF가 저장된다. 실제 카메라·장착 상태 일치와 실물 정확도는 별도 확인해야 한다.
+기존 `T_base_depth`, 단위, PLY 구조는 유지하므로 ICP/클러스터링/SAM 후처리에 그대로 사용할 수 있다.
 
 단위/광학 좌표계/카메라 보정 처리 참고:
 [Orbbec PointCloudFilter 구현](https://github.com/orbbec/OrbbecSDK_v2/blob/main/src/filter/publicfilters/PointCloudProcess.cpp),
@@ -311,17 +323,12 @@ cmake --build build-scan --target doosan_controller_c_api -j2
 
 conda activate vehicle_painting_robot_scan
 cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
-python -sB -m unittest test_three_view_scan -v
+python -sB -m unittest test_scan_pose -v
 ```
 
-테스트는 합성 로봇/점군과 SDK 메모리 프레임을 사용하며 로봇/카메라 연결이나 동작을 하지 않는다.
-목표 오차가 남은 정지 자세의 허용, 움직임·자세 드리프트·잘못된 측정값의 거부,
-이동 타임아웃 전파, 임의 이름의 여러 시점에서 실제 관절각 기반 TF와 점군 저장·통합을 확인한다.
-시점 개수·순서 보존, 잘못된 이름과 중복 이름 거부, 미입력 자세의 실행 차단도 확인한다.
-RGB 정렬의 보정값 적용, MJPG 디코딩, Depth 좌표·단위 유지, 거리/ROI 필터와 PLY 통합 후
-색상 보존도 검증한다.
-여러 프레임의 결손 제외/중앙값 선택, SDK 통합 Depth의 단위·RGB 대응, 중복 프레임 제외,
-수집 부족 시 타임아웃, 원본 프레임/유효 관측 횟수 저장도 하드웨어 없이 검증한다.
+테스트는 합성 로봇/카메라/점군을 사용하며 하드웨어에 연결하거나 움직이지 않는다.
+두 촬영 버전 × 두 TF 모드의 변환 및 파일 저장, 보정 결과 검증, 상대 경로 해석,
+SDK 자세 조회 실패 시 통합 차단, 보정 툴 TF를 사용한 IK 입력 변환을 확인한다.
 
 ## A0912 + 스캔 툴 Xacro 시각화
 

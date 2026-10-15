@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """제어 환경 전용 JSON-lines worker. scan SDK/Open3D를 import하지 않는다.
 
-직접 실행 대신 three_view_scan.py를 사용한다. --check는 .so 로딩만 검사한다.
+직접 실행 대신 multi_view_scan.py를 사용한다. --check는 .so 로딩만 검사한다.
 """
 import argparse
 import ctypes
@@ -105,7 +105,7 @@ def make_ik(request):
     if "cartesian" not in request:
         return None
     from cartesian_scan import DoosanSDKIK
-    return DoosanSDKIK(request["model_xml"], request["cartesian"])
+    return DoosanSDKIK(request["model_xml"], request["cartesian"], request.get("T_flange_target"))
 
 
 def serve(wrapper, library, protocol):
@@ -140,6 +140,17 @@ def serve(wrapper, library, protocol):
                     raise RuntimeError("initialize가 먼저 필요합니다.")
                 elif op == "snapshot":
                     result = robot.read_actual_joint_state()
+                elif op == "snapshot_cartesian":
+                    # Hand-eye: use measured SDK flange pose, not commanded pose or URDF FK.
+                    before = robot.read_actual_joint_state()
+                    if not stationary(before, settings):
+                        raise RuntimeError("Cartesian 촬영 자세 조회 전 로봇이 정지 상태가 아닙니다.")
+                    cartesian = robot.read_actual_cartesian_state()
+                    after = robot.read_actual_joint_state()
+                    if not stationary(after, settings) or max(abs(a - b) for a, b in
+                            zip(before["joint_deg"], after["joint_deg"])) > settings["capture_drift_deg"]:
+                        raise RuntimeError("Cartesian 촬영 자세 조회 중 로봇이 움직였습니다.")
+                    result = {**after, **cartesian}
                 elif op == "move":
                     result = move_and_settle(robot, request["joint_deg"], settings)
                 elif op == "move_cartesian":

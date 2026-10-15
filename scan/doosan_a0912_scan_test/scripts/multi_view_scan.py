@@ -30,9 +30,10 @@ import yaml
 from visualize_xacro import link_transforms
 from cartesian_scan import (cartesian_error, pose_matrix, target_description, target_key,
                             validate_targets)
+from scan_pose import ScanPoseSource, configure_pose_source
 
 HERE = Path(__file__).resolve().parent
-DEFAULT_CONFIG = HERE / "three_view_scan.yaml"
+DEFAULT_CONFIG = HERE / "multi_view_scan.yaml"
 JOINT_NAMES = tuple(f"joint_{i}" for i in range(1, 7))
 BASE_FRAME = "base_link"
 DEPTH_FRAME = "camera_depth_optical_frame"
@@ -143,6 +144,7 @@ def load_config(path):
         raise ValueError("ROI의 최소/최대 좌표를 함께 입력하세요.")
     if low is not None and np.any(finite_vector(low, 3, "roi_min_mm") >= finite_vector(high, 3, "roi_max_mm")):
         raise ValueError("ROI 최소 좌표는 최대 좌표보다 작아야 합니다.")
+    configure_pose_source(cfg, path)
     return cfg
 
 
@@ -180,13 +182,19 @@ def worker_command(cfg, mode):
             "--wrapper", cfg["control_wrapper"], "--library", cfg["control_library"], mode]
 
 
-def ik_request(cfg, model):
+def ik_request(cfg, model, pose_source=None):
     if any(target_key(view) == "pose_mm_deg" for view in cfg["views"]):
-        return {"model_xml": model.xml, "cartesian": cfg["cartesian"]}
+        request = {"model_xml": model.xml, "cartesian": cfg["cartesian"]}
+        if (cfg["cartesian"]["target_frame"] == DEPTH_FRAME
+                and cfg.get("pose_estimation", {}).get("source", "urdf") == "hand_eye"):
+            pose_source = pose_source or ScanPoseSource(cfg, model)
+            request["T_flange_target"] = pose_source.flange_depth.tolist()
+        return request
     return {}
 
 
-def preflight(cfg, model, execute=False):
+def preflight(cfg, model, execute=False, pose_source=None):
+    pose_source = pose_source or ScanPoseSource(cfg, model)
     for name in ("control_python", "control_wrapper", "control_library"):
         if not Path(cfg[name]).is_file():
             raise FileNotFoundError(f"{name}: {cfg[name]}")
@@ -202,9 +210,9 @@ def preflight(cfg, model, execute=False):
     if execute and missing:
         raise ValueError(f"촬영 자세를 먼저 입력하세요: {', '.join(missing)} (연결/이동하지 않았습니다)")
     if execute and cfg["mounting_tf_confirmed"] is not True:
-        raise ValueError("실제 장착과 Xacro TF를 확인한 후 mounting_tf_confirmed: true로 설정하세요.")
+        raise ValueError("실제 장착과 선택한 TF를 확인한 후 mounting_tf_confirmed: true로 설정하세요.")
     checked = subprocess.run(worker_command(cfg, "--check"), env=worker_environment(cfg["control_python"]),
-                             input=json.dumps(ik_request(cfg, model)), capture_output=True, text=True, timeout=30)
+                             input=json.dumps(ik_request(cfg, model, pose_source)), capture_output=True, text=True, timeout=30)
     if checked.returncode:
         raise RuntimeError("제어 환경 라이브러리 검사 실패:\n" + checked.stdout + checked.stderr)
     import open3d  # noqa: F401 -- 실행 전에 스캔 환경 의존성 로딩 확인
@@ -218,12 +226,10 @@ def preflight(cfg, model, execute=False):
           f"픽셀별 최소 {cfg['camera']['min_valid_frames']}회 측정된 값만 사용합니다.")
     if missing:
         print("미입력 목표 자세:", ", ".join(missing))
-    if ik_request(cfg, model):
+    if ik_request(cfg, model, pose_source):
         print(f"Cartesian: base_link 기준 {cfg['cartesian']['target_frame']}, XYZ(mm)/RPY(deg). "
               "두산 SDK IK 연결부/툴 TF만 검사했으며, 목표 IK는 실행 시 컨트롤러에서 계산합니다.")
-    print("Xacro 기준 flange → depth optical (translation: m):")
-    frames = model.transforms([0.0] * 6)
-    print(np.linalg.inv(frames["link_6"]) @ frames[DEPTH_FRAME])
+    pose_source.describe()
 
 
 class RobotClient(AbstractContextManager):
@@ -615,17 +621,19 @@ def save_depth_visualization(path, raw, scale_mm_per_unit, minimum_mm, maximum_m
             "out_of_range": "clipped_to_display_range", "invalid_depth_color_rgb": [0, 0, 0]}
 
 
-def capture_sequence(cfg, model, robot, camera, output):
+def capture_sequence(cfg, model, robot, camera, output, pose_source=None):
     """주입 가능한 robot/camera를 사용하여 순서와 저장 과정을 오프라인 테스트 가능."""
     import open3d as o3d
 
+    pose_source = pose_source or ScanPoseSource(cfg, model)
     manifest = {"status": "in_progress", "created_at": datetime.now(timezone.utc).isoformat(),
                 "units": {"point_cloud": "m", "joint": "deg"}, "reference_frame": BASE_FRAME,
-                "method": "actual_joint_fk_and_xacro_tf_only", "icp_applied": False,
+                "method": pose_source.method, "pose_estimation": pose_source.metadata, "icp_applied": False,
                 "settle_criterion": "stationary_actual_joints",
                 "color_mode": "rgb" if cfg["camera"].get("capture_color", False) else "view_colors", "views": []}
     save_json(output / "manifest.json", manifest)
     save_json(output / "settings.json", cfg)
+    pose_source.save_report(output)
     (output / "model.urdf").write_text(model.xml, encoding="utf-8")
     manifest["model_sha256"] = hashlib.sha256(model.xml.encode()).hexdigest()
     manifest["python"] = sys.executable
@@ -652,13 +660,13 @@ def capture_sequence(cfg, model, robot, camera, output):
             print(f"[{name}] 정지 확인: 실제 관절각 {settled['joint_deg']} deg, "
                   f"목표와 최대 차이 {settled['max_target_error_deg']:.4f} deg (기록용)", flush=True)
             save_json(output / "manifest.json", manifest)
-            before = robot.snapshot()
+            before = pose_source.snapshot(robot)
             # 이동 명령 종료와 실제 자세의 정지 유지가 확인된 뒤 새 스트림을 시작한다.
             captured = camera.capture()
             raw, xyz, calibration = captured.depth_raw, captured.xyz, captured.metadata
             after = None
             try:
-                after = robot.snapshot()  # 디스크 저장보다 먼저 촬영 직후 자세 조회.
+                after = pose_source.snapshot(robot)  # 디스크 저장보다 먼저 촬영 직후 자세 조회.
             finally:
                 # 직후 자세 조회가 실패해도 이미 받은 원본은 남긴다.
                 np.save(directory / "depth_raw.npy", raw, allow_pickle=False)
@@ -690,7 +698,7 @@ def capture_sequence(cfg, model, robot, camera, output):
             drift = validate_capture(before, after, cfg["robot"])
             target_error = (np.asarray(after["joint_deg"]) - target).tolist()
             max_target_error = max(abs(value) for value in target_error)
-            frames = model.transforms(after["joint_deg"])
+            frames = pose_source.frames(after)
             cartesian_diagnostics = cartesian_error(view, cfg, frames)
             transform = frames[DEPTH_FRAME]
             camera_cfg = cfg["camera"]
@@ -715,7 +723,7 @@ def capture_sequence(cfg, model, robot, camera, output):
                     "target_joint_deg": target, "target_error_deg": target_error,
                     "command": entry["command"], "ik": settled.get("ik"), **cartesian_diagnostics,
                     "max_target_error_deg": max_target_error,
-                    "pose_source": "actual_joint_measurement_after_capture_plus_URDF_FK",
+                    "pose_source": pose_source.pose_source, "pose_estimation": pose_source.metadata,
                     "T_base_flange": frames["link_6"].tolist(), "T_base_bracket": frames["bracket_link"].tolist(),
                     "T_flange_depth": (np.linalg.inv(frames["link_6"]) @ transform).tolist(),
                     "T_base_depth": transform.tolist(), "translation_unit": "m"}
@@ -773,7 +781,8 @@ def main():
         return 0
     cfg = load_config(args.config)
     model = ScanModel(cfg["xacro"])
-    preflight(cfg, model, args.execute)
+    pose_source = ScanPoseSource(cfg, model)
+    preflight(cfg, model, args.execute, pose_source)
     if not args.execute:
         return 0
     for view in cfg["views"]:
@@ -789,9 +798,9 @@ def main():
     try:
         camera = DepthCamera(cfg["camera"])  # 카메라/프로파일 오류는 로봇 초기화 전에 검사.
         with RobotClient(cfg, output) as robot:
-            robot.call("initialize", settings=cfg["robot"], **ik_request(cfg, model),
+            robot.call("initialize", settings=cfg["robot"], **ik_request(cfg, model, pose_source),
                        timeout=cfg["robot"]["connect_timeout_sec"] + 15)
-            capture_sequence(cfg, model, robot, camera, output)
+            capture_sequence(cfg, model, robot, camera, output, pose_source)
     except BaseException:
         error = traceback.format_exc()
         (output / "error.log").write_text(error, encoding="utf-8")

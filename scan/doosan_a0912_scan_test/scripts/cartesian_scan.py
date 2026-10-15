@@ -58,7 +58,7 @@ def target_description(view, cfg):
 
 
 def cartesian_error(view, cfg, frames):
-    """촬영 후 실제 관절 FK와 목표의 오차. 진단용이며 TF/촬영 허용 기준은 변경하지 않음."""
+    """촬영 후 선택한 TF로 계산한 실측 자세와 목표의 오차. 진단용이며 촬영 허용 기준은 아님."""
     if target_key(view) != "pose_mm_deg":
         return {}
     target = pose_matrix(view["pose_mm_deg"])
@@ -84,6 +84,16 @@ def sdk_pose_matrix(values):
     return transform
 
 
+def validate_transform(value):
+    t = np.asarray(value, dtype=float)
+    if (t.shape != (4, 4) or not np.isfinite(t).all()
+            or not np.allclose(t[3], [0, 0, 0, 1], atol=1e-8, rtol=0)
+            or not np.allclose(t[:3, :3].T @ t[:3, :3], np.eye(3), atol=1e-4, rtol=0)
+            or abs(np.linalg.det(t[:3, :3]) - 1) > 1e-4):
+        raise ValueError("유효한 4×4 SE(3) TF가 아닙니다. 위치 단위는 m여야 합니다.")
+    return t
+
+
 def matrix_to_sdk_pose(transform):
     """SE(3) → mm / Euler ZYZ. B=0,180도에서도 동등한 회전을 반환한다."""
     r = transform[:3, :3]
@@ -99,8 +109,8 @@ def matrix_to_sdk_pose(transform):
 
 
 class DoosanSDKIK:
-    """URDF는 플랜지 이후 고정 TF에만 사용하고 관절 해는 SDK에서 구한다."""
-    def __init__(self, model_xml, settings):
+    """플랜지 이후 URDF/보정 툴 TF를 적용하고 관절 해는 SDK에서 구한다."""
+    def __init__(self, model_xml, settings, flange_target=None):
         cfg = {"cartesian": dict(settings), "views": []}
         validate_targets(cfg)
         self.settings = cfg["cartesian"]
@@ -119,6 +129,12 @@ class DoosanSDKIK:
             joint = parents[child]
             self.flange_target = origin_matrix(joint.find("origin")) @ self.flange_target
             child = joint.find("parent").get("link")
+        self.tool_tf_source = "urdf"
+        if flange_target is not None:
+            if self.settings["target_frame"] != "camera_depth_optical_frame":
+                raise ValueError("핸드아이 툴 TF는 Depth 광학 프레임 목표에만 적용할 수 있습니다.")
+            self.flange_target = validate_transform(flange_target)
+            self.tool_tf_source = "hand_eye"
         self.target_flange = np.linalg.inv(self.flange_target)
 
     def solve(self, robot, values, seed_deg):
@@ -140,4 +156,5 @@ class DoosanSDKIK:
                        "target_frame": self.settings["target_frame"], "reference_frame": "base_link",
                        "rpy_convention": RPY_CONVENTION, "target_pose_mm_deg": list(values),
                        "T_base_target": desired.tolist(), "T_flange_active_tcp": flange_tcp.tolist(),
+                       "tool_tf_source": self.tool_tf_source, "T_flange_target": self.flange_target.tolist(),
                        "sdk_target_pose_mm_zyz_deg": sdk_pose}}

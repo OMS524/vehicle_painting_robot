@@ -1,0 +1,51 @@
+# 연결/분리된 control Python/제어 라이브러리는 기존 스캔 설정에서 읽습니다.
+# 기존 스캔 views, 카메라 TF, 속도는 보정용 촬영에 그대로 사용하지 않습니다.
+scan_config: ../../doosan_a0912_scan_test/scripts/multi_view_scan.yaml
+output_dir: ../log
+
+# eye-in-hand 전용: 카메라를 플랜지에 고정하고 보정판은 외부에 고정.
+board:
+  inner_corners: [13, 8]  # 가로/세로 내부 코너 수. 14×9칸 체커보드, 총 104개
+  square_size_mm: 40.0  # 실측 한 칸 길이: 4 cm = 40 mm
+  fixed_board_confirmed: false
+
+motion:
+  plan_confirmed: false  # 툴 설정, 시작 자세부터 모든 이동 구간, 보정판 시야 확인 후 true
+  confirm_each_pose: true  # 각 이동 전에 Enter. q/다른 문자/Ctrl+C는 종료
+  max_velocity_deg_s: 5.0
+  acceleration_deg_s2: 5.0
+  max_move_delta_deg: 45.0  # 현재 자세 대비 관절별 이동 제한. 충돌 검사를 대신하지 않음
+
+camera:
+  serial_number: ""
+  width: 1920
+  height: 1080
+  fps: 30
+  warmup_frames: 30  # 각 정지 자세에서 새 RGB 스트림 시작 후 버림
+  capture_timeout_sec: 15.0
+
+calibration:
+  method: TSAI  # PARK / TSAI / HORAUD / ANDREFF / DANIILIDIS
+  min_samples: 10
+  max_reprojection_error_px: 1.0
+  min_rotation_deg: 5.0
+  min_rotation_axis_ratio: 0.1  # 상대 회전벡터 SVD의 두 번째/첫 번째 특잇값
+  max_translation_condition: 100.0
+  max_capture_translation_mm: 0.5
+  max_capture_rotation_deg: 0.1
+  max_board_consistency_mm: 3.0
+  max_board_consistency_deg: 1.0
+  max_leave_one_out_translation_mm: 5.0
+  max_leave_one_out_rotation_deg: 2.0
+
+# RGB에서 보정판 중심을 거의 수직 아래로 바라보는 기준 자세 하나를 입력합니다.
+# 기준 1개 + tilt/2 원주 8개 + tilt 원주 8개 = 17개 촬영 자세 자동 생성.
+# Xacro의 명목 RGB 장착 TF와 아래 높이는 촬영 위치 생성 전용이며 보정 계산에는 넣지 않습니다.
+pose_generation:
+  reference_pose_mm_deg: [0.0, 500.0, 500.0, 90.0, 0.0, 0.0]  # base_link -> link_6 [x,y,z,roll,pitch,yaw], mm/deg
+  # 고정축 RPY: Rz(yaw) @ Ry(pitch) @ Rx(roll). 펜던트 ZYZ가 아님!
+  board_height_mm: 0.0  # base_link 기준 보정판의 대략적인 높이. 실제 높이를 알아야만 계산 가능한 것은 아님
+  tilt_deg: 15.0  # 최대 기울기 변화. 0 초과 ~ 30도; 기본 작은 원주 7.5도, 큰 원주 15도
+  min_camera_height_mm: 200.0  # 추정 평면에서 명목 RGB 원점까지 최소 수직 높이. 충돌 검사 아님
+# --check로 생성 목록 확인 후 전체 관절 이동 구간/시야를 확인하세요.
+# 참고: 과거 수동 poses 설정/저장 세션도 지원. 수동 목록을 쓰려면 pose_generation을 제거합니다.

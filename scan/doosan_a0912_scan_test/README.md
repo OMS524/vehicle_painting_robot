@@ -1,10 +1,10 @@
 # Doosan A0912 + ORBBEC Femto Bolt 스캔 테스트
 
-## Depth를 보며 터미널로 반복 이동 (2026-10-12)
+## RGB·Depth를 보며 터미널로 반복 이동 (2026-10-14)
 
-[`scripts/live_depth_cartesian.py`](scripts/live_depth_cartesian.py)는 여러 촬영 시점을 잡기 위한
-관찰 도구다. Depth를 연속 표시하면서 터미널로 입력한 자세로 이동한다.
-**`three_view_scan.yaml`의 `views` 목록은 실행하지 않으며**, 스캔 영상 파일이나 통합 점군도
+[`scripts/live_rgbd_cartesian.py`](scripts/live_rgbd_cartesian.py)는 여러 촬영 시점을 잡기 위한
+관찰 도구다. RGB와 Depth를 한 창에 좌우로 연속 표시하면서 터미널로 입력한 자세로 이동한다.
+**`multi_view_scan.yaml`의 `views` 목록은 실행하지 않으며**, 스캔 영상 파일이나 통합 점군도
 만들지 않는다. 실시간 Depth는 프레임 통합 없이 단일 프레임씩 표시한다.
 
 ```bash
@@ -12,14 +12,16 @@ conda activate vehicle_painting_robot_scan
 cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
 
 # 하드웨어 연결 없는 환경 검사 (인자 없이 실행해도 검사만 함)
-python -s live_depth_cartesian.py --check
+python -s live_rgbd_cartesian.py --check
 
-# 연속 Depth + 터미널 반복 이동
-python -s live_depth_cartesian.py --execute
+# 연속 RGB/Depth + 터미널 반복 이동
+python -s live_rgbd_cartesian.py --execute
 ```
 
-1. Depth 창이 나타난다. 기본 색상 범위는 YAML의 `min_depth_mm`~`max_depth_mm`이며,
-   측정값 0은 검정색이다. 중앙 십자선의 깊이(mm), 수신 FPS, 최신 프레임 경과 시간을 표시한다.
+1. 왼쪽 RGB / 오른쪽 Depth 창이 나타난다. 두 영상은 종횡비를 유지해 표시하며
+   **원본 RGB와 Depth를 각각 보여주는 것이므로 픽셀 위치가 서로 대응되는 정렬 영상은 아니다.**
+   기본 Depth 색상 범위는 YAML의 `min_depth_mm`~`max_depth_mm`이며 측정값 0은 검정색이다.
+   Depth 중앙 십자선의 깊이(mm)와 **각 스트림의 수신 FPS/최신 프레임 경과 시간**을 표시한다.
 2. 현장의 전체 이동 구간·장애물·케이블·장착·속도·비상정지를 확인한 뒤 **터미널에 `MOVE`**를 입력한다.
    이때 로봇 제어권/서보를 활성화한다. `MOVE` 전에는 로봇에 연결하지 않는다.
 3. 활성화 완료 후 **`x,y,z,roll,pitch,yaw`에 해당하는 숫자 6개**를 쉼표나 공백으로 구분해 입력한다.
@@ -28,35 +30,41 @@ python -s live_depth_cartesian.py --execute
 4. RPY를 두산 SDK의 ZYZ 표현으로 변환하고 활성 TCP 오프셋을 반영한 뒤 **두산 SDK `ikin`**으로
    목표 관절각을 계산한다. 기존 속도·가속도·최대 관절 변화량 제한으로 이동하고 정지를 확인한다.
    Pinocchio IK가 아니며, Cartesian 직선 이동(MoveL)이나 충돌 회피도 아니다.
-5. 완료 안내 후 다음 자세를 계속 입력할 수 있다. 입력 대기·이동 중에도 Depth 화면은 계속 갱신된다.
+5. 완료 안내 후 다음 자세를 계속 입력할 수 있다. 입력 대기·이동 중에도 RGB/Depth 화면은 계속 갱신된다.
    **초기화/이동 중 입력한 좌표는 예약하지 않고 버린다.** 잘못된 숫자 형식은 다시 입력할 수 있다.
    SDK가 IK 해 없음(동작 영역 밖/손목 특이점)을 반환하면 해당 이동만 취소하고 입력 대기로 돌아간다.
-   Depth 화면과 로봇 연결은 유지되며, `MOVE`를 다시 입력할 필요 없이 다른 좌표를 입력하면 된다.
+   RGB/Depth 화면과 로봇 연결은 유지되며, `MOVE`를 다시 입력할 필요 없이 다른 좌표를 입력하면 된다.
 6. 터미널 `q`/`quit`/`exit`, Ctrl+C, 창의 Q/ESC/닫기로 종료한다. 터미널 `help`로 입력 도움말을 본다.
 
 IK 해 없음은 `events.jsonl`에 `move_rejected`로 기록한다. SDK 통신·이동 오류는 기존처럼 종료한다.
-자동 촬영용 `three_view_scan.py`/`three_view_scan_single_frame.py`는 IK 실패 시 종료하는 동작을 유지한다.
-최초 10초 내 Depth가 없거나 수신 중 새 프레임이
-2초 이상 없으면 종료하며, 연결된 로봇에 종료/servo-off를 요청한다.
+자동 촬영용 `multi_view_scan.py`/`multi_view_scan_single_frame.py`는 IK 실패 시 종료하는 동작을 유지한다.
+RGB와 Depth 모두 새 영상이 들어와야 이동 명령을 받는다. 어느 한 스트림이라도 최초 10초 내에
+영상이 없거나 수신 중 새 프레임이 2초 이상 없으면 해당 스트림을 표시하고 종료하며,
+연결된 로봇에 종료/servo-off를 요청한다.
 **소프트웨어 종료는 물리적 정지를 보장하지 않으므로 현장에서 정지 상태를 확인한다.**
 사용 중 펜던트나 다른 프로그램으로 동시 제어/TCP 변경을 하지 않는다.
 
 로봇 없이 카메라만 보려면 아래 명령을 사용한다.
 
 ```bash
-python -s live_depth_cartesian.py --preview-only
+python -s live_rgbd_cartesian.py --preview-only
 ```
 
-설정은 같은 `scripts/three_view_scan.yaml`을 읽는다(`--config`로 다른 YAML 지정 가능).
-카메라는 Depth Y16만 켜며 RGB는 켜지 않는다. 다른 카메라 뷰어/스캔 프로그램은 먼저 종료한다.
+설정은 같은 `scripts/multi_view_scan.yaml`을 읽는다(`--config`로 다른 YAML 지정 가능).
+카메라는 `capture_color` 값과 무관하게 Depth Y16과 RGB를 모두 켠다.
+Depth의 `width/height/fps`와 RGB의 `color_width/color_height` 설정을 사용하며,
+RGB는 Depth와 같은 FPS의 지원 프로파일(MJPG 우선)을 선택한다.
+미리보기에서는 시간 동기화를 끄고 각 스트림을 독립 갱신한다. RGB·Depth가 정확히 같은 시각의
+프레임이라는 의미는 아니며, 기존 스캔 저장 코드의 동기화/정렬 처리는 변경하지 않았다.
+다른 카메라 뷰어/스캔 프로그램은 먼저 종료한다.
 제어용 Python은 YAML의 `control_python`에서 별도로 실행된다.
 입력 자세, 완료 결과, 오류는 기본 `log/live_depth_cartesian/실행시각/`의
 `events.jsonl`, `robot_worker.log`, 오류 시 `error.log`에 남는다. 영상/점군 파일은 저장하지 않는다.
 
-## 실행 방법 (2026-10-07)
+## 실행 방법 (2026-10-15)
 
-실행 파일은 `scripts/three_view_scan.py`, 설정 파일은
-[`scripts/three_view_scan.yaml`](scripts/three_view_scan.yaml)이다.
+실행 파일은 `scripts/multi_view_scan.py`, 설정 파일은
+[`scripts/multi_view_scan.yaml`](scripts/multi_view_scan.yaml)이다.
 **관절 입력과 Cartesian 입력 모두 실행 명령어는 동일하다.**
 아래 1~8절은 2026-09-07의 제조사 CAD/TF 조사 기록이며, 현재 실행 방법은 이 절을 따른다.
 촬영·저장 구조의 상세 설명은 [`scripts/README.md`](scripts/README.md)에 있다.
@@ -100,10 +108,36 @@ views:
 - `null`이 남아 있으면 실제 실행은 차단된다. `views`는 원하는 시점 수만큼 지정하며 목록 순서대로 이동한다.
 - 로봇 IP, 속도·이동량 제한, 장착 TF를 확인한다. `mounting_tf_confirmed: true`는 실물과 TF를 확인한 경우에만 사용한다.
 
+### 정합 TF 선택 (두 촬영 스크립트 공통)
+
+`multi_view_scan.yaml`의 아래 설정으로 선택한다. 설정 파일과 Python 실행 파일 모두
+`multi_view_scan` 이름으로 통일했다.
+
+```yaml
+pose_estimation:
+  source: urdf  # urdf / hand_eye
+  hand_eye_calibration_file: null
+```
+
+- `urdf`: 기존과 동일하게 촬영 직후 실측 관절각의 URDF FK와 Xacro 장착 TF를 사용한다.
+- `hand_eye`: `hand_eye_calibration_file`에 핸드아이 결과 `calibration.json`의 경로를
+  입력한다. **SDK 실측 base→flange × 결과의 `T_flange_depth`**를 사용한다.
+  상대 경로는 YAML 위치 기준이다. 결과 파일의 품질 검사 통과와 유효한 Depth TF가 필요하며,
+  파일 누락·잘못된 값·SDK 자세 조회 실패 시 URDF로 대체하지 않고 중단한다.
+
+`hand_eye`에서 `cartesian.target_frame: camera_depth_optical_frame`으로 이동하면,
+카메라 목표를 플랜지 목표로 바꾸는 IK 입력 계산에도 같은 보정 TF를 적용한다.
+`link_6` / `bracket_link` 목표의 툴 TF는 기존대로다. Xacro와 펜던트 TCP는 수정하지 않는다.
+원본 Depth/SDK 점군 생성 방법은 그대로이며 베이스 좌표계 배치에 선택한 TF를 사용한다.
+보정한 카메라·브라켓 장착 상태가 현재와 일치하는지 확인한다.
+
+적용한 모드와 TF는 `manifest.json`, 각 뷰의 `pose.json`에 기록하며,
+핸드아이 모드에서는 사용한 원본 결과도 `hand_eye_calibration.json`으로 복사한다.
+
 ### 3) 하드웨어 연결 없는 검사
 
 ```bash
-python -s three_view_scan.py --check
+python -s multi_view_scan.py --check
 ```
 
 파일·TF·라이브러리와 두산 SDK IK 연결부를 검사한다. 라이브러리 재빌드 방법은
@@ -115,7 +149,7 @@ python -s three_view_scan.py --check
 ### 4) 실제 로봇 이동 + 스캔 + 결과 저장
 
 ```bash
-python -s three_view_scan.py --execute
+python -s multi_view_scan.py --execute
 ```
 
 출력된 목표 자세와 현장 안전을 확인하고, 터미널에서 **Enter**를 누르면 시작한다. 다른 문자를 입력하면 취소한다.
@@ -125,7 +159,7 @@ python -s three_view_scan.py --execute
 Cartesian 입력 시 동작은 **현재 실측 관절각 조회 → 두산 SDK IK로 목표 관절각 계산 → 기존 관절 이동
 → 정지 확인 → RGB/Depth 취득 → 다음 시점 → 통합·저장** 순서다.
 Cartesian 직선 이동(MoveL)은 아니며, IK 실패 시 해당 이동을 수행하지 않고 중단한다.
-정합은 목표값이 아니라 촬영 직후의 **실제 관절각과 Xacro TF**를 사용한다.
+정합은 목표값이 아니라 촬영 직후의 **실측 자세와 선택한 URDF/핸드아이 TF**를 사용한다.
 
 기본 저장 위치는 `log/YYYYMMDD_HHMMSS_ffffff/`이며 실행 시 전체 경로를 출력한다.
 각 시점의 RGB·Depth·점군과 자세 로그, 통합본 `merged.ply`, `manifest.json` 등이 저장된다.
@@ -139,13 +173,13 @@ Cartesian 직선 이동(MoveL)은 아니며, IK 실패 시 해당 이동을 수�
 `--view`는 **다시 스캔하지 않으며 로봇·카메라에 연결하지 않는다.**
 
 ```bash
-python -s three_view_scan.py --view ../log/실행결과폴더명/merged.ply
+python -s multi_view_scan.py --view ../log/실행결과폴더명/merged.ply
 
 # 시점별 구분색 통합본 (RGB 촬영 시 생성)
-python -s three_view_scan.py --view ../log/실행결과폴더명/merged_view_colors.ply
+python -s multi_view_scan.py --view ../log/실행결과폴더명/merged_view_colors.ply
 
 # 특정 시점의 점군: 로봇 베이스 좌표계
-python -s three_view_scan.py --view ../log/실행결과폴더명/view_01/base.ply
+python -s multi_view_scan.py --view ../log/실행결과폴더명/view_01/base.ply
 ```
 
 ### 선택 사항: 단일 프레임 촬영
@@ -156,10 +190,10 @@ python -s three_view_scan.py --view ../log/실행결과폴더명/view_01/base.pl
 
 ```bash
 # 검사만
-python -s three_view_scan_single_frame.py --check
+python -s multi_view_scan_single_frame.py --check
 
 # 실제 이동·촬영 (현장 확인 후 SCAN 입력)
-python -s three_view_scan_single_frame.py --execute
+python -s multi_view_scan_single_frame.py --execute
 ```
 
 다른 YAML을 사용하려면 실행 명령에 `--config /절대경로/설정.yaml`을 추가한다.

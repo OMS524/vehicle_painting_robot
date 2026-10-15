@@ -42,7 +42,7 @@ python point_to_plane_icp.py \
 
 **하나로 합쳐진 PLY가 아니라 뷰별 데이터가 남아 있는 결과 폴더가 필요하다.**
 
-1. `three_view_scan.py`의 완료된 촬영 폴더
+1. `multi_view_scan.py`의 완료된 촬영 폴더
    - `manifest.json`
    - 각 승인된 뷰의 `camera_filtered.ply`, `pose.json`
    - `base_link`, m 단위, ICP 미적용 결과만 지원

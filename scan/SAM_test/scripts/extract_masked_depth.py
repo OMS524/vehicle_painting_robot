@@ -159,7 +159,7 @@ def sdk_video_frame(data: np.ndarray, calibration: dict, sdk, *, depth: bool = F
 
 
 def sdk_depth_points_m(depth_frame, sdk) -> np.ndarray:
-    """three_view_scan.py와 동일한 PointCloudFilter/좌표계/단위 변환. 픽셀 순서 유지."""
+    """multi_view_scan.py와 동일한 PointCloudFilter/좌표계/단위 변환. 픽셀 순서 유지."""
     frames = sdk.Frame.create_frame_set()
     frames.push_frame(depth_frame)
     point_filter = sdk.PointCloudFilter()
@@ -207,7 +207,7 @@ def extract_view(view: dict, sdk) -> dict:
     extrinsic.transform = np.asarray(camera["color"]["depth_to_color"]["translation_mm"], dtype=np.float32)
     depth_frame.get_stream_profile().bind_extrinsic_to(color_frame.get_stream_profile(), extrinsic)
     align = sdk.AlignFilter(sdk.OBStreamType.DEPTH_STREAM)
-    align.set_config_value("TargetDistortion", 1)  # three_view_scan.py와 동일: native Depth 픽셀 유지
+    align.set_config_value("TargetDistortion", 1)  # multi_view_scan.py와 동일: native Depth 픽셀 유지
     aligned_rgb = sdk_align_color_to_depth(depth_frame, color_frame, align, sdk)
 
     # RGB만 받는 C2D 필터에 마스크를 전달한다. R=부품 여부, G=RGB 유효 영역(255).

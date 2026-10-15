@@ -5,9 +5,18 @@ control_library: ../../../robot_control/doosan_a0912_controller/test/build-scan/
 xacro: ../description/xacro/a0912_to_tool_scan.xacro
 output_dir: ../log
 
-# 실제 장착 방향, 관절 영점/축, 카메라 nominal TF를 확인한 후에만 true.
-# 현재 Xacro의 TF를 그대로 사용하며 자동 hand-eye 보정은 하지 않습니다.
+# 선택한 TF와 실제 로봇/브라켓/카메라 장착 상태 및 관절 영점/축을 확인한 후에만 true.
 mounting_tf_confirmed: true
+
+# 두 스캔 스크립트 공통. 원본 Depth 취득은 동일하며 베이스 좌표 변환에 사용할 TF를 선택.
+pose_estimation:
+  source: urdf  # urdf / hand_eye
+  # urdf: 실측 관절각 + Xacro FK/장착 TF (기존 방식)
+  # hand_eye: SDK 실측 플랜지 자세 × 아래 결과 JSON의 T_flange_depth
+  # hand_eye_calibration_test/log/<촬영시각>/calibration_<계산시각>/calibration.json 지정.
+  # 상대 경로는 이 YAML 기준. 핸드아이 품질 검사 통과 결과만 허용하며 누락/실패 시 실행 차단.
+  hand_eye_calibration_file: null
+  # hand_eye + target_frame=camera_depth_optical_frame이면 IK 목표 변환에도 동일 보정 TF 적용.
 
 robot:
   ip: 192.168.137.100
@@ -23,7 +32,7 @@ robot:
   # 각 이동의 현재 관절각 대비 최대 변화. 충돌 검사를 대체하지 않습니다.
   max_move_delta_deg: 250.0
   # 이동 명령 종료 후 실제 관절 속도/자세가 이 시간 동안 안정되면 촬영한다.
-  # 목표각과의 차이는 기록하며, 정합 TF는 촬영 직후 실제 관절각으로 계산한다.
+  # 목표각과의 차이는 기록. 정합 TF는 촬영 직후 실측 자세와 pose_estimation 설정으로 계산한다.
   settle_sec: 1.0
   settle_timeout_sec: 10.0
   stationary_velocity_deg_s: 0.05

@@ -43,35 +43,35 @@ python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/v
 # 3. Scan
 
 이동 명령 종료 후 실제 관절 속도와 자세가 안정되면 촬영한다. 목표각과의 차이는
-진단용으로 저장하며, 정합 TF는 촬영 직후의 실제 관절각으로 계산한다.
+진단용으로 저장하며, 정합 TF는 촬영 직후 실측 자세와 `pose_estimation` 설정으로 계산한다.
 `target_tolerance_deg`는 이동 프로파일 계산용이고 촬영 허용 조건에는 사용하지 않는다.
 촬영은 YAML의 `views`에 적힌 순서로 진행한다. `name`과 `joint_deg` 항목을 추가하면
 3개를 넘어 원하는 개수의 시점을 촬영한다. 이름은 중복 없이 지정하며 결과 폴더명이 된다.
-추가 양식은 `three_view_scan.yaml`의 `views` 아래 주석 예시를 참고한다.
+추가 양식은 `multi_view_scan.yaml`의 `views` 아래 주석 예시를 참고한다.
 `camera.capture_color: true`이면 RGB도 촬영하여 `merged.ply`에 실제 색상을 저장한다.
 
 ```bash
 conda activate vehicle_painting_robot_scan
 cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
 
-python -s three_view_scan.py --check
-python -s three_view_scan.py --execute
+python -s multi_view_scan.py --check
+python -s multi_view_scan.py --execute
 ```
 
-이전 단일 프레임 방식은 아래 명령을 사용한다. 같은 `three_view_scan.yaml`을 읽으며,
+이전 단일 프레임 방식은 아래 명령을 사용한다. 같은 `multi_view_scan.yaml`을 읽으며,
 현재 `warmup_frames: 30`에 따라 초기 30프레임을 버린 뒤 다음 유효 Depth 한 장과
 동기 RGB를 저장한다. 이 버전은 YAML의 `capture_frames`, `min_valid_frames`를
 실행 중 1로 고정한다. 기존 다중 프레임 스크립트와 YAML 파일은 그대로 유지된다.
 
 ```bash
-python -s three_view_scan_single_frame.py --check
-python -s three_view_scan_single_frame.py --execute
-python -s three_view_scan_single_frame.py --view ../log/촬영디렉토리/merged.ply
+python -s multi_view_scan_single_frame.py --check
+python -s multi_view_scan_single_frame.py --execute
+python -s multi_view_scan_single_frame.py --view ../log/촬영디렉토리/merged.ply
 ```
 
 ```bash
-python -s three_view_scan.py --view ../log/촬영디렉토리/merged.ply
+python -s multi_view_scan.py --view ../log/촬영디렉토리/merged.ply
 
-python -s three_view_scan.py --view /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260914_221041_703254/merged.ply
-python -s three_view_scan.py --view /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260914_222323_805719/merged.ply
+python -s multi_view_scan.py --view /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260914_221041_703254/merged.ply
+python -s multi_view_scan.py --view /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log/20260914_222323_805719/merged.ply
 ```
