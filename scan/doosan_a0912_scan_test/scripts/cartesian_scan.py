@@ -1,3 +1,6 @@
+# 공통 모듈이므로 직접 실행하지 않는다. 호출 프로그램의 설정 검사 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/multi_view_scan.py --check
 """스캔 목표 자세 변환과 두산 SDK IK 연결. 생성 시 하드웨어에 연결하지 않는다."""
 import math
 import xml.etree.ElementTree as ET

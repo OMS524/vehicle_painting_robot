@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/calibration_test/scripts/point_to_point_icp.py --visualize
+# 입력 변경: --capture-dir /촬영/폴더 | 검사만: --check | 기존 결과만 보기: --view /결과/폴더
 """Point-to-point ICP: 각 뷰의 TF를 초기값으로 사용. 스캔 환경에서 실행."""
 from pathlib import Path
 

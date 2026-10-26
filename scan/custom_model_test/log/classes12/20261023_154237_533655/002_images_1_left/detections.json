@@ -1,0 +1,35 @@
+{
+  "schema": "carparts_rgb_mask_v1",
+  "coordinate_space": "native_color_pixels",
+  "model": "classes12",
+  "source_rgb": "/home/oms/vehicle_painting_robot/scan/custom_model_test/images/1_left.png",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "mask_selection": "union_of_detected_instances",
+  "detection_count": 1,
+  "status": "ok",
+  "mask_pixels": 485318,
+  "detections": [
+    {
+      "index": 0,
+      "class_id": 4,
+      "class_name": "front_bumper",
+      "confidence": 0.3485254943370819,
+      "box_xyxy": [
+        419.78704833984375,
+        313.41961669921875,
+        1241.544189453125,
+        1035.715576171875
+      ],
+      "pixel_count": 485318,
+      "mask": "instances/mask_000.png"
+    }
+  ],
+  "inference_speed_ms": {
+    "preprocess": 0.9794539073482156,
+    "inference": 4.280413966625929,
+    "postprocess": 1.1474259663373232
+  }
+}

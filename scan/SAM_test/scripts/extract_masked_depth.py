@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행 (상단 MASK_PATHS에 SAM 결과 mask.png 지정, 하드웨어 연결 없음):
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/SAM_test/scripts/extract_masked_depth.py
+# 입력/보정/의존성 검사만: 위 명령 끝에 --check
 """저장된 원본 RGB 마스크 -> 부품 Depth/점군/다중 뷰 통합 점군.
 
 vehicle_painting_robot_scan 환경에서 실행. 카메라/로봇 연결은 하지 않는다.

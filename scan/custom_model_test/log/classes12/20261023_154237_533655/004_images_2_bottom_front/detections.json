@@ -1,0 +1,35 @@
+{
+  "schema": "carparts_rgb_mask_v1",
+  "coordinate_space": "native_color_pixels",
+  "model": "classes12",
+  "source_rgb": "/home/oms/vehicle_painting_robot/scan/custom_model_test/images/2_bottom_front.png",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "mask_selection": "union_of_detected_instances",
+  "detection_count": 1,
+  "status": "ok",
+  "mask_pixels": 1409572,
+  "detections": [
+    {
+      "index": 0,
+      "class_id": 9,
+      "class_name": "trunk",
+      "confidence": 0.43671104311943054,
+      "box_xyxy": [
+        130.99237060546875,
+        0.0,
+        1768.060791015625,
+        1036.4873046875
+      ],
+      "pixel_count": 1409572,
+      "mask": "instances/mask_000.png"
+    }
+  ],
+  "inference_speed_ms": {
+    "preprocess": 0.9315829956904054,
+    "inference": 4.1213929653167725,
+    "postprocess": 1.0303910821676254
+  }
+}

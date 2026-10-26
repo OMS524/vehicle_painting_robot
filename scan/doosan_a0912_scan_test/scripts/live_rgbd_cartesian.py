@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/live_rgbd_cartesian.py --preview-only
+# 하드웨어 없는 검사: --preview-only 대신 --check
+# 로봇 이동 포함: --preview-only 대신 --execute (작업 공간 확인 후 MOVE 승인, 좌표 입력).
 """연속 RGB + Depth 미리보기 + 터미널 Cartesian 반복 이동 (두산 SDK IK).
 
 conda activate vehicle_painting_robot_scan

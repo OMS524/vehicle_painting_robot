@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/cluster_test/scripts/extract_clustered_masked_depth.py --visualize
+# 입력 변경: --capture-dir /마스크_Depth_결과/폴더 | 검사만: --check | 결과 보기: --view /결과/폴더
 """SAM 마스크로 추출·정합한 점군에 DBSCAN을 적용한다.
 
 실행: conda activate vehicle_painting_robot_scan

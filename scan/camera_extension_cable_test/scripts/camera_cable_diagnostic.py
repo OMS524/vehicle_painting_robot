@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행 (카메라 연결 필요, 로봇 제어 없음):
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/camera_extension_cable_test/scripts/camera_cable_diagnostic.py --label direct --seconds 600 --visualize
+# 지원 프로파일 확인: 위 명령 대신 동일 파일에 --list-profiles 지정.
 """Femto Bolt USB 연장선 비교: 독립 RGB/Depth 수신 통계, 선택적 미리보기.
 
 로봇 제어, 정합, 영상 전체 저장, SDK/장치 설정 파일 변경 없음.

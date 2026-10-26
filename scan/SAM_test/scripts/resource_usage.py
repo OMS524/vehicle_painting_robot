@@ -1,3 +1,6 @@
+# 공통 모듈이므로 직접 실행하지 않는다. 자원 로그는 호출 프로그램에서 저장한다.
+#   conda activate vehicle_painting_robot_sam3
+#   python -s /home/oms/vehicle_painting_robot/scan/SAM_test/scripts/sam3_generate_masks.py
 """SAM 추론용 자원 샘플링/단계별 시간 측정. 모델이나 카메라 SDK에는 의존하지 않는다."""
 from __future__ import annotations
 

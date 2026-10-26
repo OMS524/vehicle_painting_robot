@@ -2,7 +2,7 @@
 control_python: ~/miniconda3/envs/vehicle_painting_robot_control/bin/python
 control_wrapper: ../../../robot_control/doosan_a0912_controller/test/scripts/joint_target_test.py
 control_library: ../../../robot_control/doosan_a0912_controller/test/build-scan/libdoosan_controller_c_api.so
-xacro: ../description/xacro/a0912_to_tool_scan.xacro
+xacro: ../../../description/xacro/a0912_to_tool_scan.xacro
 output_dir: ../log
 
 # 선택한 TF와 실제 로봇/브라켓/카메라 장착 상태 및 관절 영점/축을 확인한 후에만 true.

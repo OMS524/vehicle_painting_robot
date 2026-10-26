@@ -1,0 +1,20 @@
+{
+  "schema": "carparts_rgb_mask_v1",
+  "coordinate_space": "native_color_pixels",
+  "model": "combined_augmentation",
+  "source_rgb": "/home/oms/vehicle_painting_robot/scan/custom_model_test/images/2_middle_front.png",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "mask_selection": "union_of_detected_instances",
+  "detection_count": 0,
+  "status": "no_detection",
+  "mask_pixels": 0,
+  "detections": [],
+  "inference_speed_ms": {
+    "preprocess": 0.9335370268672705,
+    "inference": 4.1628810577094555,
+    "postprocess": 0.2719330368563533
+  }
+}

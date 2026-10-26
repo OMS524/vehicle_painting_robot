@@ -18,8 +18,8 @@ import open3d as o3d
 import trimesh
 from scipy.spatial.transform import Rotation
 
-ROOT = Path(__file__).resolve().parents[1]
-MESH_DIR = ROOT / "description" / "meshes"
+ROOT = Path(__file__).resolve().parents[3]
+MESH_DIR = ROOT / "description" / "mesh"
 OUTPUT = Path(__file__).resolve().parent / "mesh_alignment"
 # Connected components sorted by descending surface area. Matched using bounds,
 # area, and shape. Full-mesh distances are also measured without exclusions.

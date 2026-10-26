@@ -6,7 +6,7 @@ ROS 없이 기존 두산 SDK 제어 래퍼와 Orbbec SDK, OpenCV를 사용한다
 
 ## 파일과 실행 환경
 
-- `scripts/hand_eye_calibration.py`: 설정 검사, RGB 미리보기, SDK 로봇 이동/촬영, 보정 계산.
+- `scripts/hand_eye_calibration.py`: 설정 검사, RGB/C2D 미리보기, SDK 로봇 이동/촬영, 보정 계산.
 - `scripts/hand_eye_calibration.yaml`: 보정판, 기준 자세/촬영 계획, 저속 이동 및 품질 검사 설정.
 - `log/일시/`: 실행하면서 생성되는 촬영/계산 결과.
 
@@ -23,8 +23,8 @@ YAML의 `scan_config`가 가리키는 기존 `multi_view_scan.yaml`에서 가져
 
 ## 먼저 입력할 설정
 
-1. `board.inner_corners`: 가로/세로 **내부 교차점** 수. 기본 9×6은 예시다.
-2. `board.square_size_mm`: 실제 한 칸 크기(mm). 임의의 기본 치수는 넣지 않았다.
+1. `board.inner_corners`: 가로/세로 **내부 교차점** 수. 현재 보정판 설정은 13×8이다.
+2. `board.square_size_mm`: 실제 한 칸 크기(mm). 현재 실측값은 40 mm다.
 3. 보정판을 단단한 평면에 고정한 후 `board.fixed_board_confirmed: true`.
 4. `pose_generation.reference_pose_mm_deg`: RGB 카메라가 보정판 중심을 거의 수직 아래로
    바라보는 **플랜지 기준 자세 한 개**. 기본 `null`이며 입력 전 실행이 차단된다.
@@ -86,6 +86,42 @@ pose_generation:
 코드는 검출 순서의 일반적인 180도 반전만 정규화하며 임의의 시점/큰 회전을 완전히 판별하지 않는다.
 이 조건이 어려우면 고유 ID가 있는 ChArUco/AprilTag 타깃을 지원하도록 별도 확장해야 한다.
 
+## 보정 이미지 선택: RGB / C2D
+
+`scripts/hand_eye_calibration.yaml`에서 선택한다. 기본값은 기존 동작인 `rgb`다.
+
+```yaml
+camera:
+  image_source: c2d  # rgb 또는 c2d
+  width: 1920       # 원본 RGB (두 모드 공통)
+  height: 1080
+  fps: 30
+  depth_width: 640  # c2d 전용: native Depth 해상도
+  depth_height: 576
+  max_frame_time_delta_ms: 50.0  # c2d 전용: RGB·Depth 시각 차이 상한
+```
+
+| 모드 | 코너를 찾는 이미지 | PnP 내부 파라미터 | 직접 구하는 핸드아이 TF |
+| --- | --- | --- | --- |
+| `rgb` | 원본 RGB | RGB 프로파일 K·왜곡 | `T_flange_color` |
+| `c2d` | Depth에 정렬한 RGB | Depth 프로파일 K·왜곡 | `T_flange_depth` |
+
+C2D는 기존 스캔의 `align_color_to_depth()`를 재사용한다. SDK `AlignFilter`의 대상은
+Depth이며 `TargetDistortion=1`이므로 원본 Depth의 해상도·내부 파라미터·왜곡을 사용한다.
+RGB와 Depth를 함께 스트리밍하고 준비 프레임을 버린 뒤 시간 차이 조건을 만족하는 쌍을 사용한다.
+지원하지 않는 Depth 해상도/FPS는 다른 설정으로 자동 대체하지 않고 오류로 표시한다.
+
+C2D 결과에는 `T_flange_depth`를 직접 저장하며, SDK Depth→RGB TF를 **다시 곱하지 않는다**.
+`T_flange_color`를 임의로 만들어 저장하지도 않는다.
+단, **C2D 이미지 자체는 SDK RGB–Depth 외부 파라미터와 Depth 측정에 의존**한다.
+이 방식이 문제의 SDK 회전행렬이나 Depth 오차를 자동 해결하는 것은 아니다.
+Depth 결측으로 C2D 체커보드가 끊어지면 검출 실패/정확도 저하가 생길 수 있으므로
+먼저 `--preview`로 보정판 전체와 코너를 확인하고, 결과는 별도 정합 데이터로 검증한다.
+
+이미지 모드를 바꿔도 기존 수동 `poses` 및 이동 방식은 바뀌지 않는다.
+`pose_generation`을 사용하는 경우에도 촬영 계획은 기존 명목 RGB 장착 TF 기준이다.
+C2D는 시야가 달라질 수 있으므로 모든 촬영 자세에서 보정판 전체가 들어오는지 다시 확인한다.
+
 ## 실행 명령어
 
 ```bash
@@ -119,11 +155,21 @@ python -s hand_eye_calibration.py --solve ../log/촬영_디렉토리 --exclude p
 ```
 
 `--solve`는 **세션에 저장된** `settings.json`/`robot_settings.json`/`camera.json`을 사용하며,
-원본 RGB에서 코너와 PnP를 다시 계산한다. 기존 표본/계산 결과를 덮어쓰지 않는다.
+해당 세션의 RGB/C2D 이미지에서 코너와 PnP를 다시 계산한다. 기존 표본/계산 결과를 덮어쓰지 않는다.
+모드 항목이 없는 과거 로그는 원본 RGB로 처리한다. 현재 YAML의 모드를 바꾸어도 과거 RGB
+세션이 C2D로 변환되지는 않는다. 새 C2D 촬영이 필요하며 저장된 로그의 모드를 수동 변경하면 안 된다.
 미완료 세션도 이미 accepted로 저장된 표본이 충분하다면 계산 가능하다.
 검출 실패 시점의 원본은 보존하지만, 자동으로 다음 자세로 진행하지 않는다.
 
+장치 연결 없이 RGB/C2D 입력·PnP·저장/재계산·스캔 TF 적용을 검사하려면:
+
+```bash
+python -sB test_hand_eye_image_source.py
+```
+
 ### 원본/축 길이 보정 Depth TF를 포함한 calibration.json 저장
+
+이 비교 기능은 **RGB 보정 결과 전용**이다. C2D에서 직접 구한 Depth TF에는 적용하지 않는다.
 
 이미 계산한 RGB 핸드아이 값(`T_flange_color`)에 SDK의 Depth→RGB 행렬을 곱해
 플랜지 기준 Depth 좌표계(`T_flange_depth`)를 계산한다. 기존 보정 결과 전체를 유지하고
@@ -168,24 +214,29 @@ determinant, SE(3) 허용오차 통과 여부를 기록한다. 위치 단위는 
 
 1. 생성한 각 플랜지 목표로 SDK IK/관절 이동 후 기존 정지 유지 조건을 확인한다.
 2. 촬영 전·후 SDK에서 실제 플랜지 자세를 읽는다. **목표 자세나 URDF FK로 대신하지 않는다.**
-3. 각 정지 자세에서 RGB 스트림을 새로 시작하고 준비 프레임을 버린 후 원본 RGB를 촬영한다.
-4. SDK의 해당 RGB 프로파일 내부 파라미터/왜곡 계수와 체커보드 치수로 PnP를 계산한다.
+3. 각 정지 자세에서 스트림을 새로 시작하고 준비 프레임을 버린 후 선택한 RGB/C2D를 얻는다.
+4. 선택한 광학 프레임의 내부 파라미터/왜곡 계수와 체커보드 치수로 PnP를 계산한다.
 5. 촬영 중 관절/플랜지 변화, 보정판 검출, 재투영 RMS를 검사한다.
-6. `cv2.calibrateHandEye`로 `T_flange_color`를 구한다(기본 PARK, YAML에서 방식 선택).
+6. `cv2.calibrateHandEye`로 RGB는 `T_flange_color`, C2D는 `T_flange_depth`를 구한다(현재 TSAI, YAML에서 방식 선택).
 7. 고정 보정판 위치·회전의 일관성 및 한 표본씩 제외했을 때 보정값 변화(leave-one-out)를 저장한다.
 
 모든 행렬은 `T_parent_child`: **child 점을 parent 좌표로 변환**하는 4×4 행렬이며 위치는 m다.
 RGB/Depth는 광학 프레임(x 오른쪽, y 아래, z 앞)이다.
 
 ```text
+# RGB
 T_base_board = T_base_flange × T_flange_color × T_color_board
 T_flange_depth = T_flange_color × T_color_depth
+
+# C2D: Depth optical 프레임에서 직접 보정
+T_base_board = T_base_flange × T_flange_depth × T_depth_board
 ```
 
 SDK 로봇 자세(mm/Euler ZYZ)는 m/회전행렬로 변환하고,
 체커보드 좌표 역시 mm → m로 변환하여 단위를 맞춘다.
 Depth->RGB TF는 SDK `depth_profile.get_extrinsic_to(color_profile)`에서 읽는다.
-이 TF가 없거나 회전행렬 검증에 실패하면 **RGB 보정만 저장**하고 Depth TF 미출력 경고를 남긴다.
+RGB 모드에서 이 TF가 없거나 회전행렬 검증에 실패하면 **RGB 보정만 저장**하고 Depth TF 미출력 경고를 남긴다.
+C2D 모드에서는 이 TF를 보정 결과에 곱하지 않고, 검증 실패 시 관련 경고를 기록한다.
 기본 촬영/`--solve`에서는 검증 실패한 회전행렬을 임의로 정규화하거나 transpose/부호 변경하지 않는다.
 위의 `--export-depth-variants`를 명시한 경우에만 원본/축 길이 보정 비교 파일을 별도로 만든다.
 
@@ -201,16 +252,20 @@ Depth->RGB TF는 SDK `depth_profile.get_extrinsic_to(color_profile)`에서 읽�
 ## 저장 결과와 해석
 
 - `settings.json`, `robot_settings.json`, `camera.json`: 실제 설정, 제어 연결 설정, 내부/외부 파라미터.
+  `camera.json`의 최상위 K·왜곡은 선택한 보정 이미지 기준이며 원본 RGB 정보는 `rgb_camera`에 별도 저장한다.
 - `pose_plan.json`: 자동 생성에 사용한 명목 TF, 추정 중심, 카메라 높이, 생성 플랜지 목표 목록.
 - `manifest.json`, `robot_worker.log`, 실패 시 `error.log`: 수집 상태/제어/오류 기록.
 - 각 `pose_XX/color_rgb.png`: 원본 RGB.
+- C2D 모드의 `pose_XX/color_aligned_depth.png`, `depth_raw.npy`: 보정에 사용한 정렬 RGB와 같은 쌍의 원본 Depth.
+  Depth는 uint16 원시값이며 mm 환산 배율은 `sample.json`의 `frame.depth_value_scale_mm`에 저장한다.
 - 각 `pose_XX/corners.png`: 코너·원점·보정판 좌표축 표시.
 - 각 `pose_XX/sample.json`: 목표/실측 SDK 자세, 프레임 시각, PnP, 재투영 오차, 촬영 중 자세 변화.
 - `calibration_일시/calibration.json`: 변환행렬, 사용/제외 표본, 회전 다양성, 품질 지표와 경고.
+  `image_source`, `camera_frame`으로 RGB/C2D 및 결과 광학 프레임을 구분한다.
 
 `quality_checks_passed`는 설정한 표본 품질/안정성 검사 결과이며 실제 절대 정확도 보장이 아니다.
 성공 상태도 `computed_requires_physical_validation`로 표시한다.
-보정판 평탄도/치수, RGB 내부 보정 정확도, 플랜지 측정 정확도, 장착 강성에 따른 오차는 별도 검증 대상이다.
+보정판 평탄도/치수, 카메라 내부 보정 정확도, 플랜지 측정 정확도, 장착 강성에 따른 오차는 별도 검증 대상이다.
 
 참고: [OpenCV calibrateHandEye 공식 설명](https://docs.opencv.org/4.10.0/d9/d0c/group__calib3d.html#gaebfc1c9f7434196a374c382abf43439b),
 [두산 posx의 Euler ZYZ](https://manual.doosanrobotics.com/en/programming-manual/3.4.0/publish/posx-x-0-y-0-z-0-a-0-b-0-c-0).

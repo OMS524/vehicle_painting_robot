@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# 실행 (multi_view_scan.yaml 공유):
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/multi_view_scan_single_frame.py --check
+# 실제 로봇 이동/촬영: 위 명령의 --check를 --execute로 변경. 작업 공간 확인 및 시작 동의 필요.
+# 저장된 점군만 보기: --check 대신 --view /결과/폴더/merged.ply
 """A0912 단일 프레임 촬영: 워밍업 이후 Depth 한 장과 동기 RGB를 저장.
 
 다중 프레임 통합 전 버전(deec341)을 별도 파일로 복원한 비교용 스크립트.

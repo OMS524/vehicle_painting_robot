@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# 공통 모듈이므로 직접 실행하지 않는다. 호출 프로그램 실행 예:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/calibration_test/scripts/point_to_plane_icp.py --visualize
 """저장된 스캔의 TF 초기값을 사용하는 네 가지 ICP 테스트 공통부.
 
 하드웨어 연결/SDK 호출/원본 수정/hand-eye calibration/pose graph 최적화 없음.

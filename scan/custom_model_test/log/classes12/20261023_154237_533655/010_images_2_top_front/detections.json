@@ -1,0 +1,63 @@
+{
+  "schema": "carparts_rgb_mask_v1",
+  "coordinate_space": "native_color_pixels",
+  "model": "classes12",
+  "source_rgb": "/home/oms/vehicle_painting_robot/scan/custom_model_test/images/2_top_front.png",
+  "image_size": [
+    1920,
+    1080
+  ],
+  "mask_selection": "union_of_detected_instances",
+  "detection_count": 3,
+  "status": "ok",
+  "mask_pixels": 1234878,
+  "detections": [
+    {
+      "index": 0,
+      "class_id": 2,
+      "class_name": "glass",
+      "confidence": 0.38705143332481384,
+      "box_xyxy": [
+        323.66619873046875,
+        2.3323974609375,
+        1290.8507080078125,
+        381.374755859375
+      ],
+      "pixel_count": 306459,
+      "mask": "instances/mask_000.png"
+    },
+    {
+      "index": 1,
+      "class_id": 0,
+      "class_name": "back_bumper",
+      "confidence": 0.3010994791984558,
+      "box_xyxy": [
+        125.5927734375,
+        185.51568603515625,
+        1554.02880859375,
+        1076.149169921875
+      ],
+      "pixel_count": 921480,
+      "mask": "instances/mask_001.png"
+    },
+    {
+      "index": 2,
+      "class_id": 4,
+      "class_name": "front_bumper",
+      "confidence": 0.28464996814727783,
+      "box_xyxy": [
+        121.25262451171875,
+        187.650146484375,
+        1575.0626220703125,
+        1078.44580078125
+      ],
+      "pixel_count": 910431,
+      "mask": "instances/mask_002.png"
+    }
+  ],
+  "inference_speed_ms": {
+    "preprocess": 0.9148380486294627,
+    "inference": 4.160276032052934,
+    "postprocess": 1.0156589560210705
+  }
+}

@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 제어 환경의 내부 worker이다. 직접 이동 명령을 보내지 말고 scan 환경의 진입점을 사용한다.
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/multi_view_scan.py --check
+# 위 프로그램이 YAML의 control_python으로 이 파일을 별도 프로세스에서 호출한다.
 """제어 환경 전용 JSON-lines worker. scan SDK/Open3D를 import하지 않는다.
 
 직접 실행 대신 multi_view_scan.py를 사용한다. --check는 .so 로딩만 검사한다.

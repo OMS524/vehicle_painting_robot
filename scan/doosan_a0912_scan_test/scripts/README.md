@@ -370,7 +370,8 @@ conda activate vehicle_painting_robot_scan
 python /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/visualize_xacro.py
 ```
 
-기본 입력은 `../description/xacro/a0912_to_tool_scan.xacro`다. 로봇 베이스는
+기본 입력은 저장소 루트의 `description/xacro/a0912_to_tool_scan.xacro`다
+(`scripts` 기준 `../../../description/xacro/a0912_to_tool_scan.xacro`). 로봇 베이스는
 `world`에 고정되고, 회전 관절은 기본 0도로 표시한다. 브라켓은 파란색,
 카메라는 원본 Xacro의 밝은 회색으로 표시한다. 마우스로 회전/확대하고,
 오른쪽 목록에서 메쉬와 좌표계를 개별적으로 켜고 끌 수 있다.
@@ -389,7 +390,7 @@ python /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/visu
 명령줄에서 경로를 지정해도 된다.
 
 ```bash
-python visualize_xacro.py --xacro ../description/xacro/tool_scan.xacro
+python visualize_xacro.py --xacro ../../../description/xacro/tool_scan.xacro
 python visualize_xacro.py --joint joint_2=-30 --joint joint_3=60
 python visualize_xacro.py --frame-size-mm 35
 python visualize_xacro.py --no-frames
@@ -406,6 +407,12 @@ python visualize_xacro.py --check --joint joint_2=-30 --joint joint_3=60
 
 ## 조립 좌표계와 단위
 
+공용 모델은 저장소 루트의 `description`에서 관리한다.
+메쉬/STL/STEP은 `description/mesh`, 로봇 URDF는 `description/urdf`,
+카메라 및 조립 Xacro는 `description/xacro`에 둔다.
+`multi_view_scan.yaml`의 `xacro` 설정은 다중/단일 프레임 스캔, 실시간 RGB-D 확인,
+핸드아이 캘리브레이션에서 공통으로 사용한다. 기존 촬영 로그의 모델 스냅샷은 변경하지 않는다.
+
 `a0912_to_tool_scan.xacro`는 `world -> base_link -> 로봇 관절 -> link_6 -> bracket_link`
 순서로 연결된다. `world_to_base_link`의 origin이 로봇 설치 위치/방향이다.
 스캔 툴만 불러오는 `tool_scan.xacro`의 루트는 **브라켓 단품 STL의 원점과 축**인 `bracket_link`다.
@@ -415,7 +422,7 @@ python visualize_xacro.py --check --joint joint_2=-30 --joint joint_3=60
 브라켓 기준 `camera_base_link`의 위치는 `(0, 3, -51.26) mm`,
 회전 RPY는 `(0, 0, 90) deg`다. 기존 조립 TF를 유지하며 실측 보정값은 아니다.
 공식 `femto_bolt.urdf.xacro`를 include하여 카메라 내부 nominal TF도 연결한다.
-원본 카메라 Xacro와 STL 파일들은 수정하지 않는다.
+카메라 Xacro의 메쉬 경로만 공용 위치에 맞추며, 카메라 TF와 STL 형상은 변경하지 않는다.
 
 **브라켓 프레임을 실제 TCP와 동일하게 쓰려면 원점뿐 아니라 축 방향도 일치해야 한다.**
 이 파일은 로봇이나 카메라를 제어하지 않으며, 동역학/충돌 안전 검증용 모델이 아니다.

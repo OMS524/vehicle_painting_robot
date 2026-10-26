@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행 (상단 RGB_IMAGE_PATHS/PROMPT/CHECKPOINT_PATH 설정):
+#   conda activate vehicle_painting_robot_sam3
+#   python -s /home/oms/vehicle_painting_robot/scan/SAM_test/scripts/sam3_generate_masks.py
+# 추론 없이 입력/API/GPU 검사: 위 명령 끝에 --check
 """원본 RGB -> SAM 3 마스크. vehicle_painting_robot_sam3 환경에서 실행.
 
 상단 RGB_IMAGE_PATHS/PROMPT를 수정하고 실행한다. 카메라/로봇은 연결하지 않는다.

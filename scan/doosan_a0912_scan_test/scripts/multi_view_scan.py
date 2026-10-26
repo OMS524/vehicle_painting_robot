@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# 실행 (먼저 multi_view_scan.yaml의 목표 자세/TF/연결 설정 확인):
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/multi_view_scan.py --check
+# 실제 로봇 이동/촬영: 위 명령의 --check를 --execute로 변경. 작업 공간 확인 및 시작 동의 필요.
+# 저장된 점군만 보기: --check 대신 --view /결과/폴더/merged.ply
 """A0912 YAML에 지정한 여러 시점의 정지 촬영 → TF 기반 점군 통합 및 저장.
 
 기본 실행/--check: 파일, TF, 라이브러리만 검사 (하드웨어 연결 없음).

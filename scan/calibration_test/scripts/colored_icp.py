@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/calibration_test/scripts/colored_icp.py --visualize
+# 입력 변경: --capture-dir /촬영/폴더 | 검사만: --check | 기존 결과만 보기: --view /결과/폴더
 """Colored ICP: 형상과 실제 RGB를 함께 사용. 뷰 구분색은 사용 불가."""
 from pathlib import Path
 

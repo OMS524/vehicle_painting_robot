@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/cluster_test/scripts/extract_clustered_part.py --visualize
+# 입력 변경: --capture-dir /촬영/폴더 | 검사만: --check | 기존 결과만 보기: --view /결과/폴더
 """저장된 점군을 DBSCAN으로 나누고 여러 촬영 시선 기준으로 부품 후보 선택.
 
 vehicle_painting_robot_scan 환경에서 실행. 카메라/로봇 연결, SAM, 재정합 없음.

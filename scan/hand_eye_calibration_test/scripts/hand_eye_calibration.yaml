@@ -17,11 +17,15 @@ motion:
   max_move_delta_deg: 120.0  # 현재 자세 대비 관절별 이동 제한. 충돌 검사를 대신하지 않음
 
 camera:
+  image_source: c2d  # rgb: 기존 원본 RGB / c2d: Depth에 정렬한 RGB로 보정
   serial_number: ""
-  width: 1920
+  width: 1920  # 원본 RGB 해상도 (두 모드 공통)
   height: 1080
   fps: 30
-  warmup_frames: 30  # 각 정지 자세에서 새 RGB 스트림 시작 후 버림
+  depth_width: 640  # c2d 전용: 정렬 결과/PnP는 이 Depth 해상도와 내부 파라미터 사용
+  depth_height: 576
+  max_frame_time_delta_ms: 50.0  # c2d 전용: RGB·Depth 시각 차이 상한
+  warmup_frames: 30  # 각 정지 자세에서 스트림 시작 후 버림 (c2d는 RGB+Depth)
   capture_timeout_sec: 15.0
 
 calibration:

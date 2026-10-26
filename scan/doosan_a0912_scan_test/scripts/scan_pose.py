@@ -1,3 +1,6 @@
+# 공통 모듈이므로 직접 실행하지 않는다. 호출 프로그램의 TF 설정 검사 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/multi_view_scan.py --check
 """다중/단일 프레임 스캔이 공유하는 정합 TF 선택. 하드웨어를 직접 연결하지 않는다."""
 import hashlib
 import json

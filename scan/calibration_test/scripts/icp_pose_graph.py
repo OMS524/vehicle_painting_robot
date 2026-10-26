@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+# 실행 (입력 경로와 ICP 방식은 아래 설정 사용):
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/calibration_test/scripts/icp_pose_graph.py --visualize
+# 설정 덮어쓰기: --capture-dir /촬영/폴더 --method point_to_plane
+# 검사만: --check | 기존 결과만 보기: --view /결과/폴더
 """저장된 로봇 TF -> 모든 뷰 쌍 ICP -> Pose Graph 최적화 -> 병합.
 
 하드웨어/SDK 호출, 원본 수정, 로봇·hand-eye 캘리브레이션 갱신 없음.
@@ -35,7 +40,7 @@ class GraphSettings:
 
 # ======================== 사용자가 수정할 설정 ========================
 HERE = Path(__file__).resolve().parent
-CAPTURE_DIR = HERE.parents[1] / "doosan_a0912_scan_test/log/20261012_223909_665731"
+CAPTURE_DIR = HERE.parents[1] / "doosan_a0912_scan_test/log/20261015_215329_659668"
 OUTPUT_ROOT = HERE.parent / "log"
 REFERENCE_VIEW = None  # manifest의 첫 뷰 고정. 예: "view_02"
 ICP_METHOD = "point_to_plane"  # point_to_point / point_to_plane / generalized / colored

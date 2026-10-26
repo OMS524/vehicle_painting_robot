@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""A0912 + Femto Bolt eye-in-hand: SDK 이동/실측 자세, RGB 체커보드, OpenCV.
+# 실행 (먼저 hand_eye_calibration.yaml의 보드 치수/기준 자세/연결 설정 확인):
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/hand_eye_calibration_test/scripts/hand_eye_calibration.py --check
+# 카메라만 미리보기: --check 대신 --preview
+# 실제 로봇 이동/촬영/보정: --check 대신 --execute (작업 공간 확인 및 시작 동의 필요).
+# 저장된 촬영으로 재계산: --check 대신 --solve /촬영/폴더
+"""A0912 + Femto Bolt eye-in-hand: SDK 이동/실측 자세, 원본 RGB/C2D 체커보드, OpenCV.
 
 기본/--check: 하드웨어 연결 없는 검사. --preview: 카메라만 사용.
 --execute: 기준 자세로 생성한 촬영 자세에서 촬영 후 계산. --solve SESSION: 저장 데이터로 재계산.
@@ -36,6 +42,16 @@ from cartesian_scan import pose_matrix, sdk_pose_matrix, target_key, validate_ta
 DEFAULT_CONFIG = HERE / "hand_eye_calibration.yaml"
 METHODS = {name: getattr(cv2, "CALIB_HAND_EYE_" + name)
            for name in ("PARK", "TSAI", "HORAUD", "ANDREFF", "DANIILIDIS")}
+CAMERA_FRAMES = {"rgb": "camera_color_optical_frame", "c2d": "camera_depth_optical_frame"}
+IMAGE_FILES = {"rgb": "color_rgb.png", "c2d": "color_aligned_depth.png"}
+
+
+def image_source(settings):
+    # 과거 설정/로그에는 이 항목이 없으며 모두 원본 RGB이다.
+    source = settings.get("image_source", "rgb")
+    if not isinstance(source, str) or source not in CAMERA_FRAMES:
+        raise ValueError("camera.image_source는 rgb / c2d만 가능합니다.")
+    return source
 
 
 def stamp():
@@ -74,6 +90,7 @@ def positive(value, name):
 
 def validate_settings(cfg, execute=False):
     board, cal = cfg["board"], cfg["calibration"]
+    source = image_source(cfg["camera"])
     corners = board["inner_corners"]
     if (not isinstance(corners, list) or len(corners) != 2
             or any(type(v) is not int or v < 3 for v in corners) or corners[0] == corners[1]):
@@ -93,6 +110,12 @@ def validate_settings(cfg, execute=False):
         if type(cfg["camera"][name]) is not int or cfg["camera"][name] <= 0:
             raise ValueError(f"camera.{name}: 양의 정수이어야 합니다.")
     positive(cfg["camera"]["capture_timeout_sec"], "capture_timeout_sec")
+    if source == "c2d":
+        for name in ("depth_width", "depth_height"):
+            value = cfg["camera"].get(name)
+            if type(value) is not int or value <= 0:
+                raise ValueError(f"camera.{name}: c2d에는 양의 정수 해상도가 필요합니다.")
+        positive(cfg["camera"].get("max_frame_time_delta_ms", 50.0), "max_frame_time_delta_ms")
     for name in ("max_velocity_deg_s", "acceleration_deg_s2", "max_move_delta_deg"):
         positive(cfg["motion"][name], name)
     for section, name in ((board, "fixed_board_confirmed"), (cfg["motion"], "plan_confirmed"),
@@ -249,6 +272,10 @@ def preflight(cfg):
     import pyorbbecsdk  # noqa: F401 -- Context 생성/장치 연결 없음
     print("파일·SDK 연결부 검사 완료. 로봇/카메라에 연결하지 않았습니다.")
     print(f"제어 Python: {robot_cfg['control_python']}\n촬영 자세: {len(cfg['poses'])}개")
+    source = image_source(cfg["camera"])
+    print(f"보정 이미지: {source} / 결과 광학 프레임: {CAMERA_FRAMES[source]}")
+    if source == "c2d":
+        print("C2D는 Depth 측정 및 SDK RGB–Depth 보정값에 의존합니다. 별도 정확도 검증이 필요합니다.")
     if cfg["board"]["square_size_mm"] is None:
         print("미입력: board.square_size_mm (실제 보정판 한 칸 길이)")
     missing = [p["name"] for p in cfg["poses"] if p[target_key(p)] is None]
@@ -261,23 +288,25 @@ def camera_matrix(profile):
     intrinsic, distortion = profile.get_intrinsic(), profile.get_distortion()
     model = str(distortion.model)
     if not (model.endswith(".BROWN_CONRADY") or model.endswith(".BROWN_CONRADY_K6")):
-        raise ValueError(f"지원하지 않는 RGB 왜곡 모델: {model}. pinhole PnP에 그대로 넣지 않습니다.")
+        raise ValueError(f"지원하지 않는 카메라 왜곡 모델: {model}. pinhole PnP에 그대로 넣지 않습니다.")
     k = [[intrinsic.fx, 0, intrinsic.cx], [0, intrinsic.fy, intrinsic.cy], [0, 0, 1]]
     # OpenCV rational model: k1,k2,p1,p2,k3,k4,k5,k6 (SDK 필드 순서와 다름).
     d = [distortion.k1, distortion.k2, distortion.p1, distortion.p2, distortion.k3]
     if model.endswith(".BROWN_CONRADY_K6"):
         d += [distortion.k4, distortion.k5, distortion.k6]
     if not np.isfinite(k).all() or not np.isfinite(d).all() or intrinsic.fx <= 0 or intrinsic.fy <= 0:
-        raise ValueError("SDK RGB 내부 파라미터가 유효하지 않습니다.")
+        raise ValueError("SDK 카메라 내부 파라미터가 유효하지 않습니다.")
     return {"K": k, "dist_coeffs": d, "distortion_model": model,
             "width": profile.get_width(), "height": profile.get_height(), "fps": profile.get_fps()}
 
 
-class ColorCamera:
-    """원본 RGB만 촬영. 깊이 정렬/Depth 품질에 체커보드 검출을 의존하지 않음."""
+class CalibrationCamera:
+    """rgb는 원본 Color, c2d는 native Depth 격자/왜곡에 맞춘 Color로 보정."""
     def __init__(self, settings):
         import pyorbbecsdk as sdk
         self.sdk, self.settings = sdk, settings
+        self.image_source = image_source(settings)
+        self.last_raw_rgb, self.last_depth_raw = None, None
         self.context = sdk.Context()
         devices = self.context.query_devices()
         if settings["serial_number"]:
@@ -293,13 +322,34 @@ class ColorCamera:
         profiles = self.pipeline.get_stream_profile_list(sdk.OBSensorType.COLOR_SENSOR)
         profile = profiles.get_video_stream_profile(settings["width"], settings["height"],
                                                    sdk.OBFormat.MJPG, settings["fps"])
-        self.metadata = camera_matrix(profile)
+        rgb_camera = camera_matrix(profile)
+        self.config = sdk.Config()
+        self.config.enable_stream(profile)
+        dp = None
+        if self.image_source == "c2d":
+            dp = self.pipeline.get_stream_profile_list(sdk.OBSensorType.DEPTH_SENSOR).get_video_stream_profile(
+                settings["depth_width"], settings["depth_height"], sdk.OBFormat.Y16, settings["fps"])
+            self.config.enable_stream(dp)
+            self.config.set_frame_aggregate_output_mode(sdk.OBFrameAggregateOutputMode.FULL_FRAME_REQUIRE)
+            self.pipeline.enable_frame_sync()
+            # scan.align_color_to_depth의 TargetDistortion=1에 맞춰 native Depth K/왜곡을 사용.
+            self.metadata = camera_matrix(dp)
+            self.metadata["alignment"] = "color_to_native_depth"
+            self.metadata["alignment_target_distortion"] = True
+        else:
+            self.metadata = dict(rgb_camera)
+            self.metadata["alignment"] = "none"
+        self.metadata.update(image_source=self.image_source,
+                             camera_frame=CAMERA_FRAMES[self.image_source],
+                             calibration_image_file=IMAGE_FILES[self.image_source],
+                             rgb_camera=rgb_camera)
         self.metadata["device"] = {"name": info.get_name(), "serial": info.get_serial_number(),
                                    "firmware": info.get_firmware_version()}
         # Optional factory Depth->RGB transform. RGB hand-eye remains usable if this is unavailable.
         try:
-            dp = self.pipeline.get_stream_profile_list(sdk.OBSensorType.DEPTH_SENSOR).get_video_stream_profile(
-                0, 0, sdk.OBFormat.Y16, settings["fps"])
+            if dp is None:
+                dp = self.pipeline.get_stream_profile_list(sdk.OBSensorType.DEPTH_SENSOR).get_video_stream_profile(
+                    0, 0, sdk.OBFormat.Y16, settings["fps"])
             ex = dp.get_extrinsic_to(profile)
             raw = np.eye(4)
             raw[:3, :3], raw[:3, 3] = np.asarray(ex.rot).reshape(3, 3), np.asarray(ex.transform) / 1000
@@ -307,13 +357,12 @@ class ColorCamera:
             self.metadata["T_color_depth"] = validate_transform(raw).tolist()
         except Exception as error:
             self.metadata["depth_extrinsic_warning"] = str(error)
-        self.config = sdk.Config()
-        self.config.enable_stream(profile)
 
     def capture(self):
         # 매 자세마다 새 스트림을 시작하므로 이전 이동 중 버퍼의 이미지를 사용하지 않는다.
         deadline = time.monotonic() + self.settings["capture_timeout_sec"]
-        count, previous = 0, None
+        count, previous, previous_depth = 0, None, None
+        self.last_raw_rgb, self.last_depth_raw = None, None
         try:
             self.pipeline.start(self.config)
             while time.monotonic() < deadline:
@@ -324,16 +373,48 @@ class ColorCamera:
                 identity = (frame.get_index(), frame.get_timestamp_us())
                 if identity == previous:
                     continue
+                depth, depth_identity, delta_ms = None, None, None
+                if self.image_source == "c2d":
+                    depth = frames.get_depth_frame()
+                    if depth is None:
+                        continue
+                    depth_identity = (depth.get_index(), depth.get_timestamp_us())
+                    delta_ms = abs(identity[1] - depth_identity[1]) / 1000.0
+                    if (depth_identity == previous_depth
+                            or delta_ms > self.settings.get("max_frame_time_delta_ms", 50.0)):
+                        continue
                 previous = identity
+                previous_depth = depth_identity
                 count += 1
                 if count <= self.settings["warmup_frames"]:
                     continue
-                rgb = scan.rgb_image(self.sdk, scan.color_to_rgb_frame(self.sdk, frame))
-                return rgb, {"frame_index": identity[0], "device_timestamp_us": identity[1],
-                             "host_received_ns": time.time_ns(), "warmup_frames": count - 1}
-            raise TimeoutError("새 RGB 프레임을 제한 시간 안에 취득하지 못했습니다.")
+                info = {"frame_index": identity[0], "device_timestamp_us": identity[1],
+                        "host_received_ns": time.time_ns(), "warmup_frames": count - 1,
+                        "image_source": self.image_source, "camera_frame": CAMERA_FRAMES[self.image_source]}
+                if depth is not None:
+                    # 기존 스캔과 같은 SDK C2D. 깊이 보간/회전행렬 보정은 추가하지 않는다.
+                    self.last_raw_rgb, rgb = scan.align_color_to_depth(self.sdk, depth, frame)
+                    self.last_depth_raw = np.frombuffer(depth.get_data(), dtype=np.uint16).reshape(
+                        depth.get_height(), depth.get_width()).copy()
+                    info.update(depth_frame_index=depth_identity[0],
+                                depth_device_timestamp_us=depth_identity[1],
+                                color_depth_time_delta_ms=delta_ms,
+                                depth_value_scale_mm=float(depth.get_depth_scale()))
+                else:
+                    rgb = scan.rgb_image(self.sdk, scan.color_to_rgb_frame(self.sdk, frame))
+                    self.last_raw_rgb = rgb
+                if rgb.shape[:2] != (self.metadata["height"], self.metadata["width"]):
+                    raise ValueError("보정 이미지와 선택한 광학 프레임의 내부 파라미터 해상도가 다릅니다.")
+                return rgb, info
+            raise TimeoutError(f"새 {self.image_source} 프레임을 제한 시간 안에 취득하지 못했습니다.")
         finally:
             self.pipeline.stop()
+
+    def save_capture(self, folder, rgb):
+        save_image(folder / "color_rgb.png", cv2.cvtColor(self.last_raw_rgb, cv2.COLOR_RGB2BGR))
+        if self.image_source == "c2d":
+            save_image(folder / IMAGE_FILES["c2d"], cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
+            np.save(folder / "depth_raw.npy", self.last_depth_raw, allow_pickle=False)
 
 
 def board_points(board):
@@ -346,7 +427,7 @@ def board_points(board):
 
 def detect_board(rgb, board, camera, max_error):
     if rgb.shape[:2] != (camera["height"], camera["width"]):
-        raise ValueError("원본 RGB 해상도와 내부 파라미터가 다릅니다.")
+        raise ValueError("보정 이미지 해상도와 내부 파라미터가 다릅니다.")
     gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
     pattern = tuple(board["inner_corners"])
     found, corners = cv2.findChessboardCornersSB(gray, pattern,
@@ -375,7 +456,10 @@ def detect_board(rgb, board, camera, max_error):
     origin = tuple(np.rint(corners[0, 0]).astype(int))
     cv2.circle(overlay, origin, 12, (0, 0, 255), 3)
     cv2.putText(overlay, "O", origin, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-    return {"T_color_board": t.tolist(), "reprojection_rms_px": error,
+    source = image_source(camera)
+    target_key = "T_depth_board" if source == "c2d" else "T_color_board"
+    return {target_key: t.tolist(), "image_source": source, "camera_frame": CAMERA_FRAMES[source],
+            "reprojection_rms_px": error,
             "corners_px": corners.reshape(-1, 2).tolist()}, overlay
 
 
@@ -407,11 +491,15 @@ def fit_hand_eye(grippers, targets, method):
     return transform(r, t)
 
 
-def solve_samples(samples, cal):
+def solve_samples(samples, cal, source="rgb"):
+    source = image_source({"image_source": source})
     if len(samples) < cal["min_samples"]:
         raise ValueError(f"유효 시점 {len(samples)}개 < min_samples {cal['min_samples']}")
     grippers = [validate_transform(s["T_base_flange"]) for s in samples]
-    targets = [validate_transform(s["T_color_board"]) for s in samples]
+    target_key = "T_depth_board" if source == "c2d" else "T_color_board"
+    if any(image_source(s) != source for s in samples):
+        raise ValueError("RGB/C2D 표본을 섞어서 보정할 수 없습니다.")
+    targets = [validate_transform(s[target_key]) for s in samples]
     diversity = excitation(grippers, cal)
     x = fit_hand_eye(grippers, targets, cal["method"])
     boards = [g @ x @ c for g, c in zip(grippers, targets)]
@@ -436,7 +524,9 @@ def solve_samples(samples, cal):
         warnings.append("한 시점 제외 시 보정 이동량 변화 한도 초과")
     if loo and max(r["rotation_deg"] for r in loo) > cal["max_leave_one_out_rotation_deg"]:
         warnings.append("한 시점 제외 시 보정 회전 변화 한도 초과")
-    return {"T_flange_color": x.tolist(), "T_base_board_mean": center.tolist(),
+    result_key = "T_flange_depth" if source == "c2d" else "T_flange_color"
+    return {result_key: x.tolist(), "image_source": source, "camera_frame": CAMERA_FRAMES[source],
+            "T_base_board_mean": center.tolist(),
             "excitation": diversity, "board_consistency": residuals, "leave_one_out": loo,
             "quality_checks_passed": not warnings, "warnings": warnings}
 
@@ -457,6 +547,25 @@ def save_image(path, image_bgr):
         raise OSError(f"이미지 저장 실패: {path}")
 
 
+def add_camera_transforms(report, camera):
+    """핸드아이 해의 기준을 유지한다. C2D 해에 SDK 외부 변환을 다시 곱하지 않는다."""
+    if image_source(camera) == "c2d":
+        validate_transform(report["T_flange_depth"])
+        report["depth_transform_source"] = "hand_eye_from_c2d"
+        report["warnings"].append(
+            "C2D 이미지 생성은 SDK RGB–Depth 외부 파라미터와 Depth 측정에 의존합니다. "
+            "T_flange_depth가 SE(3)이어도 실제 정합 정확도는 독립 검증해야 합니다.")
+        if camera.get("depth_extrinsic_warning"):
+            report["warnings"].append("C2D에 사용한 SDK 외부 파라미터 주의: " + camera["depth_extrinsic_warning"])
+    elif "T_color_depth" in camera:
+        report["T_flange_depth"] = (np.asarray(report["T_flange_color"]) @
+                                     validate_transform(camera["T_color_depth"])).tolist()
+        report["depth_transform_source"] = "rgb_hand_eye_composed_with_sdk_extrinsic"
+    else:
+        report["warnings"].append("Depth TF 미출력: SDK Depth->RGB 외부 파라미터 없음/검증 실패: "
+                                  + camera.get("depth_extrinsic_warning", "unknown"))
+
+
 def solve_session(session, excluded=()):
     session = Path(session).expanduser().resolve()
     manifest, cfg = read_json(session / "manifest.json"), read_json(session / "settings.json")
@@ -475,6 +584,13 @@ def solve_session(session, excluded=()):
               "applied_to_robot_or_xacro": False, "samples": []}
     try:
         camera = read_json(session / "camera.json")
+        source = image_source(cfg["camera"])
+        if (image_source(camera) != source
+                or camera.get("camera_frame", CAMERA_FRAMES["rgb"]) != CAMERA_FRAMES[source]
+                or camera.get("calibration_image_file", IMAGE_FILES["rgb"]) != IMAGE_FILES[source]):
+            raise ValueError("촬영 설정과 camera.json의 이미지 종류/좌표계가 다릅니다. 로그의 모드를 변경하지 마세요.")
+        report.update(image_source=source, camera_frame=CAMERA_FRAMES[source],
+                      calibration_image_file=IMAGE_FILES[source])
         robot_settings = read_json(session / "robot_settings.json")["robot"]
         for entry in manifest["samples"]:
             if entry["name"] in excluded or entry.get("status") != "accepted":
@@ -483,30 +599,30 @@ def solve_session(session, excluded=()):
             if folder.parent != session:
                 raise ValueError("시점 경로가 세션 밖을 가리킵니다.")
             record = read_json(folder / "sample.json")
+            if image_source(record) != source:
+                raise ValueError("세션과 표본의 RGB/C2D 모드가 다릅니다.")
             _, drift = validate_capture(record["before"], record["after"],
                                         robot_settings, cfg["calibration"])
-            rgb = cv2.imread(str(folder / "color_rgb.png"))
+            rgb = cv2.imread(str(folder / IMAGE_FILES[source]))
             if rgb is None:
-                raise ValueError(f"RGB 파일 읽기 실패: {folder}")
+                raise ValueError(f"보정 이미지 읽기 실패: {folder / IMAGE_FILES[source]}")
             observation, overlay = detect_board(cv2.cvtColor(rgb, cv2.COLOR_BGR2RGB), cfg["board"], camera,
                                                cfg["calibration"]["max_reprojection_error_px"])
             sample = {"name": entry["name"], **observation, "capture_drift": drift,
                       "T_base_flange": sdk_pose_matrix(record["after"]["flange_pose_mm_zyz_deg"]).tolist()}
             report["samples"].append(sample)
             save_image(output / (entry["name"] + "_corners.png"), overlay)
-        report.update(solve_samples(report["samples"], cfg["calibration"]))
-        if "T_color_depth" in camera:
-            report["T_flange_depth"] = (np.asarray(report["T_flange_color"]) @
-                                         validate_transform(camera["T_color_depth"])).tolist()
-        else:
-            report["warnings"].append("Depth TF 미출력: SDK Depth->RGB 외부 파라미터 없음/검증 실패: "
-                                      + camera.get("depth_extrinsic_warning", "unknown"))
+        report.update(solve_samples(report["samples"], cfg["calibration"], source))
+        add_camera_transforms(report, camera)
         report["status"] = "computed_requires_physical_validation"
         report["notes"] = ["표본 내 보정판 일관성과 leave-one-out 안정성은 절대 정확도 보증이 아닙니다.",
                            "체커보드 코너 원점이 모든 이미지에서 같은 물리적 모서리인지 확인하세요.",
                            "SDK 플랜지 기준 보정입니다. URDF FK 기반 스캔에 적용할 때 기구학 차이를 검증하세요.",
-                           "T_flange_color는 RGB 광학 프레임. Depth는 SDK Depth->RGB TF가 유효할 때만 계산합니다."]
-        print("T_flange_color (위치 m):\n", np.asarray(report["T_flange_color"]))
+                           ("C2D의 Depth 내부 파라미터로 T_flange_depth를 직접 추정합니다. SDK 외부 TF를 다시 곱하지 않습니다."
+                            if source == "c2d" else
+                            "T_flange_color는 RGB 광학 프레임. Depth는 SDK Depth->RGB TF가 유효할 때만 계산합니다.")]
+        result_key = "T_flange_depth" if source == "c2d" else "T_flange_color"
+        print(f"{source} / {result_key} (위치 m):\n", np.asarray(report[result_key]))
         print("표본 품질 검사:", "통과 (별도 실물 검증 필요)" if report["quality_checks_passed"] else "재검토 필요")
         for warning in report["warnings"]:
             print("주의:", warning)
@@ -528,8 +644,7 @@ def depth_variant_sources(path):
     elif path.is_dir():
         for candidate in sorted(path.glob("calibration_*/calibration.json"), reverse=True):
             report = read_json(candidate)
-            if (report.get("status") == "computed_requires_physical_validation"
-                    and "T_flange_color" in report):
+            if report.get("status") == "computed_requires_physical_validation":
                 path = candidate
                 break
         else:
@@ -537,6 +652,8 @@ def depth_variant_sources(path):
     report = read_json(path)
     if report.get("status") != "computed_requires_physical_validation":
         raise ValueError("완료된 RGB 핸드아이 calibration.json을 지정하세요.")
+    if image_source(report) != "rgb" or "T_flange_color" not in report:
+        raise ValueError("--export-depth-variants는 RGB 보정 전용입니다. C2D의 직접 계산 Depth TF에는 적용하지 않습니다.")
     if report.get("translation_unit") != "m":
         raise ValueError("위치 단위가 m인 핸드아이 결과가 필요합니다.")
     # 로그를 옮긴 경우에도 현재 계산 파일 주변의 camera.json을 먼저 사용한다.
@@ -651,10 +768,14 @@ def capture_session(cfg, robot_cfg, model):
     scan.save_json(output / "robot_settings.json", robot_cfg)
     if "generated_plan" in cfg:
         scan.save_json(output / "pose_plan.json", {**cfg["generated_plan"], "poses": cfg["poses"]})
-    manifest = {"schema": "doosan_eye_in_hand_v1", "status": "capturing", "samples": []}
+    source = image_source(cfg["camera"])
+    manifest = {"schema": "doosan_eye_in_hand_v1", "status": "capturing", "samples": [],
+                "image_source": source, "camera_frame": CAMERA_FRAMES[source]}
     scan.save_json(output / "manifest.json", manifest)
     try:
-        camera = ColorCamera(cfg["camera"])
+        camera = CalibrationCamera(cfg["camera"])
+        print(f"보정 이미지: {source} / {camera.metadata['width']}×{camera.metadata['height']} / "
+              f"{camera.metadata['camera_frame']}")
         scan.save_json(output / "camera.json", camera.metadata)
         with scan.RobotClient(robot_cfg, output) as robot:
             robot.call("initialize", settings=robot_cfg["robot"], **scan.ik_request(robot_cfg, model),
@@ -670,9 +791,11 @@ def capture_session(cfg, robot_cfg, model):
                 after = robot.call("snapshot_cartesian")
                 folder = output / pose["name"]
                 folder.mkdir()
-                save_image(folder / "color_rgb.png", cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
+                camera.save_capture(folder, rgb)
                 record = {"name": pose["name"], "command": pose, "before": before, "after": after,
-                          "settled": settled, "frame": frame, "status": "pending"}
+                          "settled": settled, "frame": frame, "status": "pending",
+                          "image_source": source, "camera_frame": CAMERA_FRAMES[source],
+                          "calibration_image_file": IMAGE_FILES[source]}
                 entry = {"name": pose["name"], "status": "pending"}
                 manifest["samples"].append(entry)
                 try:
@@ -703,8 +826,10 @@ def capture_session(cfg, robot_cfg, model):
 
 def preview(cfg):
     board_points(cfg["board"])
-    camera = ColorCamera(cfg["camera"])
+    camera = CalibrationCamera(cfg["camera"])
+    window = f"Hand-eye {camera.image_source.upper()} ({camera.metadata['camera_frame']})"
     print("카메라만 사용합니다. 로봇 연결/서보 활성화 없음. Q/ESC/창 닫기로 종료.")
+    print(f"보정 이미지: {camera.image_source} / {camera.metadata['width']}×{camera.metadata['height']}")
     try:
         while True:
             rgb, _ = camera.capture()
@@ -717,9 +842,9 @@ def preview(cfg):
                 message = "Board not accepted (see terminal)"
                 print(error)
             cv2.putText(overlay, message, (20, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
-            cv2.namedWindow("Hand-eye RGB", cv2.WINDOW_NORMAL)
-            cv2.imshow("Hand-eye RGB", overlay)
-            if cv2.waitKey(30) & 0xFF in (27, ord('q')) or cv2.getWindowProperty("Hand-eye RGB", cv2.WND_PROP_VISIBLE) < 1:
+            cv2.namedWindow(window, cv2.WINDOW_NORMAL)
+            cv2.imshow(window, overlay)
+            if cv2.waitKey(30) & 0xFF in (27, ord('q')) or cv2.getWindowProperty(window, cv2.WND_PROP_VISIBLE) < 1:
                 break
     finally:
         cv2.destroyAllWindows()

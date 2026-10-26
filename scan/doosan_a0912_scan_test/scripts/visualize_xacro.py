@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행 (하드웨어 연결 없음):
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/visualize_xacro.py
+# 입력 변경: --xacro /경로/모델.xacro | GUI 없는 검사: --check | 관절각: --joint joint_2=-30
 """고정/회전 조인트 Xacro/URDF 모델을 지정한 관절각으로 Open3D에 표시한다.
 
 ROS 노드/카메라/로봇을 실행하지 않는다. 입력 파일을 수정하지 않는다.
@@ -14,7 +18,7 @@ import numpy as np
 
 # ==================== 사용자 파라미터 ====================
 # 상대 경로를 쓰면 이 Python 파일이 있는 scripts 디렉토리 기준이다.
-XACRO_PATH = Path(__file__).resolve().parents[1] / "description/xacro/a0912_to_tool_scan.xacro"
+XACRO_PATH = Path(__file__).resolve().parents[3] / "description/xacro/a0912_to_tool_scan.xacro"
 # 회전 관절각(deg). 지정하지 않은 관절은 0도. 실제 로봇을 움직이지 않는다.
 JOINT_ANGLES_DEG = {
     # "joint_2": -30.0,

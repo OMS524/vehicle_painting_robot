@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# 실행:
+#   conda activate vehicle_painting_robot_scan
+#   python -s /home/oms/vehicle_painting_robot/scan/calibration_test/scripts/generalized_icp.py --visualize
+# 입력 변경: --capture-dir /촬영/폴더 | 검사만: --check | 기존 결과만 보기: --view /결과/폴더
 """Generalized ICP (GICP): 양쪽 점군의 국부 표면 구조를 사용."""
 from pathlib import Path
 
