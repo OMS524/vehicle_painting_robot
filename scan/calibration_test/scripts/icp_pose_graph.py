@@ -40,7 +40,7 @@ class GraphSettings:
 
 # ======================== 사용자가 수정할 설정 ========================
 HERE = Path(__file__).resolve().parent
-CAPTURE_DIR = HERE.parents[1] / "doosan_a0912_scan_test/log/20261015_215329_659668"
+CAPTURE_DIR = HERE.parents[1] / "doosan_a0912_scan_test/log/20261026_235704_386974"
 OUTPUT_ROOT = HERE.parent / "log"
 REFERENCE_VIEW = None  # manifest의 첫 뷰 고정. 예: "view_02"
 ICP_METHOD = "point_to_plane"  # point_to_point / point_to_plane / generalized / colored

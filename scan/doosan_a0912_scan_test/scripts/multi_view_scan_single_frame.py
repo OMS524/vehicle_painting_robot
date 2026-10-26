@@ -212,8 +212,11 @@ def preflight(cfg, model, execute=False, pose_source=None):
 
     print("파일·TF·분리된 제어 라이브러리 검사 통과. 하드웨어 연결 없음.")
     print(f"촬영 시점 {len(cfg['views'])}개 (목록 순서): " + " → ".join(v["name"] for v in cfg["views"]))
-    print(f"단일 프레임 모드: 시점마다 초기 {cfg['camera']['warmup_frames']}프레임을 버린 뒤 "
-          "다음 유효 Depth 1프레임을 저장합니다. 시간 방향 통합 없음.")
+    if cfg.get("capture_mode") == "sdk_filter_chain":
+        print("SDK 필터 모드: 카메라 워밍업 → 필터 워밍업 → 마지막 출력 저장.")
+    else:
+        print(f"단일 프레임 모드: 시점마다 초기 {cfg['camera']['warmup_frames']}프레임을 버린 뒤 "
+              "다음 유효 Depth 1프레임을 저장합니다. 시간 방향 통합 없음.")
     if missing:
         print("미입력 목표 자세:", ", ".join(missing))
     if ik_request(cfg, model, pose_source):
@@ -316,6 +319,8 @@ class CapturedView:
     metadata: dict
     color_rgb: np.ndarray | None = None
     color_aligned_rgb: np.ndarray | None = None
+    # SDK 필터 비교용. 기존 단일 프레임 촬영에서는 None.
+    unfiltered: "CapturedView | None" = None
 
 
 def profile_calibration(profile):
@@ -530,6 +535,35 @@ def save_rgb(path, rgb):
         raise OSError(f"RGB 이미지 저장 실패: {path}")
 
 
+def save_capture_files(directory, captured, camera_settings):
+    """Depth/RGB와 실제 출력 프로파일 저장. 필터 사용 시 원본 Depth도 보존."""
+    original = captured.unfiltered or captured
+    np.save(directory / "depth_raw.npy", original.depth_raw, allow_pickle=False)
+    metadata = captured.metadata
+    if captured.unfiltered is not None:
+        np.save(directory / "depth_filtered.npy", captured.depth_raw, allow_pickle=False)
+        metadata["depth_file"] = "depth_filtered.npy"
+        metadata["unfiltered_depth_file"] = "depth_raw.npy"
+        original.metadata["depth_file"] = "depth_raw.npy"
+        original.metadata["depth_visualization"] = save_depth_visualization(
+            directory / "depth_unfiltered_visualization.png", original.depth_raw,
+            original.metadata["depth_scale_mm_per_unit"],
+            camera_settings["min_depth_mm"], camera_settings["max_depth_mm"])
+        save_json(directory / "camera_unfiltered.json", original.metadata)
+        if original.color_aligned_rgb is not None:
+            save_rgb(directory / "color_aligned_depth_unfiltered.png", original.color_aligned_rgb)
+    if captured.color_rgb is not None:
+        save_rgb(directory / "color_rgb.png", captured.color_rgb)
+    if captured.color_aligned_rgb is not None:
+        save_rgb(directory / "color_aligned_depth.png", captured.color_aligned_rgb)
+    metadata["depth_visualization"] = save_depth_visualization(
+        directory / "depth_visualization.png", captured.depth_raw,
+        metadata["depth_scale_mm_per_unit"], camera_settings["min_depth_mm"], camera_settings["max_depth_mm"])
+    if captured.unfiltered is not None:
+        metadata["depth_visualization"]["source_file"] = "depth_filtered.npy"
+    save_json(directory / "camera.json", metadata)
+
+
 def capture_sequence(cfg, model, robot, camera, output, pose_source=None):
     """주입 가능한 robot/camera를 사용하여 순서와 저장 과정을 오프라인 테스트 가능."""
     import open3d as o3d
@@ -539,7 +573,7 @@ def capture_sequence(cfg, model, robot, camera, output, pose_source=None):
                 "units": {"point_cloud": "m", "joint": "deg"}, "reference_frame": BASE_FRAME,
                 "method": pose_source.method, "pose_estimation": pose_source.metadata, "icp_applied": False,
                 "settle_criterion": "stationary_actual_joints",
-                "capture_mode": "single_frame",
+                "capture_mode": cfg.get("capture_mode", "single_frame"),
                 "color_mode": "rgb" if cfg["camera"].get("capture_color", False) else "view_colors", "views": []}
     save_json(output / "manifest.json", manifest)
     save_json(output / "settings.json", cfg)
@@ -579,15 +613,7 @@ def capture_sequence(cfg, model, robot, camera, output, pose_source=None):
                 after = pose_source.snapshot(robot)  # 디스크 저장보다 먼저 촬영 직후 자세 조회.
             finally:
                 # 직후 자세 조회가 실패해도 이미 받은 원본은 남긴다.
-                np.save(directory / "depth_raw.npy", raw, allow_pickle=False)
-                if captured.color_rgb is not None:
-                    save_rgb(directory / "color_rgb.png", captured.color_rgb)
-                if captured.color_aligned_rgb is not None:
-                    save_rgb(directory / "color_aligned_depth.png", captured.color_aligned_rgb)
-                calibration["depth_visualization"] = save_depth_visualization(
-                    directory / "depth_visualization.png", raw, calibration["depth_scale_mm_per_unit"],
-                    cfg["camera"]["min_depth_mm"], cfg["camera"]["max_depth_mm"])
-                save_json(directory / "camera.json", calibration)
+                save_capture_files(directory, captured, cfg["camera"])
                 entry.update(status="captured", before_capture=before, after_capture=after)
                 save_json(directory / "pose.json", {"before": before, "after": after, "accepted": False})
                 save_json(output / "manifest.json", manifest)
@@ -600,7 +626,16 @@ def capture_sequence(cfg, model, robot, camera, output, pose_source=None):
                 if aligned_rgb is None or aligned_rgb.shape != (*raw.shape, 3) or len(xyz) != raw.size:
                     raise ValueError("RGB 촬영 결과가 없거나 Depth/점군과 픽셀이 대응하지 않습니다.")
                 colors = aligned_rgb.reshape(-1, 3)[valid].astype(float) / 255.0
-            if len(raw_points):
+            if captured.unfiltered is not None:
+                original = captured.unfiltered
+                original_valid = np.isfinite(original.xyz).all(axis=1) & (original.xyz[:, 2] > 0)
+                original_colors = (original.color_aligned_rgb.reshape(-1, 3)[original_valid].astype(float) / 255
+                                   if original.color_aligned_rgb is not None else None)
+                if np.any(original_valid):
+                    save_cloud(directory / "camera_raw.ply", original.xyz[original_valid], colors=original_colors)
+                if len(raw_points):
+                    save_cloud(directory / "camera_sdk_filtered.ply", raw_points, colors=colors)
+            elif len(raw_points):
                 save_cloud(directory / "camera_raw.ply", raw_points, colors=colors)
             drift = validate_capture(before, after, cfg["robot"])
             target_error = (np.asarray(after["joint_deg"]) - target).tolist()

@@ -1,0 +1,50 @@
+# 자세, 로봇 IP/속도, 카메라, hand_eye, 거리/ROI 설정은 기존 YAML을 그대로 사용.
+# 상대 경로는 각각 해당 YAML 위치 기준. 필터 테스트마다 이 파일의 enabled/수치를 변경.
+scan_config: multi_view_scan.yaml
+output_dir: ../log/multi_view_filter
+
+depth_filters:
+  # 기존 camera.warmup_frames를 버린 뒤, 아래 수만큼 필터에 실제 입력하여 이력 형성.
+  # 이어지는 마지막 출력 한 장 저장. Temporal 이력은 시점마다 초기화한다.
+  # camera.capture_frames/min_valid_frames의 중앙값 통합은 이 스크립트에서 사용하지 않는다.
+  warmup_frames: 30
+
+  # 실행 순서: Decimation → Threshold → NoiseRemoval → Spatial → Temporal → HoleFilling
+  # 기본은 요청했던 NoiseRemoval/Spatial/Temporal 사용. 단독 비교는 하나만 true.
+  # 수치는 장치 초기화 후 조회한 SDK 2.9.3의 생성 기본값. enabled는 테스트 선택값.
+  filters:
+    DecimationFilter: # 깊이 이미지 해상도를 낮춰 데이터량 감소
+      enabled: false
+      decimate: 2             # 1~8, 해상도 축소 배수. 출력 K/해상도는 SDK 결과 사용.
+
+    ThresholdFilter: # 지정한 최소·최대 거리 밖의 깊이 제거
+      enabled: false
+      min: 0                  # 0~16000 mm
+      max: 1500              # camera.min_depth_mm/max_depth_mm은 이후 점군 범위 제한으로 별도 적용.
+
+    NoiseRemovalFilter: # 주변과 떨어진 작은 점 무리·노이즈 제거
+      enabled: false
+      min_diff: 256           # 1~10000 (현재 SDK); Python params.disp_diff와 동일 항목.
+      max_size: 80            # 1~1000, 제거할 작은 영역의 최대 픽셀 수.
+      # 참고: 공식 ROS2 femto_bolt.launch.py는 min_diff=10, max_size=50을 지정.
+      # 이는 ROS 실행 설정값이며 위 SDK 생성 기본값 256/80과 구분한다.
+      # https://github.com/orbbec/OrbbecSDK_ROS2/blob/v2-main/orbbec_camera/launch/femto_bolt.launch.py
+      # 내부 width/height는 입력 Depth 크기로 자동 설정 (Decimation도 반영).
+
+    SpatialAdvancedFilter: # 한 프레임 안에서 주변 깊이를 이용해 표면을 매끄럽게 함
+      enabled: false
+      alpha: 0.5              # 0.1~1.0, 현재 픽셀 가중치; 클수록 원본 유지.
+      disp_diff: 160          # 1~10000, 경계 보존용 차이 기준. 임의로 mm로 해석하지 않는다.
+      magnitude: 1            # 1~5, 반복 횟수.
+      radius: 1               # 0~8, 주변 참조/작은 구멍 처리 반경.
+
+    TemporalFilter: # 이전 프레임들을 이용해 깊이의 시간적 흔들림 감소
+      enabled: true
+      diff_scale: 0.1         # 0.1~1.0, 시간 방향 깊이 변화 기준.
+      weight: 0.4             # 0.1~1.0, 현재 프레임 가중치.
+
+    HoleFillingFilter: # 깊이가 없는 픽셀을 주변 값으로 채움
+      enabled: false
+      hole_filling_mode: 0    # 현재 SDK 기본 0=TOP, 1=NEAREST, 2=FAREST(먼 쪽).
+      # 일부 이전 공식 후처리 문서/뷰어는 FARTHEST(2)를 기본/권장값으로 표기한다.
+      # 여기서는 실제 설치 SDK에서 조회한 기본 0을 사용. 채운 값은 주변 값으로 추정한 값.

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/live_rgbd_cartesian.py", line 276, in run_live
+    images[name] = depth_image(depth_mm, minimum, maximum, cv)
+KeyboardInterrupt

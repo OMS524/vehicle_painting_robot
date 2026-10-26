@@ -1,0 +1,54 @@
+{
+  "requested": {
+    "warmup_frames": 30,
+    "filters": {
+      "DecimationFilter": {
+        "enabled": false,
+        "decimate": 2
+      },
+      "ThresholdFilter": {
+        "enabled": false,
+        "min": 0,
+        "max": 1500
+      },
+      "NoiseRemovalFilter": {
+        "enabled": false,
+        "min_diff": 256,
+        "max_size": 80
+      },
+      "SpatialAdvancedFilter": {
+        "enabled": true,
+        "alpha": 0.5,
+        "disp_diff": 160,
+        "magnitude": 1,
+        "radius": 1
+      },
+      "TemporalFilter": {
+        "enabled": false,
+        "diff_scale": 0.1,
+        "weight": 0.4
+      },
+      "HoleFillingFilter": {
+        "enabled": false,
+        "hole_filling_mode": 0
+      }
+    }
+  },
+  "applied": [
+    {
+      "name": "SpatialAdvancedFilter",
+      "parameters": {
+        "alpha": 0.5,
+        "disp_diff": 160.0,
+        "magnitude": 1.0,
+        "radius": 1.0
+      },
+      "sdk_defaults": {
+        "alpha": 0.5,
+        "disp_diff": 160.0,
+        "magnitude": 1.0,
+        "radius": 1.0
+      }
+    }
+  ]
+}

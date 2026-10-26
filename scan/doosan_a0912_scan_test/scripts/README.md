@@ -2,6 +2,57 @@
 
 ## 여러 시점 촬영 및 통합
 
+### SDK 필터 비교 스캔
+
+`multi_view_filter.py`는 기존 이동·정지 확인·촬영 직후 실측 자세·핸드아이/URDF 정합을
+재사용하며, Depth에 SDK 필터를 적용한 결과를 저장한다. 설정 파일은
+`multi_view_filter.yaml`이다. 이 파일의 `scan_config: multi_view_scan.yaml`에서
+기존 자세·속도·카메라·캘리값을 읽으므로, 자세는 계속 `multi_view_scan.yaml`에서 변경한다.
+
+```bash
+conda activate vehicle_painting_robot_scan
+cd /home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts
+python -s multi_view_filter.py --check
+python -s multi_view_filter.py --execute
+python -s multi_view_filter.py --view ../log/multi_view_filter/<촬영시각>/merged.ply
+```
+
+`--check`는 하드웨어에 연결하지 않는다. `--execute` 후 기존과 같이 `SCAN`을 입력한다.
+SDK 장치 초기화와 모든 필터 생성/파라미터 확인을 로봇 연결보다 먼저 수행한다.
+기본 활성 필터는 **NoiseRemovalFilter, SpatialAdvancedFilter, TemporalFilter**이며,
+나머지 DecimationFilter, ThresholdFilter, HoleFillingFilter는 YAML에서 `enabled: true`로 켠다.
+각각 비교하려면 한 필터만 켜고 실행한다. 모두 끄면 추가 SDK 후처리 없이 비교할 수 있다.
+실행 순서는 `Decimation → Threshold → NoiseRemoval → Spatial → Temporal → HoleFilling`이다.
+
+파라미터 기본값은 설치된 SDK 2.9.3에서 장치 초기화 후 실제 조회한 값으로 적었다.
+NoiseRemoval은 `min_diff: 256`, `max_size: 80`이며, Femto Bolt 공식 ROS2 실행 파일의
+`10 / 50` 설정은 YAML 주석으로 별도 표기했다. HoleFilling은 현재 SDK 생성 기본값인
+`0 (TOP)`을 사용한다(일부 이전 문서의 FARTHEST 기본/권장값과 다름).
+실제로 적용한 값과 SDK 기본값은 세션 `filter_parameters.json`에도 저장한다.
+
+각 정지 시점에서 카메라 워밍업 프레임을 버린 다음, `depth_filters.warmup_frames`
+(기본 30)만큼 **필터에 입력**하여 Temporal 이력을 만든 뒤 마지막 출력 한 장을 저장한다.
+Temporal 이력은 시점마다 초기화한다. 기존 `capture_frames/min_valid_frames`의 중앙값
+통합은 사용하지 않는다. Decimation으로 해상도가 바뀌면 SDK 출력 프로파일의 내부 파라미터로
+점군 및 C2D를 계산한다. 기존 `camera.min_depth_mm/max_depth_mm`와 ROI 제한은 그 이후에 적용한다.
+
+| 시점별 파일 | 내용 |
+|---|---|
+| `depth_raw.npy`, `depth_unfiltered_visualization.png` | 마지막 입력 Depth, 추가 필터 적용 전 |
+| `depth_filtered.npy`, `depth_visualization.png` | 필터 최종 출력 Depth 및 시각화 |
+| `camera_unfiltered.json`, `camera.json` | 각각의 해상도·내부 파라미터·단위, 필터 적용 기록 |
+| `color_rgb.png` | 같은 입력 프레임 쌍의 원본 RGB |
+| `color_aligned_depth_unfiltered.png`, `color_aligned_depth.png` | 각각 입력/필터 출력 Depth에 맞춘 C2D |
+| `camera_raw.ply` | 추가 필터 적용 전 점군, invalid만 제외 |
+| `camera_sdk_filtered.ply` | SDK 필터 적용 후 점군, 거리/ROI 제한 전 |
+| `camera_filtered.ply`, `base.ply` | SDK 필터 + 거리/ROI 제한 후 점군 및 base 좌표 변환 |
+
+세션의 `merged_raw.ply`, `merged.ply`는 **필터 적용 후** 점군을 합친 결과이며 기존 ICP에
+입력할 수 있다. 여기서 원본은 SDK가 제공한 Depth이며 카메라 내부 기본 처리까지 제거한
+센서 신호를 뜻하지 않는다. HoleFilling과 일부 Spatial 처리는 주변 값으로 빈 픽셀을 추정한다.
+
+오프라인 회귀 검사: `python -sB test_multi_view_filter.py`.
+
 `multi_view_scan.py`가 YAML의 `views`에 적힌 순서로 이동하고, **이동 명령 종료와
 실제 자세의 정지 유지가 확인된 뒤** 각 위치에서 여러 Depth 프레임의 유효 측정값을 통합하고
 마지막 동기 RGB 한 장과 함께 저장한다. 마지막에는 촬영 직후 실측 자세와

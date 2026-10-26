@@ -17,7 +17,7 @@ pose_estimation:
   # 상대 경로는 이 YAML 기준. 핸드아이 품질 검사 통과 결과만 허용하며 누락/실패 시 실행 차단.
   # 원본/길이 보정본 모두 전체 calibration.json: raw/ 또는 unit_axis/ 폴더로 선택.
   # 파일의 T_flange_depth를 추가 보정 없이 점군 변환에 적용.
-  hand_eye_calibration_file: ../../hand_eye_calibration_test/log/20261015_202951_112921/depth_tf_variants_20261015_215240_124624/unit_axis/calibration.json
+  hand_eye_calibration_file: ../../hand_eye_calibration_test/log/20261026_233453_229364/calibration_20261026_233811_572212/calibration.json
   # hand_eye + target_frame=camera_depth_optical_frame이면 IK 목표 변환에도 동일 보정 TF 적용.
 
 robot:
@@ -81,25 +81,36 @@ views:
   #   pose_mm_deg: [500.0, 0.0, 200.0, 180.0, 0.0, -90.0]
   # - name: view_01_bottom_right
   #   pose_mm_deg: [500.0, -500.0, 200.0, 180.0, 0.0, -70.0]
-  # ========== 정면 뷰 ==========
-  - name: view_01_top_left
-    pose_mm_deg: [500.0, 250.0, 850.0, 160.0, 0.0, -90.0]
-  - name: view_02_top_front
-    pose_mm_deg: [500.0, 0.0, 850.0, 160.0, 0.0, -90.0]
-  - name: view_03_top_right
-    pose_mm_deg: [500.0, -250.0, 850.0, 160.0, 0.0, -90.0]
-  - name: view_01_middle_left
-    pose_mm_deg: [500.0, 250.0, 500.0, 180.0, 0.0, -90.0]
-  - name: view_01_middle_front
-    pose_mm_deg: [500.0, 0.0, 500.0, 180.0, 0.0, -90.0]
-  - name: view_01_middle_right
-    pose_mm_deg: [500.0, -250.0, 500.0, 180.0, 0.0, -90.0]
-  - name: view_01_bottom_left
-    pose_mm_deg: [500.0, 250.0, 200.0, 180.0, 0.0, -90.0]
-  - name: view_01_bottom_front
-    pose_mm_deg: [500.0, 0.0, 200.0, 180.0, 0.0, -90.0]
-  - name: view_01_bottom_right
-    pose_mm_deg: [500.0, -250.0, 200.0, 180.0, 0.0, -90.0]
+  # # ========== 정면 뷰 ==========
+  # - name: view_01_top_left
+  #   pose_mm_deg: [500.0, 250.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_02_top_front
+  #   pose_mm_deg: [500.0, 0.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_03_top_right
+  #   pose_mm_deg: [500.0, -250.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_01_middle_left
+  #   pose_mm_deg: [500.0, 250.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_middle_front
+  #   pose_mm_deg: [500.0, 0.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_middle_right
+  #   pose_mm_deg: [500.0, -250.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_left
+  #   pose_mm_deg: [500.0, 250.0, 200.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_front
+  #   pose_mm_deg: [500.0, 0.0, 200.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_right
+  #   pose_mm_deg: [500.0, -250.0, 200.0, 180.0, 0.0, -90.0]
+
+  - name: pose_01
+    joint_deg: [81.77, 12.77, 88.52, 2.71, 73.52, 14.50]
+  - name: pose_02
+    joint_deg: [86.09, -20.87, 90.86, 15.74, 107.66, 7.90]
+  - name: pose_03
+    joint_deg: [-67.80, -16.62, 92.50, -15.10, 103.28, -174.64]
+  - name: pose_04
+    joint_deg: [-75.53, 11.68, 108.63, -2.60, 59.07, -184.32]
+  - name: pose_05
+    joint_deg: [-82.01, 26.71, 79.96, -3.33, 69.75, -199.57]
 
 
 camera:
