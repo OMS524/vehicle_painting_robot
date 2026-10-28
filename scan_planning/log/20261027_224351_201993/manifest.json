@@ -1,0 +1,64 @@
+{
+  "schema": "scan_pipeline_v1",
+  "status": "complete",
+  "stage": "all",
+  "started_at": "2026-10-27T13:43:51.202310+00:00",
+  "python": "/home/oms/miniforge3/envs/vehicle_painting_robot_scan/bin/python",
+  "steps": [
+    {
+      "name": "01_capture",
+      "status": "reused",
+      "output": "/home/oms/vehicle_painting_robot/scan/test/doosan_a0912_scan_test/log/20261026_235704_386974"
+    },
+    {
+      "name": "02_reconstruction",
+      "status": "complete",
+      "output": "/home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/02_reconstruction",
+      "elapsed_sec": 4.3397441269999035
+    },
+    {
+      "name": "03_registration",
+      "status": "complete",
+      "output": "/home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/03_registration",
+      "elapsed_sec": 46.31942348599932
+    },
+    {
+      "name": "04_segmentation",
+      "status": "complete",
+      "output": "/home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/04_segmentation",
+      "elapsed_sec": 6.403800425000554
+    }
+  ],
+  "output": "/home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993",
+  "config_files": {
+    "scan": {
+      "source": "/home/oms/vehicle_painting_robot/scan/config/scan.yaml",
+      "snapshot": "config/scan.yaml",
+      "sha256": "dfe51a1f67dc6e26a1da08e2ce01026bf7de0242e2f2e80725e5cd5837c87e1a"
+    },
+    "sdk_filters": {
+      "source": "/home/oms/vehicle_painting_robot/scan/config/orbbec_sdk_filter.yaml",
+      "snapshot": "config/orbbec_sdk_filter.yaml",
+      "sha256": "b5f44aa91f17bd2c94ea5819e7e51fb89fe7f387c7c52857743aa2190a5131e7"
+    },
+    "registration": {
+      "source": "/home/oms/vehicle_painting_robot/scan/config/registration.yaml",
+      "snapshot": "config/registration.yaml",
+      "sha256": "9fc87c6f6385886963992e36c55f05e49d123a19be327168844cfa432df1e2e8"
+    },
+    "segmentation": {
+      "source": "/home/oms/vehicle_painting_robot/scan/config/segmentation.yaml",
+      "snapshot": "config/segmentation.yaml",
+      "sha256": "dc05a9be3563df5515a30be25be98cf1820d3a962f14a47e98ad247dc602cfe8"
+    }
+  },
+  "source_capture": "/home/oms/vehicle_painting_robot/scan/test/doosan_a0912_scan_test/log/20261026_235704_386974",
+  "source_geometry": null,
+  "geometry": "/home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/03_registration",
+  "segmentation_status": "complete",
+  "result": "/home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/part.ply",
+  "selected_points": 869802,
+  "requires_visual_review": true,
+  "finished_at": "2026-10-27T13:44:48.284316+00:00",
+  "elapsed_sec": 57.08117988700087
+}

@@ -1,0 +1,63 @@
+# 갠트리 환경 "legacy" — model/gantry.stp (2026-07-13) 실측. NLP 도장 파이프라인의 기본 환경.
+#
+# 이 파일의 값은 paint_viz/make_gantry_urdf.py 의 모듈 상수와 **동일해야 한다**
+# (`make_gantry_urdf --env legacy` 출력이 인자 없는 출력과 바이트 동일한지 검증한다).
+# 기존 URDF(paint_cell_8axis.urdf / _mesh.urdf)는 그대로 쓰고 재생성하지 않는다.
+gantry_env:
+  name: legacy
+  title: "gantry.stp 실측 (5.0 x 2.8 m 레일, 장착면 2.066 m, 중앙 원점)"
+  # 조인트 0 이 갠트리 중앙(center) 인지 코너(corner) 인지. 월드 원점은 어느 쪽이든 갠트리 중앙 바닥(z=0).
+  convention: center
+  rail:
+    x_length: 5.0       # HSR55 X 레일 [m]
+    y_length: 2.8       # 브리지 Y 레일 [m]
+    z_height: 2.314     # 브리지 중심(레일) 높이 [m] = mount_z + 0.248
+  stroke:               # 슬라이더군 외곽이 레일 끝에 닿는 기하학적 한계 [m]
+    x: 4.392
+    y: 2.142
+  joints:
+    gantry_x: {axis: [1, 0, 0], lower: -2.196, upper: 2.196, origin_xyz: [0.0, 0.0, 2.314]}
+    gantry_y: {axis: [0, 1, 0], lower: -1.071, upper: 1.071, origin_xyz: [0.028, 0.0, 0.0]}
+  mount_z: 2.066        # 팔 base_link 장착면 높이 [m]
+  arm_mount:            # gantry_y_link -> base_link (gantry_to_arm 고정 조인트)
+    xyz: [0.006036, 0.000015, -0.248]
+    rpy: [3.141592653589793, 0.0, 1.5707963267948966]
+  urdf:
+    generated: false    # 기존 파일 사용 (재생성 금지)
+    primitive: paint_cell_8axis.urdf          # 프리미티브 팔 — NLP/IK 계획용
+    mesh: paint_cell_8axis_mesh.urdf          # A0912 원본 메시 — RViz/충돌 검사용
+    bare: null                                # 툴 없는 플랜지판 없음
+    collision: paint_cell_8axis_mesh.urdf
+    arm_source: $REPO/robot_controller/doosan_a0912_controller/urdf/a0912.white.urdf
+  frame:                # make_gantry_urdf.py 상수 (브리지 중심 기준 아래 오프셋 등). 값 출처는 그 파일 docstring.
+    style: legacy_stp
+    mount_below_bridge: 0.248
+    x_beam_center_below_bridge: 0.372
+    x_rail_center_below_bridge: 0.207
+    column_top_below_bridge: 0.533
+    column_size: [0.244, 0.175]
+    column_x: 1.744
+    column_y: 1.5095
+    pedestal_size: [0.5, 0.5, 0.079]
+    x_beam_size: [5.3, 0.2, 0.25]
+    x_rail_size: [5.0, 0.053, 0.044]
+    x_rail_y: 1.4795
+    bridge_beam_size: [0.15, 3.3, 0.25]
+    bridge_rail_size: [0.053, 2.8, 0.044]
+    bridge_rail_x: 0.0185
+    bridge_rail_z: 0.165
+    carriage_size: [0.257, 0.65, 0.466]
+    carriage_x_offset: 0.028
+    mount_plate: [0.22, 0.22, 0.02]
+    mount_plate_z: -0.243
+  toolchanger: null     # 이 환경에는 툴체인저 프레임이 없다 (spec_c / x7y4z3 참조)
+  home:
+    gantry: [0.0, 0.0]            # 조인트값 [m] (= 갠트리 중앙)
+    arm_deg: [0, 0, 90, 0, 90, -90]
+  nlp:
+    initial_joint: "0,0,90,0,90,-90,0,0"   # trajectory_nlp --initial-joint-deg (직동축 m, 회전축 deg)
+    node_limit_scale: "0.85,0.50"          # run_all.sh 가 종전에 명시하던 값 (범퍼는 1,1 로 덮어씀). legacy 결과 바이트 동일 유지
+    # motor_limits / gantry_*_weight 없음 → trajectory_nlp 상수(1.0 m/s, 5 m/s^2, 가중치 0) = 종전 동작
+  part_placement:
+    # run_all.sh / scene_*.yaml 의 part_xyz 는 이 환경(legacy) 월드 기준으로 튜닝됐다. 기준이므로 0.
+    xyz_offset: [0.0, 0.0, 0.0]

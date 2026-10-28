@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="paint_cell_8axis_x7y4z3">
+  <material name="cell_rail"><color rgba="0.55 0.57 0.60 1.0" /></material><material name="cell_frame"><color rgba="0.25 0.27 0.30 1.0" /></material><material name="black">
+    <color rgba="0.0 0.0 0.0 1.0" />
+  </material>
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0" />
+  </material>
+  <material name="orange">
+    <color rgba="1.0 0.4 0.0 1.0" />
+  </material>
+  <material name="dr_gray">
+    <color rgba="0.490 0.490 0.486 1.0" />
+  </material>
+  <material name="dr_white">
+    <color rgba="0.941 0.941 0.941 1.0" />
+  </material>
+  <material name="dr_blue">
+    <color rgba="0 0 0.15 1" />
+  </material>
+  <link name="base_link">
+    <inertial>
+      <mass value="3.635" />
+      <origin xyz="4e-06   -0.001016     0.08181" />
+      <inertia ixx="0.02216" ixy="5.8001e-06" ixz="6.1941e-06" iyy="0.024835" iyz="-5.3034e-05" izz="0.021063" />
+    </inertial>
+    <visual><origin xyz="0.000000 0.000000 0.097500" rpy="0.000000 0.000000 0.000000" /><geometry><cylinder length="0.195000" radius="0.035000" /></geometry><material name="dr_white" /></visual><visual><origin xyz="0.000000 0.000000 0.195000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.050000" /></geometry><material name="dr_gray" /></visual><visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.030000" /></geometry><material name="dr_gray" /></visual></link>
+  
+  <joint name="joint_1" type="revolute">
+    <parent link="base_link" />
+    <child link="link_1" />
+    <origin rpy="0 0 0" xyz="0 0 0.195" />
+    <axis xyz="0 0 1" />
+    <limit effort="411" lower="-6.2832" upper="6.2832" velocity="3.1416" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_1">
+    <inertial>
+      <mass value="7.863" />
+      <origin xyz="4.4e-05    0.029982    -0.01112" />
+      <inertia ixx="0.045839" ixy="1.2759e-05" ixz="-3.6168e-05" iyy="0.032913" iyz="-0.0029965" izz="0.044399" />
+    </inertial>
+    <visual><origin xyz="0.000000 0.019500 0.000000" rpy="0.000000 1.570796 1.570796" /><geometry><cylinder length="0.039000" radius="0.035000" /></geometry><material name="dr_white" /></visual><visual><origin xyz="0.000000 0.039000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.050000" /></geometry><material name="dr_gray" /></visual><visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.030000" /></geometry><material name="dr_gray" /></visual></link>
+  
+  <joint name="joint_2" type="revolute">
+    <parent link="link_1" />
+    <child link="link_2" />
+    <origin rpy="0 -1.571 -1.571" xyz="0 0.039 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="411" lower="-6.2832" upper="6.2832" velocity="3.1416" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_2">
+    <inertial>
+      <mass value="10.985" />
+      <origin xyz="0.19748    0.001426     0.13191" />
+      <inertia ixx="0.04446" ixy="-0.0049948" ixz="-0.010992" iyy="0.67642" iyz="-2.8483e-05" izz="0.67428" />
+    </inertial>
+    <visual><origin xyz="0.280000 0.000000 0.000000" rpy="0.000000 1.570796 0.000000" /><geometry><cylinder length="0.560000" radius="0.035000" /></geometry><material name="dr_white" /></visual><visual><origin xyz="0.560000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.050000" /></geometry><material name="dr_gray" /></visual><visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.030000" /></geometry><material name="dr_gray" /></visual></link>
+  
+  <joint name="joint_3" type="revolute">
+    <parent link="link_2" />
+    <child link="link_3" />
+    <origin rpy="0 0 1.571" xyz="0.56 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="194" lower="-2.7925" upper="2.7925" velocity="3.1416" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_3">
+    <inertial>
+      <mass value="2.881" />
+      <origin xyz="8.5e-05   -0.002513    0.032058" />
+      <inertia ixx="0.012756" ixy="-5.4257e-06" ixz="1.6402e-05" iyy="0.011416" iyz="-0.0001989" izz="0.0080652" />
+    </inertial>
+    <visual><origin xyz="0.000000 -0.258000 0.000000" rpy="0.000000 1.570796 -1.570796" /><geometry><cylinder length="0.516000" radius="0.035000" /></geometry><material name="dr_white" /></visual><visual><origin xyz="0.000000 -0.516000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.050000" /></geometry><material name="dr_gray" /></visual><visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.030000" /></geometry><material name="dr_gray" /></visual></link>
+  
+  <joint name="joint_4" type="revolute">
+    <parent link="link_3" />
+    <child link="link_4" />
+    <origin rpy="1.571 0 0" xyz="0 -0.516 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="50" lower="-6.2832" upper="6.2832" velocity="6.2832" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_4">
+    <inertial>
+      <mass value="3.273" />
+      <origin xyz="-9.6e-05    0.085314    -0.13975" />
+      <inertia ixx="0.12246" ixy="2.3905e-05" ixz="2.5022e-05" iyy="0.11307" iyz="-0.027995" izz="0.017186" />
+    </inertial>
+    <visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.030000" /></geometry><material name="dr_gray" /></visual></link>
+  
+  <joint name="joint_5" type="revolute">
+    <parent link="link_4" />
+    <child link="link_5" />
+    <origin rpy="-1.571 0 0" xyz="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="50" lower="-6.2832" upper="6.2832" velocity="6.2832" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_5">
+    <inertial>
+      <mass value="2.141" />
+      <origin xyz="0.000109   -0.003286     0.01477" />
+      <inertia ixx="0.013145" ixy="-4.7132e-06" ixz="8.5804e-06" iyy="0.0073072" iyz="-5.999e-05" izz="0.0090476" />
+    </inertial>
+    <visual><origin xyz="0.000000 -0.062000 0.000000" rpy="0.000000 1.570796 -1.570796" /><geometry><cylinder length="0.124000" radius="0.035000" /></geometry><material name="dr_white" /></visual><visual><origin xyz="0.000000 -0.124000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.050000" /></geometry><material name="dr_gray" /></visual><visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.030000" /></geometry><material name="dr_gray" /></visual></link>
+  
+  <joint name="joint_6" type="revolute">
+    <parent link="link_5" />
+    <child link="link_6" />
+    <origin rpy="1.571 0 0" xyz="0 -0.124 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="50" lower="-6.2832" upper="6.2832" velocity="6.2832" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_6">
+    <inertial>
+      <mass value="0.784" />
+      <origin xyz="-1.9e-05      -6e-06    -0.05227" />
+      <inertia ixx="0.0067403" ixy="5.2373e-06" ixz="2.4957e-06" iyy="0.0048015" iyz="8.3671e-06" izz="0.0059696" />
+    </inertial>
+    <visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><sphere radius="0.030000" /></geometry><material name="dr_gray" /></visual></link>
+<link name="world_base"><visual><origin xyz="-2.977000 -2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-2.977000 -2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-2.977000 2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-2.977000 2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="2.977000 -2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="2.977000 -2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="2.977000 2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="2.977000 2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 -2.300000 2.732500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.200000 0.268000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 -2.238500 2.855500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.023000 0.022000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="0.000000 2.300000 2.732500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.200000 0.268000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 2.238500 2.855500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.023000 0.022000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="0.000000 -2.300000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.760000 0.100000 0.100000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 2.300000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.760000 0.100000 0.100000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-2.977000 0.000000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.100000 4.450000 0.100000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="2.977000 0.000000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.100000 4.450000 0.100000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="3.437000 -2.173000 1.673986" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.310000 0.190000 0.073000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.104000 -2.293000 1.340500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.050000 0.400000 0.050000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.104000 -2.293000 1.667486" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.070000 0.400000 0.162430" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.104000 -2.293000 1.994473" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.070000 0.400000 0.110000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.298100 -2.253000 1.478387" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.318198 0.030000 0.318198" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.364000 -2.253000 1.667486" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.450000 0.030000 0.060000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.437000 -2.373000 2.000973" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.310000 0.190000 0.073000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.298100 -2.453000 1.805374" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.318198 0.030000 0.318198" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.364000 -2.453000 1.994473" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.450000 0.030000 0.060000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="3.104000 -2.293000 0.657750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.070000 0.400000 1.315500" /></geometry><material name="cell_rail" /></visual><collision><origin xyz="-2.977000 -2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry></collision><collision><origin xyz="-2.977000 -2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry></collision><collision><origin xyz="-2.977000 2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry></collision><collision><origin xyz="-2.977000 2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry></collision><collision><origin xyz="2.977000 -2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry></collision><collision><origin xyz="2.977000 -2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry></collision><collision><origin xyz="2.977000 2.300000 0.082500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.165000" /></geometry></collision><collision><origin xyz="2.977000 2.300000 1.381750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.194000 0.150000 2.433500" /></geometry></collision><collision><origin xyz="0.000000 -2.300000 2.732500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.200000 0.268000" /></geometry></collision><collision><origin xyz="0.000000 -2.238500 2.855500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.023000 0.022000" /></geometry></collision><collision><origin xyz="0.000000 2.300000 2.732500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.200000 0.268000" /></geometry></collision><collision><origin xyz="0.000000 2.238500 2.855500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="7.000000 0.023000 0.022000" /></geometry></collision><collision><origin xyz="0.000000 -2.300000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.760000 0.100000 0.100000" /></geometry></collision><collision><origin xyz="0.000000 2.300000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.760000 0.100000 0.100000" /></geometry></collision><collision><origin xyz="-2.977000 0.000000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.100000 4.450000 0.100000" /></geometry></collision><collision><origin xyz="2.977000 0.000000 0.531000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.100000 4.450000 0.100000" /></geometry></collision><collision><origin xyz="3.437000 -2.173000 1.673986" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.310000 0.190000 0.073000" /></geometry></collision><collision><origin xyz="3.104000 -2.293000 1.340500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.050000 0.400000 0.050000" /></geometry></collision><collision><origin xyz="3.104000 -2.293000 1.667486" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.070000 0.400000 0.162430" /></geometry></collision><collision><origin xyz="3.104000 -2.293000 1.994473" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.070000 0.400000 0.110000" /></geometry></collision><collision><origin xyz="3.298100 -2.253000 1.478387" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.318198 0.030000 0.318198" /></geometry></collision><collision><origin xyz="3.364000 -2.253000 1.667486" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.450000 0.030000 0.060000" /></geometry></collision><collision><origin xyz="3.437000 -2.373000 2.000973" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.310000 0.190000 0.073000" /></geometry></collision><collision><origin xyz="3.298100 -2.453000 1.805374" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.318198 0.030000 0.318198" /></geometry></collision><collision><origin xyz="3.364000 -2.453000 1.994473" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.450000 0.030000 0.060000" /></geometry></collision><collision><origin xyz="3.104000 -2.293000 0.657750" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.070000 0.400000 1.315500" /></geometry></collision><collision><origin xyz="3.331100 -2.101900 1.712700" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.102000 0.080000 0.044000" /></geometry></collision><collision><origin xyz="3.531100 -2.101900 1.712700" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.102000 0.080000 0.044000" /></geometry></collision><collision><origin xyz="3.331100 -2.301900 2.039700" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.102000 0.080000 0.044000" /></geometry></collision></link><link name="gantry_x_link"><inertial><mass value="180.0" /><origin xyz="-0.084084 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><inertia ixx="318.09" ixy="0" ixz="0" iyy="1.49" iyz="0" izz="318.19" /></inertial><visual><origin xyz="-0.084084 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.230000 4.600000 0.215000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.019916 0.000000 -0.069000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.022000 4.000000 0.023000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="0.019916 0.000000 0.084000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.022000 4.000000 0.023000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="-0.164084 -2.300000 -0.115000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.300000 0.015000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-0.164084 2.300000 -0.115000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.300000 0.015000" /></geometry><material name="cell_frame" /></visual><collision><origin xyz="-0.084084 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.230000 4.600000 0.215000" /></geometry></collision><collision><origin xyz="0.019916 0.000000 -0.069000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.022000 4.000000 0.023000" /></geometry></collision><collision><origin xyz="0.019916 0.000000 0.084000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.022000 4.000000 0.023000" /></geometry></collision><collision><origin xyz="-0.164084 -2.300000 -0.115000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.300000 0.015000" /></geometry></collision><collision><origin xyz="-0.164084 2.300000 -0.115000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.300000 0.015000" /></geometry></collision></link><joint name="gantry_x" type="prismatic"><parent link="world_base" /><child link="gantry_x_link" /><origin xyz="3.413200 0.000000 3.000000" rpy="0.000000 0.000000 0.000000" /><axis xyz="-1 0 0" /><limit effort="2000" lower="0.000000" upper="6.826400" velocity="1.5" /></joint><link name="gantry_y_link"><inertial><mass value="160.0" /><origin xyz="0.217416 0.000000 0.002500" rpy="0.000000 0.000000 0.000000" /><inertia ixx="2.80" ixy="0" ixz="0" iyy="2.65" iyz="0" izz="3.51" /></inertial><visual><origin xyz="0.217416 0.000000 0.002500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.355000 0.370000 0.270000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-0.107084 0.067500 0.140000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.450000 0.060000 0.005000" /></geometry><material name="cell_frame" /></visual><collision><origin xyz="0.217416 0.000000 0.002500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.355000 0.370000 0.270000" /></geometry></collision><collision><origin xyz="-0.107084 0.067500 0.140000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.450000 0.060000 0.005000" /></geometry></collision></link><joint name="gantry_y" type="prismatic"><parent link="gantry_x_link" /><child link="gantry_y_link" /><origin xyz="0.000000 1.943200 0.000000" rpy="0.000000 0.000000 0.000000" /><axis xyz="0 -1 0" /><limit effort="2000" lower="0.000000" upper="3.886400" velocity="1.5" /></joint><joint name="gantry_to_arm" type="fixed"><parent link="gantry_y_link" /><child link="base_link" /><origin xyz="0.323040 0.000000 -0.153000" rpy="3.141593 0.000000 -1.570796" /></joint><link name="tool_assy"><visual><origin xyz="0 0 0" rpy="0 0 0" /><geometry><mesh filename="package://paint_viz/urdf/tool_assy.stl" /></geometry><material name="dr_gray" /></visual><collision><origin xyz="-0.010000 -0.012000 0.030000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.092000 0.104000 0.062000" /></geometry></collision><collision><origin xyz="-0.014000 0.007000 0.083000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.082000 0.086000 0.066000" /></geometry></collision><collision><origin xyz="0.021000 -0.024000 0.175000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.152000 0.178000 0.122000" /></geometry></collision><collision><origin xyz="0.065000 -0.054000 0.262000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.099000 0.070000 0.058000" /></geometry></collision></link><joint name="flange_to_tool" type="fixed"><parent link="link_6" /><child link="tool_assy" /><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /></joint><link name="spray_gun"><visual><origin xyz="0 0 0" rpy="0 0 0" /><geometry><mesh filename="package://paint_viz/urdf/spray_gun.stl" /></geometry><material name="dr_gray" /></visual><collision><origin xyz="0.088000 0.019000 -0.030000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.301000 0.111000 0.127000" /></geometry></collision><collision><origin xyz="-0.012000 0.017000 -0.140000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.138000 0.026000 0.102000" /></geometry></collision></link><joint name="tool_to_gun" type="fixed"><parent link="link_6" /><child link="spray_gun" /><origin xyz="0.129200 -0.060700 0.296900" rpy="0.000000 0.000000 0.000000" /></joint><link name="tcp" /><joint name="spray_gun_to_tcp" type="fixed"><parent link="spray_gun" /><child link="tcp" /><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /></joint><link name="toolchanger_slot_1" /><joint name="world_base_to_toolchanger_slot_1" type="fixed"><parent link="world_base" /><child link="toolchanger_slot_1" /><origin xyz="3.331100 -2.101900 1.734700" rpy="0.000000 0.000000 0.000000" /></joint><link name="toolchanger_slot_2" /><joint name="world_base_to_toolchanger_slot_2" type="fixed"><parent link="world_base" /><child link="toolchanger_slot_2" /><origin xyz="3.531100 -2.101900 1.734700" rpy="0.000000 0.000000 0.000000" /></joint><link name="toolchanger_slot_3" /><joint name="world_base_to_toolchanger_slot_3" type="fixed"><parent link="world_base" /><child link="toolchanger_slot_3" /><origin xyz="3.331100 -2.301900 2.061700" rpy="0.000000 0.000000 0.000000" /></joint><link name="toolchanger_slot_4" /><joint name="world_base_to_toolchanger_slot_4" type="fixed"><parent link="world_base" /><child link="toolchanger_slot_4" /><origin xyz="3.531100 -2.301900 2.061700" rpy="0.000000 0.000000 0.000000" /></joint></robot>

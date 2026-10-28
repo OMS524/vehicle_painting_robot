@@ -1,0 +1,77 @@
+저장: /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993
+
+[02_reconstruction] 시작
+
+[03_registration] 시작
+ICP + Pose Graph: point_to_plane
+입력: /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/02_reconstruction
+저장: /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/03_registration
+ICP 쌍: pose_01 -> pose_02
+  voxel 10 mm: fitness=0.6014, RMSE=8.777 mm, 0.272초
+  voxel 5 mm: fitness=0.6165, RMSE=4.888 mm, 1.186초
+  voxel 2 mm: fitness=0.5582, RMSE=3.123 mm, 2.532초
+  accepted: 
+ICP 쌍: pose_01 -> pose_03
+  voxel 10 mm: fitness=0.3308, RMSE=10.421 mm, 0.403초
+  voxel 5 mm: fitness=0.3467, RMSE=5.501 mm, 2.635초
+  voxel 2 mm: fitness=0.3124, RMSE=3.111 mm, 0.352초
+  accepted: 
+ICP 쌍: pose_01 -> pose_04
+  voxel 10 mm: fitness=0.3349, RMSE=10.657 mm, 0.283초
+  voxel 5 mm: fitness=0.3456, RMSE=5.678 mm, 0.641초
+  voxel 2 mm: fitness=0.2846, RMSE=3.190 mm, 1.839초
+  accepted: 
+ICP 쌍: pose_01 -> pose_05
+  voxel 10 mm: fitness=0.3327, RMSE=10.146 mm, 0.327초
+  voxel 5 mm: fitness=0.3451, RMSE=5.452 mm, 0.749초
+  voxel 2 mm: fitness=0.2880, RMSE=3.259 mm, 1.029초
+  accepted: 
+ICP 쌍: pose_02 -> pose_03
+  voxel 10 mm: fitness=0.6290, RMSE=9.788 mm, 0.226초
+  voxel 5 mm: fitness=0.5897, RMSE=5.167 mm, 0.859초
+  voxel 2 mm: fitness=0.5308, RMSE=3.059 mm, 1.019초
+  accepted: 
+ICP 쌍: pose_02 -> pose_04
+  voxel 10 mm: fitness=0.4996, RMSE=10.776 mm, 0.232초
+  voxel 5 mm: fitness=0.4566, RMSE=5.527 mm, 0.799초
+  voxel 2 mm: fitness=0.3892, RMSE=3.178 mm, 1.722초
+  accepted: 
+ICP 쌍: pose_02 -> pose_05
+  voxel 10 mm: fitness=0.4894, RMSE=10.658 mm, 0.275초
+  voxel 5 mm: fitness=0.4475, RMSE=5.562 mm, 1.511초
+  voxel 2 mm: fitness=0.3816, RMSE=3.289 mm, 1.724초
+  accepted: 
+ICP 쌍: pose_03 -> pose_04
+  voxel 10 mm: fitness=0.7332, RMSE=9.750 mm, 0.110초
+  voxel 5 mm: fitness=0.6803, RMSE=5.052 mm, 0.411초
+  voxel 2 mm: fitness=0.6259, RMSE=2.953 mm, 1.420초
+  accepted: 
+ICP 쌍: pose_03 -> pose_05
+  voxel 10 mm: fitness=0.7037, RMSE=9.940 mm, 0.126초
+  voxel 5 mm: fitness=0.6539, RMSE=5.174 mm, 0.378초
+  voxel 2 mm: fitness=0.5989, RMSE=3.099 mm, 0.473초
+  accepted: 
+ICP 쌍: pose_04 -> pose_05
+  voxel 10 mm: fitness=0.8865, RMSE=7.894 mm, 0.152초
+  voxel 5 mm: fitness=0.8642, RMSE=4.558 mm, 0.364초
+  voxel 2 mm: fitness=0.7970, RMSE=3.045 mm, 0.789초
+  accepted: 
+PGO: 5 nodes, 10 edges / 고정: pose_01
+주의: PGO에서 loop 제거: pose_01 -> pose_05
+완료 (complete_with_warnings): /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/03_registration
+
+[04_segmentation] 시작
+선택 기준점 [base, mm]: [1633.61, 25.55, 137.79]
+입력 1,216,992점 / DBSCAN 계산용 659,280점
+집합 1: 원본 869,802점 / 중심 거리 383.4 mm [선택]
+집합 0: 원본 297,965점 / 중심 거리 434.6 mm
+집합 182: 원본 522점 / 중심 거리 490.0 mm
+집합 2: 원본 2,979점 / 중심 거리 1582.5 mm
+집합 25: 원본 441점 / 중심 거리 1813.5 mm
+집합 135: 원본 526점 / 중심 거리 1904.2 mm
+집합 14: 원본 694점 / 중심 거리 1948.8 mm
+집합 4: 원본 365점 / 중심 거리 2064.4 mm
+집합 36: 원본 444점 / 중심 거리 2133.6 mm
+주의: DBSCAN은 물체 의미를 알지 못합니다. 부품/거치대가 연결되면 함께 남고, 분리된 부품 조각은 누락될 수 있습니다.
+완료: /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/04_segmentation
+선택 집합: [1] / 869,802점

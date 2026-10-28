@@ -1,0 +1,71 @@
+{
+  "schema": "scan_pipeline_v1",
+  "status": "complete",
+  "stage": "all",
+  "started_at": "2026-10-28T12:32:31.840994+00:00",
+  "python": "/home/oms/miniforge3/envs/vehicle_painting_robot_scan/bin/python",
+  "steps": [
+    {
+      "name": "01_capture",
+      "status": "reused",
+      "output": "/home/oms/vehicle_painting_robot/scan_planning/test/doosan_a0912_scan_test/log/20261026_235704_386974"
+    },
+    {
+      "name": "02_reconstruction",
+      "status": "complete",
+      "output": "/home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/02_reconstruction",
+      "elapsed_sec": 4.810619707999649
+    },
+    {
+      "name": "03_registration",
+      "status": "complete",
+      "output": "/home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/03_registration",
+      "elapsed_sec": 39.42470302900074
+    },
+    {
+      "name": "04_segmentation",
+      "status": "complete",
+      "output": "/home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/04_segmentation",
+      "elapsed_sec": 6.25507178999942
+    }
+  ],
+  "output": "/home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638",
+  "config_files": {
+    "scan": {
+      "source": "/home/oms/vehicle_painting_robot/scan_planning/config/scan.yaml",
+      "snapshot": "config/scan.yaml",
+      "sha256": "b4f30ff2083e1031dddd0e7347d0ca818fe9b6c57a8b57a5ccaa1f4a08570bca"
+    },
+    "sdk_filters": {
+      "source": "/home/oms/vehicle_painting_robot/scan_planning/config/orbbec_sdk_filter.yaml",
+      "snapshot": "config/orbbec_sdk_filter.yaml",
+      "sha256": "b5f44aa91f17bd2c94ea5819e7e51fb89fe7f387c7c52857743aa2190a5131e7"
+    },
+    "registration": {
+      "source": "/home/oms/vehicle_painting_robot/scan_planning/config/registration.yaml",
+      "snapshot": "config/registration.yaml",
+      "sha256": "9fc87c6f6385886963992e36c55f05e49d123a19be327168844cfa432df1e2e8"
+    },
+    "segmentation": {
+      "source": "/home/oms/vehicle_painting_robot/scan_planning/config/segmentation.yaml",
+      "snapshot": "config/segmentation.yaml",
+      "sha256": "dc05a9be3563df5515a30be25be98cf1820d3a962f14a47e98ad247dc602cfe8"
+    }
+  },
+  "source_capture": "/home/oms/vehicle_painting_robot/scan_planning/test/doosan_a0912_scan_test/log/20261026_235704_386974",
+  "source_geometry": null,
+  "registration_status": "complete_with_warnings",
+  "registration_warnings": [
+    "PGO에서 loop 제거: pose_01 -> pose_05"
+  ],
+  "geometry": "/home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/03_registration",
+  "segmentation_status": "complete",
+  "segmentation_warnings": [
+    "DBSCAN은 물체 의미를 알지 못합니다. 부품/거치대가 연결되면 함께 남고, 분리된 부품 조각은 누락될 수 있습니다."
+  ],
+  "result": "/home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/part.ply",
+  "selected_points": 869802,
+  "requires_visual_review": true,
+  "finished_at": "2026-10-28T12:33:22.345152+00:00",
+  "elapsed_sec": 50.502759499000604
+}

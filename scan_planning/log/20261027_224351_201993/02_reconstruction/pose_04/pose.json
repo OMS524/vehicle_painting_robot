@@ -1,0 +1,39 @@
+{
+  "accepted": true,
+  "translation_unit": "m",
+  "T_base_depth": [
+    [
+      0.3484650195191298,
+      -0.12379946706718985,
+      0.9291102314178938,
+      0.21096662478762346
+    ],
+    [
+      -0.937203205575947,
+      -0.061785424893556845,
+      0.3432676983476481,
+      -0.5210396664736741
+    ],
+    [
+      0.014909112304285786,
+      -0.99038187242326,
+      -0.1375553166754952,
+      0.32376380113030057
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "source": {
+    "cloud": "/home/oms/vehicle_painting_robot/scan/test/doosan_a0912_scan_test/log/20261026_235704_386974/pose_04/camera_filtered.ply",
+    "cloud_sha256": "1ab0fcdf869179d8a868916f33185f2ec7186212c08e1a851b2ff203b6b7bf01",
+    "pose": "/home/oms/vehicle_painting_robot/scan/test/doosan_a0912_scan_test/log/20261026_235704_386974/pose_04/pose.json",
+    "pose_sha256": "bea2617c155fbf6626f629107b8cce79813f76bc4582d32f23c57501f74e53e2",
+    "valid_points": 264292,
+    "dropped_nonfinite": 0
+  },
+  "icp_applied": false
+}

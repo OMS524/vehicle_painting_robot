@@ -1,3 +1,12 @@
-[submodule "robot_control/doosan_a0912_controller/API-DRFL"]
-	path = robot_control/doosan_a0912_controller/API-DRFL
+[submodule "robot_controller/doosan_a0912_controller/API-DRFL"]
+	path = robot_controller/doosan_a0912_controller/API-DRFL
 	url = https://github.com/DoosanRobotics/API-DRFL.git
+[submodule "scan_planning/test/SAM_test/sam3"]
+	path = scan_planning/test/SAM_test/sam3
+	url = https://github.com/facebookresearch/sam3.git
+[submodule "scan_planning/test/SAM_test/efficientsam3"]
+	path = scan_planning/test/SAM_test/efficientsam3
+	url = https://github.com/SimonZeng7108/efficientsam3.git
+[submodule "scan_planning/test/custom_model_test/Car_Painting"]
+	path = scan_planning/test/custom_model_test/Car_Painting
+	url = https://github.com/ayaori-AIRO/Car_Painting.git

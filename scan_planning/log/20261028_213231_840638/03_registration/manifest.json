@@ -1,0 +1,46 @@
+{
+  "schema": "scan_geometry_v1",
+  "status": "complete",
+  "calculation_status": "complete_with_warnings",
+  "reference_frame": "base_link",
+  "units": {
+    "point_cloud": "m"
+  },
+  "icp_applied": true,
+  "source_directory": "/home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/02_reconstruction",
+  "point_count": 1216992,
+  "raw_point_count": 1312349,
+  "views": [
+    {
+      "name": "pose_01",
+      "status": "accepted",
+      "cloud": "registered_base.ply",
+      "point_count": 260319
+    },
+    {
+      "name": "pose_02",
+      "status": "accepted",
+      "cloud": "registered_base.ply",
+      "point_count": 277827
+    },
+    {
+      "name": "pose_03",
+      "status": "accepted",
+      "cloud": "registered_base.ply",
+      "point_count": 267049
+    },
+    {
+      "name": "pose_04",
+      "status": "accepted",
+      "cloud": "registered_base.ply",
+      "point_count": 264292
+    },
+    {
+      "name": "pose_05",
+      "status": "accepted",
+      "cloud": "registered_base.ply",
+      "point_count": 242862
+    }
+  ],
+  "color_mode": "rgb"
+}

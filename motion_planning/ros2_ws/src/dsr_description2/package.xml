@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>dsr_description2</name>
+  <version>0.0.1</version>
+  <description>
+    A0912 메시 전용 최소 패키지. 원본 a0912.white.urdf 가 형상을
+    package://dsr_description2/meshes/... 로 참조하는데, 상위 패키지가 설치돼
+    있지 않으면 RViz에서 로봇이 보이지 않아 이 경로만 해결해 준다.
+
+    상위 dsr_description2(두산 공식 doosan-robot2, humble 브랜치)의 **일부**다.
+    a0912_white / a0912_collision 메시만 담았고 urdf/xacro/launch/ros2_control/
+    mujoco/usd 및 다른 기종(a0509, h2017 등)은 들어 있지 않다. 전체 기능이
+    필요하면 상위 저장소를 받아 이 패키지를 대체할 것.
+      https://github.com/doosan-robotics/doosan-robot2  (dsr_description2)
+  </description>
+  <maintainer email="vontte21@hanyang.ac.kr">airo</maintainer>
+  <license>BSD-3-Clause</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

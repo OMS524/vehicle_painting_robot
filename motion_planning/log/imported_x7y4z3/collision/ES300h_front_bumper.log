@@ -1,0 +1,14 @@
+[collision] URDF: /home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3_mesh.urdf (gantry_env x7y4z3)
+[collision] 충돌 형상 56개, 검사 쌍 885개 (인접 쌍 제외)
+[collision] 세그먼트 25개, 검사 샘플 46509개 (stride=2)
+
+[collision] 1) 자기 충돌 / 프레임 간섭
+[collision]    충돌 없음 (46509개 샘플 전부 통과)
+
+[collision] 2) 부품 간섭 — 점군 71558개 (z 1.657~2.376 m)
+[collision]    로봇 정점 828개 기준 최소 여유 78.9 mm  [seq_0003_move001_002_joint.csv]
+[collision]    (점군 해상도만큼의 오차가 있는 근사값이다)
+
+[collision] 3) 바닥 간섭 — 로봇 최저점 z = 1.569 m [seq_0024_row012_joint.csv]
+
+[collision] 결과: 이상 없음

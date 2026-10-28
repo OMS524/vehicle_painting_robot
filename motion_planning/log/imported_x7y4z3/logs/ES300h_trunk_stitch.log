@@ -1,0 +1,22 @@
+[stitch] URDF: /home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3.urdf (gantry_env x7y4z3)
+[stitch] TCP frame: tcp, 리트랙트 방향: spray
+[stitch] 갠트리 한계 v 0.5 m/s, a 1.6 m/s^2
+[stitch] row 16개, 전이 15곳 생성
+[stitch] 리트랙트 적응형 (안전계수 9.0, 5~100 mm), 샘플 간격 10 mm
+[stitch] move  0-> 1 pts=  68 T= 0.67s (0.08+0.52+0.07) lift=  5.0mm pos_err= 0.18mm seam= 0.00 v=0.36 a=0.97
+[stitch] move  1-> 2 pts= 893 T= 8.92s (2.09+4.44+2.39) lift= 15.5mm pos_err= 1.60mm seam= 0.00 v=0.44 a=0.93
+[stitch] move  2-> 3 pts= 220 T= 2.19s (0.14+1.84+0.21) lift=  5.0mm pos_err= 1.21mm seam= 0.00 v=0.32 a=0.92
+[stitch] move  3-> 4 pts=  67 T= 0.66s (0.09+0.51+0.06) lift=  5.0mm pos_err= 0.21mm seam= 0.00 v=0.39 a=0.91
+[stitch] move  4-> 5 pts= 106 T= 1.05s (0.10+0.79+0.16) lift=  5.0mm pos_err= 1.20mm seam= 0.00 v=0.36 a=0.85
+[stitch] move  5-> 6 pts= 108 T= 1.07s (0.11+0.84+0.12) lift=  5.0mm pos_err= 1.46mm seam= 0.00 v=0.42 a=0.95
+[stitch] move  6-> 7 pts= 477 T= 4.76s (0.30+4.23+0.23) lift=  5.0mm pos_err= 0.17mm seam= 0.00 v=0.29 a=0.90
+[stitch] move  7-> 8 pts= 369 T= 3.68s (0.41+2.90+0.37) lift=  5.0mm pos_err= 0.13mm seam= 0.00 v=0.37 a=0.96
+[stitch] move  8-> 9 pts= 528 T= 5.27s (0.32+4.58+0.37) lift=  5.0mm pos_err= 0.35mm seam= 0.00 v=0.30 a=0.94
+[stitch] move  9->10 pts= 126 T= 1.25s (0.33+0.64+0.28) lift= 20.4mm pos_err= 0.81mm seam= 0.00 v=0.49 a=0.97
+[stitch] move 10->11 pts=  80 T= 0.79s (0.13+0.53+0.13) lift=  5.0mm pos_err= 0.11mm seam= 0.00 v=0.40 a=0.91
+[stitch] move 11->12 pts=  77 T= 0.76s (0.12+0.52+0.12) lift=  5.0mm pos_err= 0.18mm seam= 0.00 v=0.39 a=0.92
+[stitch] move 12->13 pts=  74 T= 0.73s (0.12+0.47+0.14) lift=  5.0mm pos_err= 0.25mm seam= 0.00 v=0.53 a=0.94
+[stitch] move 13->14 pts=  82 T= 0.81s (0.12+0.56+0.13) lift=  6.0mm pos_err= 0.16mm seam= 0.00 v=0.40 a=0.96
+[stitch] move 14->15 pts=  64 T= 0.63s (0.13+0.37+0.13) lift=  5.0mm pos_err= 0.10mm seam= 0.00 v=0.36 a=0.94
+[stitch] 완료: 세그먼트 31개 -> /home/airo/paint_cell_ws/nlp4cm/stitched_x7y4z3/ES300h_trunk
+[stitch] 전이 총 시간 33.2s, 최악 추종오차 1.60mm / 0.04deg, 최악 이음새 0.000, 속도 한계 대비 0.53, 가속도 한계 대비 0.97

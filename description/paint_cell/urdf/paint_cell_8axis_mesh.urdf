@@ -1,0 +1,292 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="paint_cell_8axis">
+  <material name="cell_rail"><color rgba="0.55 0.57 0.60 1.0" /></material><material name="cell_frame"><color rgba="0.25 0.27 0.30 1.0" /></material><material name="black">
+    <color rgba="0.0 0.0 0.0 1.0" />
+  </material>
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0" />
+  </material>
+  <material name="orange">
+    <color rgba="1.0 0.4 0.0 1.0" />
+  </material>
+  <material name="dr_gray">
+    <color rgba="0.490 0.490 0.486 1.0" />
+  </material>
+  <material name="dr_white">
+    <color rgba="0.941 0.941 0.941 1.0" />
+  </material>
+  <material name="dr_blue">
+    <color rgba="0 0 0.15 1" />
+  </material>
+  <link name="base_link">
+    <inertial>
+      <mass value="3.635" />
+      <origin xyz="4e-06   -0.001016     0.08181" />
+      <inertia ixx="0.02216" ixy="5.8001e-06" ixz="6.1941e-06" iyy="0.024835" iyz="-5.3034e-05" izz="0.021063" />
+    </inertial>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_0_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_0_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="joint_1" type="revolute">
+    <parent link="base_link" />
+    <child link="link_1" />
+    <origin rpy="0 0 0" xyz="0 0 0.195" />
+    <axis xyz="0 0 1" />
+    <limit effort="411" lower="-6.2832" upper="6.2832" velocity="3.1416" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_1">
+    <inertial>
+      <mass value="7.863" />
+      <origin xyz="4.4e-05    0.029982    -0.01112" />
+      <inertia ixx="0.045839" ixy="1.2759e-05" ixz="-3.6168e-05" iyy="0.032913" iyz="-0.0029965" izz="0.044399" />
+    </inertial>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_1_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_1_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_1_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_1_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_1_2.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_1_2.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="joint_2" type="revolute">
+    <parent link="link_1" />
+    <child link="link_2" />
+    <origin rpy="0 -1.571 -1.571" xyz="0 0.039 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="411" lower="-6.2832" upper="6.2832" velocity="3.1416" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_2">
+    <inertial>
+      <mass value="10.985" />
+      <origin xyz="0.19748    0.001426     0.13191" />
+      <inertia ixx="0.04446" ixy="-0.0049948" ixz="-0.010992" iyy="0.67642" iyz="-2.8483e-05" izz="0.67428" />
+    </inertial>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_2_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_2_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_2_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_2_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_2_2.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_2_2.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="joint_3" type="revolute">
+    <parent link="link_2" />
+    <child link="link_3" />
+    <origin rpy="0 0 1.571" xyz="0.56 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="194" lower="-2.7925" upper="2.7925" velocity="3.1416" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_3">
+    <inertial>
+      <mass value="2.881" />
+      <origin xyz="8.5e-05   -0.002513    0.032058" />
+      <inertia ixx="0.012756" ixy="-5.4257e-06" ixz="1.6402e-05" iyy="0.011416" iyz="-0.0001989" izz="0.0080652" />
+    </inertial>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_3_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_3_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_3_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_3_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="joint_4" type="revolute">
+    <parent link="link_3" />
+    <child link="link_4" />
+    <origin rpy="1.571 0 0" xyz="0 -0.516 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="50" lower="-6.2832" upper="6.2832" velocity="6.2832" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_4">
+    <inertial>
+      <mass value="3.273" />
+      <origin xyz="-9.6e-05    0.085314    -0.13975" />
+      <inertia ixx="0.12246" ixy="2.3905e-05" ixz="2.5022e-05" iyy="0.11307" iyz="-0.027995" izz="0.017186" />
+    </inertial>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_4_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_4_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_4_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_4_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="joint_5" type="revolute">
+    <parent link="link_4" />
+    <child link="link_5" />
+    <origin rpy="-1.571 0 0" xyz="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="50" lower="-6.2832" upper="6.2832" velocity="6.2832" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_5">
+    <inertial>
+      <mass value="2.141" />
+      <origin xyz="0.000109   -0.003286     0.01477" />
+      <inertia ixx="0.013145" ixy="-4.7132e-06" ixz="8.5804e-06" iyy="0.0073072" iyz="-5.999e-05" izz="0.0090476" />
+    </inertial>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_5_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_5_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_5_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_5_1.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="joint_6" type="revolute">
+    <parent link="link_5" />
+    <child link="link_6" />
+    <origin rpy="1.571 0 0" xyz="0 -0.124 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="50" lower="-6.2832" upper="6.2832" velocity="6.2832" />
+    <dynamics friction="0" />
+  </joint>
+  <link name="link_6">
+    <inertial>
+      <mass value="0.784" />
+      <origin xyz="-1.9e-05      -6e-06    -0.05227" />
+      <inertia ixx="0.0067403" ixy="5.2373e-06" ixz="2.4957e-06" iyy="0.0048015" iyz="8.3671e-06" izz="0.0059696" />
+    </inertial>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_collision/A0912_6_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://dsr_description2/meshes/a0912_white/A0912_6_0.dae" scale="0.001 0.001 0.001" />
+      </geometry>
+    </visual>
+  </link>
+<link name="world_base"><visual><origin xyz="-1.744000 -1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-1.744000 -1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-1.744000 1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="-1.744000 1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="1.744000 -1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="1.744000 -1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="1.744000 1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="1.744000 1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 -1.509500 1.942000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.300000 0.200000 0.250000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 -1.479500 2.107000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.000000 0.053000 0.044000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="0.000000 1.509500 1.942000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.300000 0.200000 0.250000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 1.479500 2.107000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.000000 0.053000 0.044000" /></geometry><material name="cell_rail" /></visual><collision><origin xyz="-1.744000 -1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry></collision><collision><origin xyz="-1.744000 -1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry></collision><collision><origin xyz="-1.744000 1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry></collision><collision><origin xyz="-1.744000 1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry></collision><collision><origin xyz="1.744000 -1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry></collision><collision><origin xyz="1.744000 -1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry></collision><collision><origin xyz="1.744000 1.509500 0.039500" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.500000 0.500000 0.079000" /></geometry></collision><collision><origin xyz="1.744000 1.509500 0.930000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.244000 0.175000 1.702000" /></geometry></collision><collision><origin xyz="0.000000 -1.509500 1.942000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.300000 0.200000 0.250000" /></geometry></collision><collision><origin xyz="0.000000 -1.479500 2.107000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.000000 0.053000 0.044000" /></geometry></collision><collision><origin xyz="0.000000 1.509500 1.942000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.300000 0.200000 0.250000" /></geometry></collision><collision><origin xyz="0.000000 1.479500 2.107000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="5.000000 0.053000 0.044000" /></geometry></collision></link><link name="gantry_x_link"><inertial><mass value="1.0" /><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" /></inertial><visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.150000 3.300000 0.250000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.018500 0.000000 -0.165000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.053000 2.800000 0.044000" /></geometry><material name="cell_rail" /></visual><visual><origin xyz="0.018500 0.000000 0.165000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.053000 2.800000 0.044000" /></geometry><material name="cell_rail" /></visual><collision><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.150000 3.300000 0.250000" /></geometry></collision><collision><origin xyz="0.018500 0.000000 -0.165000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.053000 2.800000 0.044000" /></geometry></collision><collision><origin xyz="0.018500 0.000000 0.165000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.053000 2.800000 0.044000" /></geometry></collision></link><joint name="gantry_x" type="prismatic"><parent link="world_base" /><child link="gantry_x_link" /><origin xyz="0.000000 0.000000 2.314000" rpy="0.000000 0.000000 0.000000" /><axis xyz="1 0 0" /><limit effort="2000" lower="-2.196000" upper="2.196000" velocity="1.5" /></joint><link name="gantry_y_link"><inertial><mass value="1.0" /><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" /></inertial><visual><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.257000 0.650000 0.466000" /></geometry><material name="cell_frame" /></visual><visual><origin xyz="0.000000 0.000000 -0.243000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.220000 0.220000 0.020000" /></geometry><material name="cell_rail" /></visual><collision><origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.257000 0.650000 0.466000" /></geometry></collision><collision><origin xyz="0.000000 0.000000 -0.243000" rpy="0.000000 0.000000 0.000000" /><geometry><box size="0.220000 0.220000 0.020000" /></geometry></collision></link><joint name="gantry_y" type="prismatic"><parent link="gantry_x_link" /><child link="gantry_y_link" /><origin xyz="0.028000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000" /><axis xyz="0 1 0" /><limit effort="2000" lower="-1.071000" upper="1.071000" velocity="1.5" /></joint><joint name="gantry_to_arm" type="fixed"><parent link="gantry_y_link" /><child link="base_link" /><origin xyz="0.006036 0.000015 -0.248000" rpy="3.141593 0.000000 1.570796" /></joint><link name="tool_assy"><visual><origin xyz="0 0 0" rpy="0 0 0" /><geometry><mesh filename="package://paint_viz/urdf/tool_assy.stl" /></geometry><material name="dr_gray" /></visual></link><joint name="flange_to_tool" type="fixed"><parent link="link_6" /><child link="tool_assy" /><origin xyz="0 0 0" rpy="0 0 0" /></joint><link name="spray_gun"><visual><origin xyz="0 0 0" rpy="0 0 0" /><geometry><mesh filename="package://paint_viz/urdf/spray_gun.stl" /></geometry><material name="dr_gray" /></visual></link><joint name="tool_to_gun" type="fixed"><parent link="link_6" /><child link="spray_gun" /><origin xyz="0.129200 -0.060700 0.296900" rpy="0 0 0" /></joint><link name="tcp" /><joint name="spray_gun_to_tcp" type="fixed"><parent link="spray_gun" /><child link="tcp" /><origin xyz="0 0 0" rpy="0 0 0" /></joint></robot>

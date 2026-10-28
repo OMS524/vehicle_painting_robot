@@ -5,28 +5,41 @@ Ubuntu 22.04 / Linux x86_64 기준이며, sudo 없이 실행한다.
 
 | 기능 | 환경 이름 | 패키지 정의 |
 | --- | --- | --- |
-| 스캔·3D 재구성·Xacro 뷰어 | `vehicle_painting_robot_scan` | [scan.yml](scan.yml) |
-| 도장 경로 생성·CSV/HTML 디버깅 | `vehicle_painting_robot_planner` | [planner.yml](planner.yml) |
-| 두산 로봇 제어·기구학·궤적 최적화 | `vehicle_painting_robot_control` | [control.yml](control.yml) |
+| 스캔·3D 재구성·Xacro 뷰어 | `vehicle_painting_robot_scan` | [scan_planning.yaml](config/scan_planning.yaml) |
+| 도장 경로 생성·CSV/HTML 디버깅 | `vehicle_painting_robot_planner` | [path_planning.yaml](config/path_planning.yaml) |
+| 모션 플래닝·두산 로봇 제어·ROS 시각화 빌드 도구 | `vehicle_painting_robot_control` | [motion_planning.yaml](config/motion_planning.yaml) |
 
 ## 설치
 
 세 환경을 한 번에 생성한다.
 
 ```bash
-bash ~/vehicle_painting_robot/conda/setup.sh
+bash ~/vehicle_painting_robot/miniforge/setup.sh
 ```
 
 하나만 생성하려면 다음 중 하나를 실행한다.
 
 ```bash
-bash ~/vehicle_painting_robot/conda/setup.sh scan
-bash ~/vehicle_painting_robot/conda/setup.sh planner
-bash ~/vehicle_painting_robot/conda/setup.sh control
+bash ~/vehicle_painting_robot/miniforge/setup.sh scan
+bash ~/vehicle_painting_robot/miniforge/setup.sh planner
+bash ~/vehicle_painting_robot/miniforge/setup.sh control
 ```
 
-같은 이름의 환경이 이미 있으면 해당 환경만 건너뛰고 나머지를 생성한다.
-건너뛴 환경의 패키지를 갱신하거나, YAML과 버전이 같은지 검사하지는 않는다.
+환경 설정 파일은 `miniforge/config/`에서 관리한다. 실행 대상 `scan` / `planner` / `control`과 기존 가상환경 이름은 유지한다.
+
+기본 동작은 같은 이름의 환경이 이미 있으면 해당 환경만 건너뛰고 나머지를 생성하는 것이다.
+기존 제어 환경에도 현재 모션 플래닝 의존성을 반영하려면 다음처럼 갱신한다.
+
+```bash
+bash ~/vehicle_painting_robot/miniforge/setup.sh control --update
+conda activate vehicle_painting_robot_control
+```
+
+`--update`는 지정한 대상의 YAML로 `conda env update`를 실행한다. 환경이 없으면 새로 생성한다.
+버전 고정값에 따라 설치된 패키지와 관련 의존성이 변경될 수 있으므로 해당 환경의 프로그램을 종료한 후 실행한다.
+`--prune`은 사용하지 않으며, YAML에 없는 패키지를 일괄 제거하지 않는다.
+갱신 대상을 생략한 `setup.sh --update`는 오류로 처리한다. 전체 갱신은 `all --update`를 명시해야 한다.
+`--update` 없이 건너뛴 환경은 패키지를 갱신하거나 YAML과 버전이 같은지 검사하지 않는다.
 기존 통합 환경 `vehicle_painting_robot`도 변경하거나 삭제하지 않는다.
 설치 명령에만 `PYTHONNOUSERSITE=1`을 적용해 `~/.local`의 패키지를 이미 설치된 것으로 오인하지 않게 한다.
 이 설정은 Conda 환경에 저장하거나 활성화 훅으로 등록하지 않는다.
@@ -43,17 +56,17 @@ bash ~/vehicle_painting_robot/conda/setup.sh control
 ```bash
 # 스캔 / Xacro 뷰어
 conda activate vehicle_painting_robot_scan
-python ~/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/visualize_xacro.py
+python ~/vehicle_painting_robot/scan_planning/test/doosan_a0912_scan_test/scripts/visualize_xacro.py
 
 # 도장 경로 생성: 실행 전 test.py의 CASES와 파라미터를 확인한다.
 conda activate vehicle_painting_robot_planner
-python ~/vehicle_painting_robot/painting_trajectory_planner/path_planner/test/scripts/test.py
+python ~/vehicle_painting_robot/path_planning/test/scripts/test.py
 
 # 로봇 제어: 제어 .so 재빌드 및 장비 실행 조건을 확인한 다음 사용한다.
 conda activate vehicle_painting_robot_control
 ```
 
-`setup.sh`는 환경 생성과 패키지 설치만 한다.
+`setup.sh`는 환경 생성·명시적 갱신과 패키지 설치만 한다.
 SDK/Open3D 바이너리 수정, 시스템 라이브러리 교체, `LD_LIBRARY_PATH`/`LD_PRELOAD` 설정,
 활성화 훅, 제어 라이브러리 자동 빌드·백업, 하드웨어 검사를 하지 않는다.
 기존 SDK 바이너리 수정용 `configure_native_runtime.py`와 통합 `environment.yml`은 제거했다.
@@ -61,16 +74,16 @@ SDK/Open3D 바이너리 수정, 시스템 라이브러리 교체, `LD_LIBRARY_PA
 ## 기존 환경을 다시 만들려면
 
 해당 환경을 사용하는 프로그램을 종료한 다음, 재설치할 환경만 삭제한다.
-예를 들어 기존 스캔 환경을 새 `scan.yml` 구성으로 바꾸려면:
+예를 들어 기존 스캔 환경을 새 `config/scan_planning.yaml` 구성으로 바꾸려면:
 
 ```bash
 conda deactivate
 conda env remove --name vehicle_painting_robot_scan
-bash ~/vehicle_painting_robot/conda/setup.sh scan
+bash ~/vehicle_painting_robot/miniforge/setup.sh scan
 ```
 
 이전 통합 환경은 필요 없어졌을 때 사용자가 별도로 삭제한다.
-단, 기존 제어 `.so`가 통합 환경의 라이브러리를 참조하므로 아래 재빌드 주의사항을 먼저 확인한다.
+단, 기존 제어 `.so`가 삭제할 환경의 라이브러리를 참조한다면 아래 재빌드 주의사항을 먼저 확인한다.
 
 ```bash
 conda deactivate
@@ -86,16 +99,47 @@ Plotly가 `~/.local` 경로에서 로딩되는 경우를 확인했으며, 각 �
 
 ## 제어 라이브러리와 프로세스 분리 주의사항
 
-- **제어 `.so` 재빌드가 별도로 필요하다.** 현재 빌드된
-  `robot_control/doosan_a0912_controller/test/build/libdoosan_controller_c_api.so`는
-  이전 `vehicle_painting_robot/lib`를 참조한다. 새 제어 환경을 활성화하고,
-  이전 환경을 참조하는 CMake 캐시를 제거하거나 새 빌드 디렉토리를 사용해 다시 빌드해야 한다.
-  기존 `CMakeLists.txt`는 활성화한 Conda 환경을 우선 탐색하고, 빌드에 사용한 Pinocchio 경로를 `.so`에 기록한다.
-  새 빌드 디렉토리를 쓴다면 Python 래퍼의 `LIB_PATH`와 실제 `.so` 위치도 일치시켜야 한다.
-- **가상환경 생성만으로 스캔·제어 통신이 구현되지는 않는다.** 스캔 Python에서 기존
-  `DoosanRobot` 래퍼를 직접 사용하면 제어 `.so`도 스캔 프로세스에 로딩되어 분리 목적에 맞지 않는다.
-  제어 환경의 Python으로 별도 제어 프로세스를 실행하고 이동 요청·완료·로봇 자세를 주고받는 연결 코드는 후속 작업이다.
-- 이번 변경은 `conda/` 설치 구성만 대상으로 하며, 경로 생성 알고리즘·로봇 제어 로직·워크스테이션 실행 설정은 변경하지 않는다.
+- **환경 설치와 제어 `.so` 빌드는 별개다.**
+  `robot_controller/doosan_a0912_controller/test/build/libdoosan_controller_c_api.so`가
+  다른 환경의 라이브러리를 참조하거나 Pinocchio 등 ABI가 바뀌면 해당 제어 코드의 빌드 절차로 재빌드한다.
+  빌드 위치를 바꿨다면 래퍼 및 스캔 설정의 제어 라이브러리 경로도 일치시킨다.
+- 스캔은 `scan_planning/config/scan.yaml`의 `control_python`으로 별도 제어 프로세스를 실행한다.
+  스캔 환경에 Pinocchio를 추가하거나 제어 환경에 카메라 SDK를 넣는 방식으로 합치지 않는다.
+- 이 설치 스크립트는 알고리즘·로봇 제어 로직·스캔 설정을 수정하지 않는다.
 
 설치 방식 참고: [Conda 환경 관리](https://docs.conda.io/projects/conda/en/stable/user-guide/tasks/manage-environments.html#using-pip-in-an-environment),
 [Orbbec Python SDK 의존성](https://github.com/orbbec/pyorbbecsdk/blob/v2-main/pyproject.toml).
+
+## 모션 플래닝
+
+모션 플래닝은 별도의 `paintcell` 환경을 만들지 않고 `vehicle_painting_robot_control`을 사용한다.
+`config/motion_planning.yaml`은 현재 `motion_planning`의 import와 검증된 제어 환경을 기준으로 한다.
+
+| 구성 | 지정 버전 / 역할 |
+| --- | --- |
+| Python | 3.10 — 시스템 ROS Humble Python ABI와 일치 |
+| NumPy / SciPy | 1.26.4 / 1.15.2 — 수치 계산, KD-tree, 보간 |
+| Pinocchio / CasADi / Eigen | 3.9.0 / 3.7.2 / 3.4.0 — 기구학·충돌·NLP·제어 라이브러리 |
+| PyYAML / setuptools | 6.0.3 / 79.0.1 — 설정 로딩·패키지 빌드 |
+| colcon-common-extensions | 0.3.0 — 제어 환경 Python을 사용하는 ROS 패키지 빌드 |
+| catkin_pkg / empy / lark | 1.1.1 / 3.3.4 / 1.3.1 — ROS 빌드 의존성 |
+
+전체 전이 의존성까지 고정한 lock 파일은 아니다. 기존 핵심 수치 라이브러리 버전은 유지한다.
+현재 코드에 필요하지 않은 pandas와 카메라 SDK는 제어 환경에 추가하지 않는다.
+설치에 사용하는 모션 환경 정의는 `config/motion_planning.yaml`이다.
+ROS 자체는 시스템 Humble(`/opt/ros/humble`)을 사용한다. `setup.sh`는 apt 설치나 ROS 빌드를 하지 않는다.
+
+```bash
+# ROS 없이 모션 플래닝 입력/설정 확인
+conda activate vehicle_painting_robot_control
+python -s ~/vehicle_painting_robot/motion_planning/scripts/motion_planning.py --check
+
+# 최초 1회 ROS 패키지 빌드 (시스템 ROS Humble 및 CMake/컴파일러는 별도 설치)
+bash ~/vehicle_painting_robot/motion_planning/scripts/setup_ros2.sh
+
+# RViz를 사용할 터미널: Conda → ROS → 워크스페이스를 함께 활성화
+source ~/vehicle_painting_robot/motion_planning/scripts/activate_ros2.sh
+```
+
+`conda activate`만으로 시스템 ROS와 워크스페이스까지 자동으로 source되지는 않는다.
+계산·시각화 명령은 [motion_planning README](../motion_planning/README.md)를 참고한다.

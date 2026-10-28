@@ -1,0 +1,14 @@
+scene:
+  part_file: /home/oms/vehicle_painting_robot/path_planning/test/data/ES300h_hood.ply
+  trajectory_dir: /home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/input/ES300h_hood
+  part_xyz:
+  - -0.751
+  - -1.316
+  - 2.66
+  part_rpy:
+  - 0.0
+  - 0.0
+  - 0.0
+  max_part_points: 120000
+  max_rows: 0
+  gantry_env: x7y4z3

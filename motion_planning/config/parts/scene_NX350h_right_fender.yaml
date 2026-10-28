@@ -1,0 +1,10 @@
+# 4cm waypoint 플랜 RViz 재생용 — run_fender.sh 배치와 동일 (지그 +0.2 m 상향)
+scene:
+  part_file: $REPO/path_planning/test/data/NX350h_right_fender.ply
+  trajectory_dir: $MOTION_ROOT/test/input/NX350h_right_fender
+  part_xyz: [-0.990, 0.051, 2.280]
+  part_rpy: [0.0, 0.0, 0.0]
+  max_part_points: 120000
+  max_rows: 0
+planning:
+  extra_optimization_arguments: [--ipopt-max-iter, '4000']

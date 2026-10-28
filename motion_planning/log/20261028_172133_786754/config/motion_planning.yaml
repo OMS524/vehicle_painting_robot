@@ -1,0 +1,17 @@
+# 실행 위치와 기존 배치 스크립트의 인자만 관리합니다. 수치 알고리즘 기본값은 변경하지 않습니다.
+# 모든 일반 상대 경로는 이 파일 기준입니다.
+gantry_env: x7y4z3
+parts: [ES300h_hood, ES300h_front_bumper, NX350h_right_fender, ES300h_trunk]
+parts_dir: parts
+planner_csv_root: ../../path_planning/test/csv
+fallback_input_root: ../test/input
+output_root: ../log
+# 기존 run_all.sh와 같은 기본 실행 범위. 전체 공정은 --stage all.
+stages: [time_profile, optimization, transition]
+time_profile:
+  velocity_m_s: 0.42
+  acceleration_m_s2: 1.2
+optimization_arguments: [--stride, '1', --tcp-frame, tcp, --tool-clearance-weight, '100', --ipopt-print-level, '0']
+transition_arguments: [--tcp-frame, tcp]
+collision_arguments: [--stride, '2', --part-stride, '4']
+sequence: paint_with_tool

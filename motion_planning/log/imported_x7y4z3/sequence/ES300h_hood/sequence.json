@@ -1,0 +1,3101 @@
+{
+  "gantry_env": {
+    "name": "x7y4z3",
+    "config_file": "/home/airo/paint_cell_ws/install/paint_viz/share/paint_viz/config/gantry/x7y4z3.yaml",
+    "convention": "corner",
+    "rail_m": {
+      "x_length": 7.0,
+      "y_length": 4.0,
+      "z_height": 3.0
+    },
+    "stroke_m": {
+      "x": 6.8264,
+      "y": 3.8864
+    },
+    "bridge_z_m": 3.0,
+    "mount_z_m": 2.847,
+    "joint_limits": {
+      "gantry_x": [
+        0.0,
+        6.8264
+      ],
+      "gantry_y": [
+        0.0,
+        3.8864
+      ]
+    },
+    "world_travel_m": {
+      "x": [
+        -3.4132,
+        3.4132
+      ],
+      "y": [
+        -1.9432,
+        1.9432
+      ]
+    },
+    "arm_mount": {
+      "xyz": [
+        0.32304,
+        0.0,
+        -0.153
+      ],
+      "rpy": [
+        3.141592653589793,
+        0.0,
+        -1.5707963267948966
+      ]
+    },
+    "toolchanger_slots": [
+      [
+        "toolchanger_slot_1",
+        3.3310999999999997,
+        -2.1019,
+        1.7347,
+        true
+      ],
+      [
+        "toolchanger_slot_2",
+        3.5311,
+        -2.1019,
+        1.7347,
+        true
+      ],
+      [
+        "toolchanger_slot_3",
+        3.3310999999999997,
+        -2.3019,
+        2.0617,
+        true
+      ],
+      [
+        "toolchanger_slot_4",
+        3.5311,
+        -2.3019,
+        2.0617,
+        false
+      ]
+    ],
+    "part_xyz_offset": [
+      0.0,
+      0.0,
+      0.781
+    ],
+    "motor_limits": {
+      "gantry_velocity_m_s": 0.5,
+      "gantry_acceleration_m_s2": 1.6
+    }
+  },
+  "sequence": {
+    "name": "paint_with_tool",
+    "slot": 1,
+    "paint": {
+      "dir": "/home/airo/paint_cell_ws/nlp4cm/stitched{env_suffix}/{part}",
+      "pattern": "seq_*_joint.csv"
+    },
+    "control_dt": 0.01,
+    "command_dt": 0.001,
+    "event_dwell_s": 1.0,
+    "collision_stride": 5,
+    "limits": {
+      "joint_velocity_deg_s": 70.0,
+      "joint_acceleration_deg_s2": 500.0,
+      "gantry_velocity_m_s": 1.0,
+      "gantry_acceleration_m_s2": 5.0
+    },
+    "speeds": {
+      "dock_approach_scale": 0.25,
+      "reposition_scale": 0.5,
+      "transit_scale": 1.0,
+      "dock_descend_tcp_m_s": 0.02,
+      "dock_ascend_tcp_m_s": 0.05,
+      "paint_approach_tcp_m_s": 0.1
+    },
+    "approach": {
+      "lift_m": 0.15,
+      "step_m": 0.01
+    },
+    "dock": {
+      "flip": false,
+      "depart_lift_m": 0.35,
+      "depart_retreat_xyz": [
+        0.0,
+        0.3,
+        0.0
+      ]
+    },
+    "shallow_penetration_m": 0.008,
+    "ik": {
+      "max_iter": 200,
+      "damping": 0.05,
+      "max_step_deg": 5.0,
+      "position_tolerance": 0.002,
+      "orientation_tolerance_deg": 2.0,
+      "polish_iter": 40
+    },
+    "segments": [
+      {
+        "name": "home",
+        "type": "home"
+      },
+      {
+        "name": "dock_approach",
+        "type": "dock_approach",
+        "slot": 1,
+        "tcp_frame": "link_6"
+      },
+      {
+        "name": "tool_attach",
+        "type": "tool_attach",
+        "slot": 1
+      },
+      {
+        "name": "dock_depart",
+        "type": "dock_depart",
+        "tcp_frame": "link_6"
+      },
+      {
+        "name": "to_paint",
+        "type": "transit",
+        "target": "paint",
+        "tcp_frame": "tcp"
+      },
+      {
+        "name": "paint",
+        "type": "paint",
+        "tcp_frame": "tcp"
+      },
+      {
+        "name": "retreat",
+        "type": "retreat",
+        "tcp_frame": "tcp"
+      },
+      {
+        "name": "to_dock",
+        "type": "transit",
+        "target": "dock",
+        "tcp_frame": "tcp"
+      },
+      {
+        "name": "dock_return",
+        "type": "dock_return",
+        "slot": 1,
+        "tcp_frame": "link_6"
+      },
+      {
+        "name": "tool_detach",
+        "type": "tool_detach"
+      },
+      {
+        "name": "dock_depart_bare",
+        "type": "dock_depart",
+        "tcp_frame": "link_6"
+      },
+      {
+        "name": "go_home",
+        "type": "home"
+      }
+    ]
+  },
+  "sequence_file": "/home/airo/paint_cell_ws/install/paint_viz/share/paint_viz/config/sequence/paint_with_tool.yaml",
+  "part": "ES300h_hood",
+  "paint_dir": "/home/airo/paint_cell_ws/nlp4cm/stitched_x7y4z3/ES300h_hood",
+  "urdf": {
+    "kinematics": "/home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3_mesh.urdf",
+    "collision_bare": "/home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3_mesh_bare.urdf",
+    "collision_tool": "/home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3_mesh.urdf"
+  },
+  "joint_names": [
+    "gantry_x",
+    "gantry_y",
+    "joint_1",
+    "joint_2",
+    "joint_3",
+    "joint_4",
+    "joint_5",
+    "joint_6"
+  ],
+  "total_time_s": 340.2196757328375,
+  "stages": [
+    {
+      "index": 0,
+      "segment": "home",
+      "stage": "start",
+      "kind": "home",
+      "file": "seq_0000_home_start_joint.csv",
+      "t_start": 0.0,
+      "duration": 0.0,
+      "t_end": 0.0,
+      "rows": 1,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 1,
+      "segment": "dock_approach",
+      "stage": "fold",
+      "kind": "joint",
+      "file": "seq_0001_dock_approach_fold_joint.csv",
+      "t_start": 0.0,
+      "duration": 7.714285714285824,
+      "t_end": 7.714285714285824,
+      "rows": 773,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.2499994407008541,
+      "acceleration_ratio": 0.018112886202618233,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 2,
+      "segment": "dock_approach",
+      "stage": "travel",
+      "kind": "joint",
+      "file": "seq_0002_dock_approach_travel_joint.csv",
+      "t_start": 7.714285714285824,
+      "duration": 10.609200000000195,
+      "t_end": 18.32348571428602,
+      "rows": 1062,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.9999979272542987,
+      "acceleration_ratio": 0.11765569498891337,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 3,
+      "segment": "dock_approach",
+      "stage": "reposition",
+      "kind": "joint",
+      "file": "seq_0003_dock_approach_reposition_joint.csv",
+      "t_start": 18.32348571428602,
+      "duration": 15.426991459783427,
+      "t_end": 33.750477174069445,
+      "rows": 1544,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.2499997549893765,
+      "acceleration_ratio": 0.009066181300171838,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 4,
+      "segment": "dock_approach",
+      "stage": "descend",
+      "kind": "cartesian",
+      "file": "seq_0004_dock_approach_descend_joint.csv",
+      "t_start": 33.750477174069445,
+      "duration": 10.903357491253027,
+      "t_end": 44.65383466532247,
+      "rows": 1092,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.07279025458745701,
+      "acceleration_ratio": 0.15397547034462758,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false,
+      "cartesian_length_m": 0.1453780998833737,
+      "tcp_speed_limit_m_s": 0.02,
+      "ik_position_error_m": 0.001855501589247225,
+      "ik_rotation_error_deg": 0.0021619539464272906
+    },
+    {
+      "index": 5,
+      "segment": "tool_attach",
+      "stage": "dwell",
+      "kind": "event",
+      "file": "seq_0005_tool_attach_dwell_joint.csv",
+      "t_start": 44.65383466532247,
+      "duration": 1.0,
+      "t_end": 45.65383466532247,
+      "rows": 101,
+      "tcp_frame": "link_6",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": true
+    },
+    {
+      "index": 6,
+      "segment": "dock_depart",
+      "stage": "ascend",
+      "kind": "cartesian",
+      "file": "seq_0006_dock_depart_ascend_joint.csv",
+      "t_start": 45.65383466532247,
+      "duration": 10.360857333375511,
+      "t_end": 56.014691998697984,
+      "rows": 1038,
+      "tcp_frame": "link_6",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.1385776215014102,
+      "acceleration_ratio": 0.19301390258960535,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": true,
+      "cartesian_length_m": 0.3453619111125171,
+      "tcp_speed_limit_m_s": 0.05,
+      "ik_position_error_m": 0.0018574469559005295,
+      "ik_rotation_error_deg": 0.0029604308819431786
+    },
+    {
+      "index": 7,
+      "segment": "dock_depart",
+      "stage": "retreat",
+      "kind": "cartesian",
+      "file": "seq_0007_dock_depart_retreat_joint.csv",
+      "t_start": 56.014691998697984,
+      "duration": 9.0045451115371,
+      "t_end": 65.01923711023508,
+      "rows": 902,
+      "tcp_frame": "link_6",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.08452068895221744,
+      "acceleration_ratio": 0.1292813342507802,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false,
+      "cartesian_length_m": 0.3001515037179034,
+      "tcp_speed_limit_m_s": 0.05,
+      "ik_position_error_m": 0.001997436635367879,
+      "ik_rotation_error_deg": 0.0002870689654823815
+    },
+    {
+      "index": 8,
+      "segment": "dock_depart",
+      "stage": "reposition",
+      "kind": "joint",
+      "file": "seq_0008_dock_depart_reposition_joint.csv",
+      "t_start": 65.01923711023508,
+      "duration": 15.426065204032428,
+      "t_end": 80.44530231426751,
+      "rows": 1544,
+      "tcp_frame": "link_6",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.2499997549893765,
+      "acceleration_ratio": 0.009066725679298558,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 9,
+      "segment": "to_paint",
+      "stage": "travel",
+      "kind": "joint",
+      "file": "seq_0009_to_paint_travel_joint.csv",
+      "t_start": 80.44530231426751,
+      "duration": 8.356673490000503,
+      "t_end": 88.80197580426801,
+      "rows": 837,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.9999980922291911,
+      "acceleration_ratio": 0.14931266353764336,
+      "joint_limit_violations": 0,
+      "collisions": {
+        "world_base_19<->link_4_1": 2,
+        "world_base_19<->link_5_1": 5
+      },
+      "max_penetration_m": 0.0025875759979435073,
+      "collision_shallow": true,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 10,
+      "segment": "to_paint",
+      "stage": "reposition",
+      "kind": "joint",
+      "file": "seq_0010_to_paint_reposition_joint.csv",
+      "t_start": 88.80197580426801,
+      "duration": 7.561082570896902,
+      "t_end": 96.36305837516491,
+      "rows": 758,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.49999796410660247,
+      "acceleration_ratio": 0.03695835559534513,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 11,
+      "segment": "to_paint",
+      "stage": "approach",
+      "kind": "cartesian",
+      "file": "seq_0011_to_paint_approach_joint.csv",
+      "t_start": 96.36305837516491,
+      "duration": 2.250011379091593,
+      "t_end": 98.6130697542565,
+      "rows": 227,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.15370974045580818,
+      "acceleration_ratio": 0.19111184530386963,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false,
+      "cartesian_length_m": 0.1500007586061062,
+      "tcp_speed_limit_m_s": 0.1,
+      "ik_position_error_m": 0.00033570416969416365,
+      "ik_rotation_error_deg": 0.0031456095698386964
+    },
+    {
+      "index": 12,
+      "segment": "paint",
+      "stage": "000_row000",
+      "kind": "paint",
+      "file": "seq_0012_paint_000_row000_joint.csv",
+      "t_start": 98.6130697542565,
+      "duration": 3.207142857,
+      "t_end": 101.8202126112565,
+      "rows": 3209,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 13,
+      "segment": "paint",
+      "stage": "001_move000_001",
+      "kind": "paint",
+      "file": "seq_0013_paint_001_move000_001_joint.csv",
+      "t_start": 101.8202126112565,
+      "duration": 0.66,
+      "t_end": 102.48021261125649,
+      "rows": 67,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 14,
+      "segment": "paint",
+      "stage": "002_row001",
+      "kind": "paint",
+      "file": "seq_0014_paint_002_row001_joint.csv",
+      "t_start": 102.48021261125649,
+      "duration": 3.302380952,
+      "t_end": 105.78259356325648,
+      "rows": 3304,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 15,
+      "segment": "paint",
+      "stage": "003_move001_002",
+      "kind": "paint",
+      "file": "seq_0015_paint_003_move001_002_joint.csv",
+      "t_start": 105.78259356325648,
+      "duration": 0.64,
+      "t_end": 106.42259356325648,
+      "rows": 65,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 16,
+      "segment": "paint",
+      "stage": "004_row002",
+      "kind": "paint",
+      "file": "seq_0016_paint_004_row002_joint.csv",
+      "t_start": 106.42259356325648,
+      "duration": 3.397619048,
+      "t_end": 109.82021261125648,
+      "rows": 3399,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 17,
+      "segment": "paint",
+      "stage": "005_move002_003",
+      "kind": "paint",
+      "file": "seq_0017_paint_005_move002_003_joint.csv",
+      "t_start": 109.82021261125648,
+      "duration": 0.57,
+      "t_end": 110.39021261125647,
+      "rows": 58,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 18,
+      "segment": "paint",
+      "stage": "006_row003",
+      "kind": "paint",
+      "file": "seq_0018_paint_006_row003_joint.csv",
+      "t_start": 110.39021261125647,
+      "duration": 3.397619048,
+      "t_end": 113.78783165925647,
+      "rows": 3399,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 19,
+      "segment": "paint",
+      "stage": "007_move003_004",
+      "kind": "paint",
+      "file": "seq_0019_paint_007_move003_004_joint.csv",
+      "t_start": 113.78783165925647,
+      "duration": 1.01,
+      "t_end": 114.79783165925647,
+      "rows": 102,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 20,
+      "segment": "paint",
+      "stage": "008_row004",
+      "kind": "paint",
+      "file": "seq_0020_paint_008_row004_joint.csv",
+      "t_start": 114.79783165925647,
+      "duration": 3.397619048,
+      "t_end": 118.19545070725647,
+      "rows": 3399,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 21,
+      "segment": "paint",
+      "stage": "009_move004_005",
+      "kind": "paint",
+      "file": "seq_0021_paint_009_move004_005_joint.csv",
+      "t_start": 118.19545070725647,
+      "duration": 0.84,
+      "t_end": 119.03545070725647,
+      "rows": 85,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 22,
+      "segment": "paint",
+      "stage": "010_row005",
+      "kind": "paint",
+      "file": "seq_0022_paint_010_row005_joint.csv",
+      "t_start": 119.03545070725647,
+      "duration": 3.492857143,
+      "t_end": 122.52830785025647,
+      "rows": 3494,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 23,
+      "segment": "paint",
+      "stage": "011_move005_006",
+      "kind": "paint",
+      "file": "seq_0023_paint_011_move005_006_joint.csv",
+      "t_start": 122.52830785025647,
+      "duration": 1.36,
+      "t_end": 123.88830785025647,
+      "rows": 137,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 24,
+      "segment": "paint",
+      "stage": "012_row006",
+      "kind": "paint",
+      "file": "seq_0024_paint_012_row006_joint.csv",
+      "t_start": 123.88830785025647,
+      "duration": 3.588095238,
+      "t_end": 127.47640308825646,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 25,
+      "segment": "paint",
+      "stage": "013_move006_007",
+      "kind": "paint",
+      "file": "seq_0025_paint_013_move006_007_joint.csv",
+      "t_start": 127.47640308825646,
+      "duration": 1.38,
+      "t_end": 128.85640308825646,
+      "rows": 139,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 26,
+      "segment": "paint",
+      "stage": "014_row007",
+      "kind": "paint",
+      "file": "seq_0026_paint_014_row007_joint.csv",
+      "t_start": 128.85640308825646,
+      "duration": 3.588095238,
+      "t_end": 132.44449832625645,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 27,
+      "segment": "paint",
+      "stage": "015_move007_008",
+      "kind": "paint",
+      "file": "seq_0027_paint_015_move007_008_joint.csv",
+      "t_start": 132.44449832625645,
+      "duration": 0.64,
+      "t_end": 133.08449832625644,
+      "rows": 65,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 28,
+      "segment": "paint",
+      "stage": "016_row008",
+      "kind": "paint",
+      "file": "seq_0028_paint_016_row008_joint.csv",
+      "t_start": 133.08449832625644,
+      "duration": 3.588095238,
+      "t_end": 136.67259356425643,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 29,
+      "segment": "paint",
+      "stage": "017_move008_009",
+      "kind": "paint",
+      "file": "seq_0029_paint_017_move008_009_joint.csv",
+      "t_start": 136.67259356425643,
+      "duration": 0.64,
+      "t_end": 137.31259356425642,
+      "rows": 65,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 30,
+      "segment": "paint",
+      "stage": "018_row009",
+      "kind": "paint",
+      "file": "seq_0030_paint_018_row009_joint.csv",
+      "t_start": 137.31259356425642,
+      "duration": 3.588095238,
+      "t_end": 140.9006888022564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 31,
+      "segment": "paint",
+      "stage": "019_move009_010",
+      "kind": "paint",
+      "file": "seq_0031_paint_019_move009_010_joint.csv",
+      "t_start": 140.9006888022564,
+      "duration": 0.68,
+      "t_end": 141.58068880225642,
+      "rows": 69,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 32,
+      "segment": "paint",
+      "stage": "020_row010",
+      "kind": "paint",
+      "file": "seq_0032_paint_020_row010_joint.csv",
+      "t_start": 141.58068880225642,
+      "duration": 3.588095238,
+      "t_end": 145.1687840402564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 33,
+      "segment": "paint",
+      "stage": "021_move010_011",
+      "kind": "paint",
+      "file": "seq_0033_paint_021_move010_011_joint.csv",
+      "t_start": 145.1687840402564,
+      "duration": 0.62,
+      "t_end": 145.78878404025642,
+      "rows": 63,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 34,
+      "segment": "paint",
+      "stage": "022_row011",
+      "kind": "paint",
+      "file": "seq_0034_paint_022_row011_joint.csv",
+      "t_start": 145.78878404025642,
+      "duration": 3.588095238,
+      "t_end": 149.3768792782564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 35,
+      "segment": "paint",
+      "stage": "023_move011_012",
+      "kind": "paint",
+      "file": "seq_0035_paint_023_move011_012_joint.csv",
+      "t_start": 149.3768792782564,
+      "duration": 0.59,
+      "t_end": 149.9668792782564,
+      "rows": 60,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 36,
+      "segment": "paint",
+      "stage": "024_row012",
+      "kind": "paint",
+      "file": "seq_0036_paint_024_row012_joint.csv",
+      "t_start": 149.9668792782564,
+      "duration": 3.588095238,
+      "t_end": 153.5549745162564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 37,
+      "segment": "paint",
+      "stage": "025_move012_013",
+      "kind": "paint",
+      "file": "seq_0037_paint_025_move012_013_joint.csv",
+      "t_start": 153.5549745162564,
+      "duration": 0.65,
+      "t_end": 154.2049745162564,
+      "rows": 66,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 38,
+      "segment": "paint",
+      "stage": "026_row013",
+      "kind": "paint",
+      "file": "seq_0038_paint_026_row013_joint.csv",
+      "t_start": 154.2049745162564,
+      "duration": 3.588095238,
+      "t_end": 157.7930697542564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 39,
+      "segment": "paint",
+      "stage": "027_move013_014",
+      "kind": "paint",
+      "file": "seq_0039_paint_027_move013_014_joint.csv",
+      "t_start": 157.7930697542564,
+      "duration": 0.67,
+      "t_end": 158.4630697542564,
+      "rows": 68,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 40,
+      "segment": "paint",
+      "stage": "028_row014",
+      "kind": "paint",
+      "file": "seq_0040_paint_028_row014_joint.csv",
+      "t_start": 158.4630697542564,
+      "duration": 3.588095238,
+      "t_end": 162.0511649922564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 41,
+      "segment": "paint",
+      "stage": "029_move014_015",
+      "kind": "paint",
+      "file": "seq_0041_paint_029_move014_015_joint.csv",
+      "t_start": 162.0511649922564,
+      "duration": 0.61,
+      "t_end": 162.6611649922564,
+      "rows": 62,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 42,
+      "segment": "paint",
+      "stage": "030_row015",
+      "kind": "paint",
+      "file": "seq_0042_paint_030_row015_joint.csv",
+      "t_start": 162.6611649922564,
+      "duration": 3.588095238,
+      "t_end": 166.2492602302564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 43,
+      "segment": "paint",
+      "stage": "031_move015_016",
+      "kind": "paint",
+      "file": "seq_0043_paint_031_move015_016_joint.csv",
+      "t_start": 166.2492602302564,
+      "duration": 0.63,
+      "t_end": 166.8792602302564,
+      "rows": 64,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 44,
+      "segment": "paint",
+      "stage": "032_row016",
+      "kind": "paint",
+      "file": "seq_0044_paint_032_row016_joint.csv",
+      "t_start": 166.8792602302564,
+      "duration": 3.588095238,
+      "t_end": 170.4673554682564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 45,
+      "segment": "paint",
+      "stage": "033_move016_017",
+      "kind": "paint",
+      "file": "seq_0045_paint_033_move016_017_joint.csv",
+      "t_start": 170.4673554682564,
+      "duration": 0.65,
+      "t_end": 171.1173554682564,
+      "rows": 66,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 46,
+      "segment": "paint",
+      "stage": "034_row017",
+      "kind": "paint",
+      "file": "seq_0046_paint_034_row017_joint.csv",
+      "t_start": 171.1173554682564,
+      "duration": 3.683333333,
+      "t_end": 174.8006888012564,
+      "rows": 3685,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 47,
+      "segment": "paint",
+      "stage": "035_move017_018",
+      "kind": "paint",
+      "file": "seq_0047_paint_035_move017_018_joint.csv",
+      "t_start": 174.8006888012564,
+      "duration": 0.63,
+      "t_end": 175.4306888012564,
+      "rows": 64,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 48,
+      "segment": "paint",
+      "stage": "036_row018",
+      "kind": "paint",
+      "file": "seq_0048_paint_036_row018_joint.csv",
+      "t_start": 175.4306888012564,
+      "duration": 3.588095238,
+      "t_end": 179.0187840392564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 49,
+      "segment": "paint",
+      "stage": "037_move018_019",
+      "kind": "paint",
+      "file": "seq_0049_paint_037_move018_019_joint.csv",
+      "t_start": 179.0187840392564,
+      "duration": 0.74,
+      "t_end": 179.7587840392564,
+      "rows": 75,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 50,
+      "segment": "paint",
+      "stage": "038_row019",
+      "kind": "paint",
+      "file": "seq_0050_paint_038_row019_joint.csv",
+      "t_start": 179.7587840392564,
+      "duration": 3.683333333,
+      "t_end": 183.4421173722564,
+      "rows": 3685,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 51,
+      "segment": "paint",
+      "stage": "039_move019_020",
+      "kind": "paint",
+      "file": "seq_0051_paint_039_move019_020_joint.csv",
+      "t_start": 183.4421173722564,
+      "duration": 0.69,
+      "t_end": 184.1321173722564,
+      "rows": 70,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 52,
+      "segment": "paint",
+      "stage": "040_row020",
+      "kind": "paint",
+      "file": "seq_0052_paint_040_row020_joint.csv",
+      "t_start": 184.1321173722564,
+      "duration": 3.588095238,
+      "t_end": 187.7202126102564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 53,
+      "segment": "paint",
+      "stage": "041_move020_021",
+      "kind": "paint",
+      "file": "seq_0053_paint_041_move020_021_joint.csv",
+      "t_start": 187.7202126102564,
+      "duration": 0.77,
+      "t_end": 188.4902126102564,
+      "rows": 78,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 54,
+      "segment": "paint",
+      "stage": "042_row021",
+      "kind": "paint",
+      "file": "seq_0054_paint_042_row021_joint.csv",
+      "t_start": 188.4902126102564,
+      "duration": 3.683333333,
+      "t_end": 192.1735459432564,
+      "rows": 3685,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 55,
+      "segment": "paint",
+      "stage": "043_move021_022",
+      "kind": "paint",
+      "file": "seq_0055_paint_043_move021_022_joint.csv",
+      "t_start": 192.1735459432564,
+      "duration": 0.61,
+      "t_end": 192.78354594325643,
+      "rows": 62,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 56,
+      "segment": "paint",
+      "stage": "044_row022",
+      "kind": "paint",
+      "file": "seq_0056_paint_044_row022_joint.csv",
+      "t_start": 192.78354594325643,
+      "duration": 3.683333333,
+      "t_end": 196.46687927625644,
+      "rows": 3685,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 57,
+      "segment": "paint",
+      "stage": "045_move022_023",
+      "kind": "paint",
+      "file": "seq_0057_paint_045_move022_023_joint.csv",
+      "t_start": 196.46687927625644,
+      "duration": 0.69,
+      "t_end": 197.15687927625643,
+      "rows": 70,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 58,
+      "segment": "paint",
+      "stage": "046_row023",
+      "kind": "paint",
+      "file": "seq_0058_paint_046_row023_joint.csv",
+      "t_start": 197.15687927625643,
+      "duration": 3.683333333,
+      "t_end": 200.84021260925644,
+      "rows": 3685,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 59,
+      "segment": "paint",
+      "stage": "047_move023_024",
+      "kind": "paint",
+      "file": "seq_0059_paint_047_move023_024_joint.csv",
+      "t_start": 200.84021260925644,
+      "duration": 0.67,
+      "t_end": 201.51021260925643,
+      "rows": 68,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 60,
+      "segment": "paint",
+      "stage": "048_row024",
+      "kind": "paint",
+      "file": "seq_0060_paint_048_row024_joint.csv",
+      "t_start": 201.51021260925643,
+      "duration": 3.588095238,
+      "t_end": 205.09830784725642,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 61,
+      "segment": "paint",
+      "stage": "049_move024_025",
+      "kind": "paint",
+      "file": "seq_0061_paint_049_move024_025_joint.csv",
+      "t_start": 205.09830784725642,
+      "duration": 0.66,
+      "t_end": 205.75830784725642,
+      "rows": 67,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 62,
+      "segment": "paint",
+      "stage": "050_row025",
+      "kind": "paint",
+      "file": "seq_0062_paint_050_row025_joint.csv",
+      "t_start": 205.75830784725642,
+      "duration": 3.588095238,
+      "t_end": 209.3464030852564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 63,
+      "segment": "paint",
+      "stage": "051_move025_026",
+      "kind": "paint",
+      "file": "seq_0063_paint_051_move025_026_joint.csv",
+      "t_start": 209.3464030852564,
+      "duration": 0.62,
+      "t_end": 209.96640308525642,
+      "rows": 63,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 64,
+      "segment": "paint",
+      "stage": "052_row026",
+      "kind": "paint",
+      "file": "seq_0064_paint_052_row026_joint.csv",
+      "t_start": 209.96640308525642,
+      "duration": 3.588095238,
+      "t_end": 213.5544983232564,
+      "rows": 3590,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 65,
+      "segment": "paint",
+      "stage": "053_move026_027",
+      "kind": "paint",
+      "file": "seq_0065_paint_053_move026_027_joint.csv",
+      "t_start": 213.5544983232564,
+      "duration": 0.65,
+      "t_end": 214.20449832325642,
+      "rows": 66,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 66,
+      "segment": "paint",
+      "stage": "054_row027",
+      "kind": "paint",
+      "file": "seq_0066_paint_054_row027_joint.csv",
+      "t_start": 214.20449832325642,
+      "duration": 3.492857143,
+      "t_end": 217.69735546625643,
+      "rows": 3494,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 67,
+      "segment": "paint",
+      "stage": "055_move027_028",
+      "kind": "paint",
+      "file": "seq_0067_paint_055_move027_028_joint.csv",
+      "t_start": 217.69735546625643,
+      "duration": 0.79,
+      "t_end": 218.48735546625642,
+      "rows": 80,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 68,
+      "segment": "paint",
+      "stage": "056_row028",
+      "kind": "paint",
+      "file": "seq_0068_paint_056_row028_joint.csv",
+      "t_start": 218.48735546625642,
+      "duration": 3.492857143,
+      "t_end": 221.98021260925643,
+      "rows": 3494,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 69,
+      "segment": "paint",
+      "stage": "057_move028_029",
+      "kind": "paint",
+      "file": "seq_0069_paint_057_move028_029_joint.csv",
+      "t_start": 221.98021260925643,
+      "duration": 0.6,
+      "t_end": 222.58021260925642,
+      "rows": 61,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 70,
+      "segment": "paint",
+      "stage": "058_row029",
+      "kind": "paint",
+      "file": "seq_0070_paint_058_row029_joint.csv",
+      "t_start": 222.58021260925642,
+      "duration": 3.397619048,
+      "t_end": 225.97783165725642,
+      "rows": 3399,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 71,
+      "segment": "paint",
+      "stage": "059_move029_030",
+      "kind": "paint",
+      "file": "seq_0071_paint_059_move029_030_joint.csv",
+      "t_start": 225.97783165725642,
+      "duration": 0.8,
+      "t_end": 226.77783165725643,
+      "rows": 81,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 72,
+      "segment": "paint",
+      "stage": "060_row030",
+      "kind": "paint",
+      "file": "seq_0072_paint_060_row030_joint.csv",
+      "t_start": 226.77783165725643,
+      "duration": 3.207142857,
+      "t_end": 229.98497451425644,
+      "rows": 3209,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 73,
+      "segment": "paint",
+      "stage": "061_move030_031",
+      "kind": "paint",
+      "file": "seq_0073_paint_061_move030_031_joint.csv",
+      "t_start": 229.98497451425644,
+      "duration": 1.32,
+      "t_end": 231.30497451425643,
+      "rows": 133,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 74,
+      "segment": "paint",
+      "stage": "062_row031",
+      "kind": "paint",
+      "file": "seq_0074_paint_062_row031_joint.csv",
+      "t_start": 231.30497451425643,
+      "duration": 2.445238095,
+      "t_end": 233.75021260925644,
+      "rows": 2447,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 75,
+      "segment": "retreat",
+      "stage": "lift",
+      "kind": "cartesian",
+      "file": "seq_0075_retreat_lift_joint.csv",
+      "t_start": 233.75021260925644,
+      "duration": 2.250014302826238,
+      "t_end": 236.00022691208267,
+      "rows": 227,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.14935007213363372,
+      "acceleration_ratio": 0.19411502539937264,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false,
+      "cartesian_length_m": 0.15000095352174922,
+      "tcp_speed_limit_m_s": 0.1,
+      "ik_position_error_m": 0.00046839728245891363,
+      "ik_rotation_error_deg": 0.0068556618331984155
+    },
+    {
+      "index": 76,
+      "segment": "retreat",
+      "stage": "reposition",
+      "kind": "joint",
+      "file": "seq_0076_retreat_reposition_joint.csv",
+      "t_start": 236.00022691208267,
+      "duration": 6.851682557174978,
+      "t_end": 242.85190946925763,
+      "rows": 687,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.4999985833567227,
+      "acceleration_ratio": 0.04077651770802926,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 77,
+      "segment": "to_dock",
+      "stage": "travel",
+      "kind": "joint",
+      "file": "seq_0077_to_dock_travel_joint.csv",
+      "t_start": 242.85190946925763,
+      "duration": 7.92319244400041,
+      "t_end": 250.77510191325806,
+      "rows": 794,
+      "tcp_frame": "tcp",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.99999628951727,
+      "acceleration_ratio": 0.15746627006768918,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 78,
+      "segment": "dock_return",
+      "stage": "reposition",
+      "kind": "joint",
+      "file": "seq_0078_dock_return_reposition_joint.csv",
+      "t_start": 250.77510191325806,
+      "duration": 15.426065204032428,
+      "t_end": 266.2011671172905,
+      "rows": 1544,
+      "tcp_frame": "link_6",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.2499997549893765,
+      "acceleration_ratio": 0.009066725679156305,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 79,
+      "segment": "dock_return",
+      "stage": "approach",
+      "kind": "cartesian",
+      "file": "seq_0079_dock_return_approach_joint.csv",
+      "t_start": 266.2011671172905,
+      "duration": 9.0045451115371,
+      "t_end": 275.20571222882757,
+      "rows": 902,
+      "tcp_frame": "link_6",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.08452068895221163,
+      "acceleration_ratio": 0.12928133424988766,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false,
+      "cartesian_length_m": 0.3001515037179034,
+      "tcp_speed_limit_m_s": 0.05,
+      "ik_position_error_m": 0.001997436635367879,
+      "ik_rotation_error_deg": 0.00028706896548688626
+    },
+    {
+      "index": 80,
+      "segment": "dock_return",
+      "stage": "descend",
+      "kind": "cartesian",
+      "file": "seq_0080_dock_return_descend_joint.csv",
+      "t_start": 275.20571222882757,
+      "duration": 25.902143333438786,
+      "t_end": 301.10785556226637,
+      "rows": 2592,
+      "tcp_frame": "link_6",
+      "tool_attached": true,
+      "collision_model": "tool",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.05543114960880198,
+      "acceleration_ratio": 0.07872500127545284,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": true,
+      "cartesian_length_m": 0.34536191111251713,
+      "tcp_speed_limit_m_s": 0.02,
+      "ik_position_error_m": 0.0018574469559005295,
+      "ik_rotation_error_deg": 0.0029604308819419917
+    },
+    {
+      "index": 81,
+      "segment": "tool_detach",
+      "stage": "dwell",
+      "kind": "event",
+      "file": "seq_0081_tool_detach_dwell_joint.csv",
+      "t_start": 301.10785556226637,
+      "duration": 1.0,
+      "t_end": 302.10785556226637,
+      "rows": 101,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.0,
+      "acceleration_ratio": 0.0,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 82,
+      "segment": "dock_depart_bare",
+      "stage": "ascend",
+      "kind": "cartesian",
+      "file": "seq_0082_dock_depart_bare_ascend_joint.csv",
+      "t_start": 302.10785556226637,
+      "duration": 4.361342996501209,
+      "t_end": 306.4691985587676,
+      "rows": 438,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.18197376974679136,
+      "acceleration_ratio": 0.39569212147209554,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false,
+      "cartesian_length_m": 0.14537809988337366,
+      "tcp_speed_limit_m_s": 0.05,
+      "ik_position_error_m": 0.001855501589247225,
+      "ik_rotation_error_deg": 0.0021619539464259666
+    },
+    {
+      "index": 83,
+      "segment": "dock_depart_bare",
+      "stage": "reposition",
+      "kind": "joint",
+      "file": "seq_0083_dock_depart_bare_reposition_joint.csv",
+      "t_start": 306.4691985587676,
+      "duration": 15.426991459783427,
+      "t_end": 321.896190018551,
+      "rows": 1544,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.2499997549893765,
+      "acceleration_ratio": 0.009066181301672022,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 84,
+      "segment": "go_home",
+      "stage": "travel",
+      "kind": "joint",
+      "file": "seq_0084_go_home_travel_joint.csv",
+      "t_start": 321.896190018551,
+      "duration": 10.609200000000666,
+      "t_end": 332.5053900185517,
+      "rows": 1062,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.9999979272543555,
+      "acceleration_ratio": 0.1176556949924645,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    },
+    {
+      "index": 85,
+      "segment": "go_home",
+      "stage": "unfold",
+      "kind": "joint",
+      "file": "seq_0085_go_home_unfold_joint.csv",
+      "t_start": 332.5053900185517,
+      "duration": 7.714285714285824,
+      "t_end": 340.2196757328375,
+      "rows": 773,
+      "tcp_frame": "link_6",
+      "tool_attached": false,
+      "collision_model": "bare",
+      "boundary_joint_jump": 0.0,
+      "velocity_ratio": 0.2499994407008541,
+      "acceleration_ratio": 0.018112886202536784,
+      "joint_limit_violations": 0,
+      "collisions": {},
+      "max_penetration_m": -0.0,
+      "collision_shallow": false,
+      "dock_zone_exclusion": false
+    }
+  ],
+  "boundary_tcp_jumps": [
+    {
+      "file": "seq_0001_dock_approach_fold_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.570153549685988e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.570153549685988e-15
+      }
+    },
+    {
+      "file": "seq_0002_dock_approach_travel_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    },
+    {
+      "file": "seq_0003_dock_approach_reposition_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    },
+    {
+      "file": "seq_0004_dock_approach_descend_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 3.312677149333116e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 3.312677149333116e-14
+      }
+    },
+    {
+      "file": "seq_0005_tool_attach_dwell_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      }
+    },
+    {
+      "file": "seq_0006_dock_depart_ascend_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      }
+    },
+    {
+      "file": "seq_0007_dock_depart_retreat_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.876663503592534e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.876663503592534e-14
+      }
+    },
+    {
+      "file": "seq_0008_dock_depart_reposition_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3644846933941538e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3644846933941538e-14
+      }
+    },
+    {
+      "file": "seq_0009_to_paint_travel_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    },
+    {
+      "file": "seq_0010_to_paint_reposition_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    },
+    {
+      "file": "seq_0011_to_paint_approach_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 8.139165565437665e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 8.139165565437665e-15
+      }
+    },
+    {
+      "file": "seq_0012_paint_000_row000_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 5.2588269572711795e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 5.2588269572711795e-15
+      }
+    },
+    {
+      "file": "seq_0013_paint_001_move000_001_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0034141371631124e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0034141371631124e-14
+      }
+    },
+    {
+      "file": "seq_0014_paint_002_row001_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2138239785837983e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2138239785837983e-14
+      }
+    },
+    {
+      "file": "seq_0015_paint_003_move001_002_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 8.766544628828441e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 8.766544628828441e-15
+      }
+    },
+    {
+      "file": "seq_0016_paint_004_row002_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2148738621761953e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2148738621761953e-14
+      }
+    },
+    {
+      "file": "seq_0017_paint_005_move002_003_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.049471614056372e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.049471614056372e-14
+      }
+    },
+    {
+      "file": "seq_0018_paint_006_row003_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.7380099824558116e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.7380099824558116e-14
+      }
+    },
+    {
+      "file": "seq_0019_paint_007_move003_004_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1958272365343276e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1958272365343276e-14
+      }
+    },
+    {
+      "file": "seq_0020_paint_008_row004_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0372705700150033e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0372705700150033e-14
+      }
+    },
+    {
+      "file": "seq_0021_paint_009_move004_005_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.713043637654486e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.713043637654486e-14
+      }
+    },
+    {
+      "file": "seq_0022_paint_010_row005_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 5.576306312563917e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 5.576306312563917e-15
+      }
+    },
+    {
+      "file": "seq_0023_paint_011_move005_006_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 9.286970898098822e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 9.286970898098822e-15
+      }
+    },
+    {
+      "file": "seq_0024_paint_012_row006_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.021698604818414e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.021698604818414e-14
+      }
+    },
+    {
+      "file": "seq_0025_paint_013_move006_007_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 3.5413690981746007e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 3.5413690981746007e-15
+      }
+    },
+    {
+      "file": "seq_0026_paint_014_row007_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0270169233074613e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0270169233074613e-14
+      }
+    },
+    {
+      "file": "seq_0027_paint_015_move007_008_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2141610487903277e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2141610487903277e-14
+      }
+    },
+    {
+      "file": "seq_0028_paint_016_row008_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3254450167154857e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3254450167154857e-14
+      }
+    },
+    {
+      "file": "seq_0029_paint_017_move008_009_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.76939184004516e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.76939184004516e-14
+      }
+    },
+    {
+      "file": "seq_0030_paint_018_row009_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.6937261097567263e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.6937261097567263e-14
+      }
+    },
+    {
+      "file": "seq_0031_paint_019_move009_010_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.1877913161960506e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.1877913161960506e-14
+      }
+    },
+    {
+      "file": "seq_0032_paint_020_row010_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.680814165971925e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.680814165971925e-14
+      }
+    },
+    {
+      "file": "seq_0033_paint_021_move010_011_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.1150251674948774e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.1150251674948774e-14
+      }
+    },
+    {
+      "file": "seq_0034_paint_022_row011_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.5577111764819184e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.5577111764819184e-14
+      }
+    },
+    {
+      "file": "seq_0035_paint_023_move011_012_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.674929503692446e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.674929503692446e-14
+      }
+    },
+    {
+      "file": "seq_0036_paint_024_row012_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.2386792920302168e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.2386792920302168e-14
+      }
+    },
+    {
+      "file": "seq_0037_paint_025_move012_013_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 8.426413671751843e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 8.426413671751843e-15
+      }
+    },
+    {
+      "file": "seq_0038_paint_026_row013_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.6236782869632014e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.6236782869632014e-14
+      }
+    },
+    {
+      "file": "seq_0039_paint_027_move013_014_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.9025630278751384e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.9025630278751384e-14
+      }
+    },
+    {
+      "file": "seq_0040_paint_028_row014_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.6318767774514796e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.6318767774514796e-14
+      }
+    },
+    {
+      "file": "seq_0041_paint_029_move014_015_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.2443830460414362e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.2443830460414362e-14
+      }
+    },
+    {
+      "file": "seq_0042_paint_030_row015_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2161290558895625e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2161290558895625e-14
+      }
+    },
+    {
+      "file": "seq_0043_paint_031_move015_016_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 9.952377292676407e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 9.952377292676407e-15
+      }
+    },
+    {
+      "file": "seq_0044_paint_032_row016_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.633825923638266e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.633825923638266e-14
+      }
+    },
+    {
+      "file": "seq_0045_paint_033_move016_017_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 9.311720600219278e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 9.311720600219278e-15
+      }
+    },
+    {
+      "file": "seq_0046_paint_034_row017_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1046297919145288e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1046297919145288e-14
+      }
+    },
+    {
+      "file": "seq_0047_paint_035_move017_018_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 3.12018735666766e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 3.12018735666766e-15
+      }
+    },
+    {
+      "file": "seq_0048_paint_036_row018_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 3.9612870783460465e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 3.9612870783460465e-15
+      }
+    },
+    {
+      "file": "seq_0049_paint_037_move018_019_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 5.182061887457067e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 5.182061887457067e-15
+      }
+    },
+    {
+      "file": "seq_0050_paint_038_row019_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.1155467278717117e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.1155467278717117e-14
+      }
+    },
+    {
+      "file": "seq_0051_paint_039_move019_020_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.4072025648150033e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.4072025648150033e-14
+      }
+    },
+    {
+      "file": "seq_0052_paint_040_row020_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0673060640446411e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0673060640446411e-14
+      }
+    },
+    {
+      "file": "seq_0053_paint_041_move020_021_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 6.348170606377157e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 6.348170606377157e-15
+      }
+    },
+    {
+      "file": "seq_0054_paint_042_row021_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.365047288250564e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.365047288250564e-14
+      }
+    },
+    {
+      "file": "seq_0055_paint_043_move021_022_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1679264633833684e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1679264633833684e-14
+      }
+    },
+    {
+      "file": "seq_0056_paint_044_row022_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.9289670343245906e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.9289670343245906e-14
+      }
+    },
+    {
+      "file": "seq_0057_paint_045_move022_023_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 8.144366011575027e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 8.144366011575027e-15
+      }
+    },
+    {
+      "file": "seq_0058_paint_046_row023_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2183445684235137e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2183445684235137e-14
+      }
+    },
+    {
+      "file": "seq_0059_paint_047_move023_024_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.0115447223202046e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.0115447223202046e-14
+      }
+    },
+    {
+      "file": "seq_0060_paint_048_row024_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.8134718036481936e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.8134718036481936e-14
+      }
+    },
+    {
+      "file": "seq_0061_paint_049_move024_025_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1974645244407514e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1974645244407514e-14
+      }
+    },
+    {
+      "file": "seq_0062_paint_050_row025_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2117766019167794e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.2117766019167794e-14
+      }
+    },
+    {
+      "file": "seq_0063_paint_051_move025_026_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.002689088917254e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.002689088917254e-14
+      }
+    },
+    {
+      "file": "seq_0064_paint_052_row026_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 7.332484195404438e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 7.332484195404438e-15
+      }
+    },
+    {
+      "file": "seq_0065_paint_053_move026_027_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0438457942829394e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0438457942829394e-14
+      }
+    },
+    {
+      "file": "seq_0066_paint_054_row027_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.668895170029134e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.668895170029134e-14
+      }
+    },
+    {
+      "file": "seq_0067_paint_055_move027_028_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3486169934587096e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3486169934587096e-14
+      }
+    },
+    {
+      "file": "seq_0068_paint_056_row028_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0429575574000904e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.0429575574000904e-14
+      }
+    },
+    {
+      "file": "seq_0069_paint_057_move028_029_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 9.27634739643582e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 9.27634739643582e-15
+      }
+    },
+    {
+      "file": "seq_0070_paint_058_row029_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.3526714474110462e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.3526714474110462e-14
+      }
+    },
+    {
+      "file": "seq_0071_paint_059_move029_030_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1765018016012667e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.1765018016012667e-14
+      }
+    },
+    {
+      "file": "seq_0072_paint_060_row030_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.098331242231665e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.098331242231665e-14
+      }
+    },
+    {
+      "file": "seq_0073_paint_061_move030_031_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.2514836050444235e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.2514836050444235e-14
+      }
+    },
+    {
+      "file": "seq_0074_paint_062_row031_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5091388114483445e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5091388114483445e-14
+      }
+    },
+    {
+      "file": "seq_0075_retreat_lift_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.7670544506055377e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.7670544506055377e-14
+      }
+    },
+    {
+      "file": "seq_0076_retreat_reposition_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 3.327846729961507e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 3.327846729961507e-14
+      }
+    },
+    {
+      "file": "seq_0077_to_dock_travel_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    },
+    {
+      "file": "seq_0078_dock_return_reposition_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    },
+    {
+      "file": "seq_0079_dock_return_approach_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3644846933941538e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 1.3644846933941538e-14
+      }
+    },
+    {
+      "file": "seq_0080_dock_return_descend_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.876663503592534e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.876663503592534e-14
+      }
+    },
+    {
+      "file": "seq_0081_tool_detach_dwell_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      }
+    },
+    {
+      "file": "seq_0082_dock_depart_bare_ascend_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.801440433057684e-14
+      }
+    },
+    {
+      "file": "seq_0083_dock_depart_bare_reposition_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 3.312677149333116e-14
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 3.312677149333116e-14
+      }
+    },
+    {
+      "file": "seq_0084_go_home_travel_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    },
+    {
+      "file": "seq_0085_go_home_unfold_joint.csv",
+      "link_6": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      },
+      "tcp": {
+        "pos_m": 0.0,
+        "rot_deg": 2.5668055152238803e-15
+      }
+    }
+  ],
+  "verification": {
+    "worst_boundary_joint_jump": 0.0,
+    "worst_boundary_link6_jump_m": 0.0,
+    "worst_boundary_link6_jump_deg": 3.327846729961507e-14,
+    "stages_with_collisions": [],
+    "stages_with_shallow_interference": [
+      "seq_0009_to_paint_travel_joint.csv"
+    ],
+    "stages_with_joint_limit_violations": [],
+    "stages_over_speed_limits": []
+  },
+  "command_csv": {
+    "file": "sequence_command.csv",
+    "rows": 340218,
+    "duration_s": 340.2169999999998
+  }
+}

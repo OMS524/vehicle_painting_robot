@@ -1,0 +1,40 @@
+[nlp] gantry env: x7y4z3 (/home/oms/vehicle_painting_robot/motion_planning/config/gantry/x7y4z3.yaml)
+[nlp] TCP frame: tcp
+[nlp] joint bound override joint_3: [25.00, 135.00] deg
+[nlp] joint bound override joint_5: [25.00, 135.00] deg
+[nlp] arm singularity weight: 0.001
+[nlp] node limit scale: 0.85,0.25 (env)
+[nlp] gantry limits: v 0.5 m/s (env), a 1.6 m/s^2 (env); gantry smoothness weights: v 0.01 (env), a 0.01 (env)
+[nlp] tool clearance: tip 0.30,0,0 (TCP frame) >= 0.35 m from joint_3,joint_5, weight 100
+[nlp] URDF: /home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf
+[nlp] joints: gantry_x, gantry_y, joint_1, joint_2, joint_3, joint_4, joint_5, joint_6
+[nlp] prismatic joints: 2 of 8
+[nlp] TCP spray axis: z path axis: y
+[nlp] part placement xyz=[-0.751, -1.316, 2.66] rpy=[0.0, 0.0, 0.0]
+[nlp] output: /home/oms/vehicle_painting_robot/motion_planning/log/structure_verification/after/optimization
+[nlp] input #1/1: /home/oms/vehicle_painting_robot/motion_planning/log/structure_verification/after/input/trajectory_000.csv
+[nlp] loaded points=31 duration=3.207s stride=1 max_points=0
+[nlp] seed 1/31 pos_err=0.00078m rot_resid=0.00101
+[nlp] seed 26/31 pos_err=0.00002m rot_resid=0.00000
+[nlp] seed 31/31 pos_err=0.00002m rot_resid=0.00000
+[nlp] solving NLP points=31 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.82 s ( 23.03ms)  40.74ms (515.67us)        79
+       nlp_g  | 449.78ms (  5.69ms)  15.95ms (201.86us)        79
+  nlp_grad_f  |   3.04 s ( 75.90ms)  53.93ms (  1.35ms)        40
+  nlp_hess_l  |   6.28 s (165.32ms) 373.71ms (  9.83ms)        38
+   nlp_jac_g  |   2.05 s ( 51.20ms)  37.04ms (925.93us)        40
+       total  | 147.05 s (147.05 s)   3.07 s (  3.07 s)         1
+[nlp][time] seed 0.01s + NLP 3.71s = 3.72s for 31 points (120.2 ms/point), path duration 3.21s
+[nlp] metrics max_pos_err=0.000462m max_rot_err=0.2269deg min_manip=1.214012e+00 min_arm_sigma=0.2378 tool_clearance=0.347m qdot[joint3 36.667deg/s/70.000deg/s] qddot[joint5 124.611deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/structure_verification/after/optimization/trajectory_000_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.299m/s/0.500m/s] qddot[joint1 1.710m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.60, acceleration x1.07) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/structure_verification/after/optimization/trajectory_000_nlp_command.csv points=3209 max_qdot=37.753deg/s max_qddot=362.148deg/s^2
+[nlp][time] planning cost
+[nlp][time]   trajectory_000.csv           points=   31 seed=  0.01s NLP=    3.71s total=    3.72s (  120.2 ms/pt) path=  3.21s ratio=   1.16x
+[nlp][time]   TOTAL                        points=   31 seed=  0.01s NLP=    3.71s total=    3.72s (  120.2 ms/pt) path=  3.21s ratio=   1.16x
+[nlp][time]   wall clock (I/O + 후처리 포함) 4.19s
+[nlp] saved plan metadata: /home/oms/vehicle_painting_robot/motion_planning/log/structure_verification/after/optimization/plan_metadata.json
+[nlp] dry run complete. Add --execute to track the optimized command CSV on the robot.

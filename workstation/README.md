@@ -10,7 +10,7 @@
    - 오른쪽 공정 패널에서 PLY 또는 XYZ CSV를 선택한다.
    - 파일은 현재 작업용 임시 세션에 복사되고 Three.js 뷰어에 표시된다.
 2. **도장 경로 생성**
-   - `painting_trajectory_planner/path_planner/config/painting_trajectory.yaml`의
+   - `path_planning/config/painting_path.yaml`의
      기본값을 불러와 화면에서 수정한다.
    - 도장 방향과 스캔 방향을 입력하고 기존 Python 경로 생성 알고리즘을 실행한다.
 3. **도장 경로 수정**
@@ -32,11 +32,11 @@ workstation/
 │   └── workstation_backend.py   # 기존 planner를 호출하는 외부 어댑터
 └── standalone_html/             # 계약사 전달용 읽기 전용 단일 HTML
 
-painting_trajectory_planner/
-└── path_planner/
-    ├── config/painting_trajectory.yaml
-    ├── scripts/                 # 수정하지 않고 호출하는 기존 알고리즘
-    └── log/<YYYYMMDD_HHMMSS>/   # 완료 결과
+path_planning/
+├── config/painting_path.yaml
+├── scripts/path_planning.py       # 상위 제어기
+├── src/painting_path_planner/     # 단계별 알고리즘
+└── log/<YYYYMMDD_HHMMSS>/          # 완료 결과
 ```
 
 경로 생성 알고리즘은 Tauri 실행 파일에 포함하지 않는다. 앱은 외부의
@@ -49,7 +49,7 @@ Python 모듈을 직접 import한다. 따라서 알고리즘 수정 후 앱을 �
 `완료 및 저장`을 누르면 다음 형식으로 저장한다.
 
 ```text
-painting_trajectory_planner/path_planner/log/20260808_153012/
+path_planning/log/20260808_153012/
 ├── <scan-file>.ply 또는 .csv
 ├── painting_trajectory.csv
 ├── trajectory_000.csv
@@ -80,7 +80,7 @@ Tauri 앱에서만 동작한다.
 기본 디렉터리 배치와 다를 경우 다음 환경변수로 연결 위치를 지정한다.
 
 ```bash
-PAINTING_TRAJECTORY_PLANNER_ROOT=/absolute/path/to/path_planner
+PAINTING_TRAJECTORY_PLANNER_ROOT=/absolute/path/to/path_planning
 WORKSTATION_BACKEND_SCRIPT=/absolute/path/to/workstation_backend.py
 PAINTING_WORKSTATION_PYTHON=/absolute/path/to/python3
 ```
@@ -93,6 +93,11 @@ npm run tauri build
 
 빌드 결과에는 프론트엔드와 Tauri 명령만 들어간다. 실행할 컴퓨터에는 별도로
 planner 소스, backend 어댑터와 Python 실행 환경이 있어야 한다.
+
+2026-10-28 폴더 재구성 이후 빌드한 앱은 `path_planning`을 탐색한다.
+이전 실행 파일에는 이전 폴더명이 들어 있으므로 갱신된 AppImage를 사용한다.
+기존 작업 세션·계약사 전달 데이터의 `painting_trajectory.yaml` 파일 이름은
+그대로 유지하며, 앱 기본 설정은 새 `config/painting_path.yaml`에서 읽는다.
 
 ## 읽기 전용 단일 HTML
 

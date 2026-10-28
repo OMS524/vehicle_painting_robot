@@ -60,14 +60,18 @@ def _configure_planner_imports(planner_root: Path):
     if scripts_source not in sys.path:
         sys.path.insert(0, scripts_source)
 
-    from painting_trajectory_planner import (  # pylint: disable=import-outside-toplevel
+    from path_planning import (  # pylint: disable=import-outside-toplevel
         PaintingTrajectoryConfig,
         _structure_and_export_painting_trajectory,
         generate_painting_trajectory_debug,
     )
-    from painting_trajectory_planner_4_spline import (  # pylint: disable=import-outside-toplevel
+    from painting_path_planner import (  # pylint: disable=import-outside-toplevel
         generate_paint_spline_rows,
+        structuring,
     )
+
+    # 이전 버전에서 저장된 작업 세션의 dataclass pickle도 계속 읽습니다.
+    sys.modules.setdefault("painting_trajectory_planner_5_structuring", structuring)
 
     return (
         PaintingTrajectoryConfig,
@@ -133,26 +137,9 @@ def _plane_for_row(state: dict[str, Any], row_index: int) -> tuple[np.ndarray, n
 
 def _structured_source_row_indices(state: dict[str, Any]) -> list[int]:
     trajectory_rows = list(state.get("paint_spline_rows", []))
-    row_count = len(trajectory_rows)
-    slice_positions = np.asarray(
-        state.get("paint_spline_row_slice_positions", []), dtype=float
-    ).reshape(-1)
-    if row_count == 0 or len(slice_positions) != row_count:
-        return list(range(row_count))
-
-    start_side = str(state.get("spline_start_side", "top")).strip().lower()
-    descending = start_side in {"top", "from_top", "top_to_bottom", "right", "from_right", "right_to_left"}
-    finite = np.isfinite(slice_positions)
-    return sorted(
-        range(row_count),
-        key=lambda index: (
-            not bool(finite[index]),
-            -float(slice_positions[index])
-            if descending
-            else float(slice_positions[index]),
-            index,
-        ),
-    )
+    # 현재 structuring은 보정 슬라이스 삽입 순서를 그대로 유지합니다.
+    # 편집 포인트도 같은 Row에 대응해야 하므로 별도로 좌표 정렬하지 않습니다.
+    return list(range(len(trajectory_rows)))
 
 
 def _trajectory_offset_row_indices(state: dict[str, Any]) -> list[int]:

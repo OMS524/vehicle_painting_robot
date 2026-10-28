@@ -1,0 +1,32 @@
+# paint_viz 씬 설정 — launch와 IK 솔버가 같은 파일을 읽어 부품 배치가 어긋나지 않게 한다.
+#
+# part_xyz / part_rpy 는 world(로봇 base_link) 기준 부품 좌표계의 위치·자세다.
+# planner가 만든 trajectory와 PLY 점군은 모두 부품 스캔 좌표계 값이므로,
+# 이 변환이 곧 "도장셀 안에서 부품을 어디에 두는가"에 해당한다.
+
+scene:
+  # 부품 표면 데이터 (.ply 또는 x,y,z CSV)
+  part_file: $REPO/path_planning/test/data/ES300h_hood.ply
+  # planner가 만든 trajectory_XXX.csv 디렉터리
+  trajectory_dir: $REPO/path_planning/test/csv/ES300h_hood
+
+  # world → part 변환. world 원점은 갠트리 중앙의 **바닥(z=0)** 이다.
+  # 스캔 좌표 그대로면 부품이 원점에서 1~2 m 떨어져 있어 작업 영역 밖이다.
+  #
+  # ⚠️ XY 는 **재튜닝이 필요하다.** 아래 값은 갠트리 스트로크를 ±1.5 x ±1.5 m 로
+  #     가정하던 시절에 맞춘 것인데, model/gantry.stp 실측 결과 실제 스트로크는
+  #     X ±2.196 / Y ±1.071 m 다. 이 배치로 풀면 추종률은 100 % 지만
+  #     gantry_y 가 전체 점의 20.9 % 구간에서 상한(+1.071)에 붙는다.
+  #     Y 로 -0.57 m 옮기면 3.6 % 까지 줄지만 0 이 되지는 않는다
+  #     (8축 여유자유도가 Y 한계 쪽으로 흘러가는 것도 같이 작용).
+  #     자세한 내용은 README "왜 8축인가" 절 참고.
+  # Z : 후드 상면(부품 좌표 z=-0.879)을 바닥 1.00 m 높이의 지그에 올린다.
+  #     → TCP 경로가 world z = 1.12~1.30 m 에 놓이고, 천장 장착 팔의
+  #       base_link(z=2.066 m)에서 0.77~0.95 m 아래다 (도달 반경 1.395 m).
+  part_xyz: [-0.751, -1.316, 1.879]
+  part_rpy: [0.0, 0.0, 0.0]
+
+  # RViz 부하 조절용 다운샘플 상한 (0이면 전체)
+  max_part_points: 120000
+  # 표시/해석할 row 수 상한 (0이면 전체)
+  max_rows: 0

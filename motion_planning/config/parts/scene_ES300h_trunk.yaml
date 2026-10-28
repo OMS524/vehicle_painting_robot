@@ -1,0 +1,8 @@
+# 4cm waypoint 플랜 RViz 재생용 — run_all.sh 배치와 동일
+scene:
+  part_file: $REPO/path_planning/test/data/ES300h_trunk.ply
+  trajectory_dir: $MOTION_ROOT/test/input/ES300h_trunk
+  part_xyz: [-0.806, -1.367, 1.803]
+  part_rpy: [0.0, 0.0, 0.0]
+  max_part_points: 120000
+  max_rows: 0

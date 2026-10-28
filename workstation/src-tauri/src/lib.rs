@@ -88,27 +88,27 @@ fn resolve_planner_root() -> Result<PathBuf, String> {
         candidates.push(PathBuf::from(configured));
     }
     if let Ok(current_dir) = env::current_dir() {
-        candidates.push(current_dir.join("painting_trajectory_planner/path_planner"));
-        candidates.push(current_dir.join("../painting_trajectory_planner/path_planner"));
+        candidates.push(current_dir.join("path_planning"));
+        candidates.push(current_dir.join("../path_planning"));
     }
     candidates.push(
         PathBuf::from(env!("CARGO_MANIFEST_DIR"))
             .join("../..")
-            .join("painting_trajectory_planner/path_planner"),
+            .join("path_planning"),
     );
 
     for candidate in candidates {
         let normalized = candidate.canonicalize().unwrap_or(candidate);
         if normalized
-            .join("scripts/painting_trajectory_planner.py")
+            .join("scripts/path_planning.py")
             .is_file()
-            && normalized.join("config/painting_trajectory.yaml").is_file()
+            && normalized.join("config/painting_path.yaml").is_file()
         {
             return Ok(normalized);
         }
     }
     Err(
-        "경로 생성기를 찾지 못했습니다. PAINTING_TRAJECTORY_PLANNER_ROOT에 path_planner 경로를 지정하세요."
+        "경로 생성기를 찾지 못했습니다. PAINTING_TRAJECTORY_PLANNER_ROOT에 path_planning 경로를 지정하세요."
             .to_string(),
     )
 }
@@ -340,7 +340,7 @@ fn get_backend_info(state: tauri::State<'_, WorkstationState>) -> BackendInfo {
 
 #[tauri::command]
 fn read_default_parameters(state: tauri::State<'_, WorkstationState>) -> Result<String, String> {
-    let path = state.planner_root.join("config/painting_trajectory.yaml");
+    let path = state.planner_root.join("config/painting_path.yaml");
     fs::read_to_string(&path)
         .map_err(|error| format!("{} 파일을 읽지 못했습니다: {error}", path.display()))
 }

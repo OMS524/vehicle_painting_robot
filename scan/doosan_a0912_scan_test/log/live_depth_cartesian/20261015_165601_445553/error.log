@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/live_rgbd_cartesian.py", line 231, in run_live
-    camera = DepthCamera(camera_settings)
-  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/multi_view_scan.py", line 421, in __init__
-    raise RuntimeError(f"카메라 {devices.get_count()}대 발견. 한 대 연결하거나 serial_number를 지정하세요.")
-RuntimeError: 카메라 0대 발견. 한 대 연결하거나 serial_number를 지정하세요.

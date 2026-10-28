@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/live_rgbd_cartesian.py", line 271, in run_live
-    images[name] = depth_image(depth_mm, minimum, maximum, cv)
-  File "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/scripts/live_rgbd_cartesian.py", line 134, in depth_image
-    image = cv.applyColorMap(gray, cv.COLORMAP_JET)
-KeyboardInterrupt

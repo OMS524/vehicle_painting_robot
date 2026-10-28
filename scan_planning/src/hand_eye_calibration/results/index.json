@@ -1,0 +1,132 @@
+{
+  "schema": "hand_eye_result_import_v1",
+  "imported_on": "2026-10-28",
+  "source_data_unchanged": true,
+  "active_scan_calibration": "c2d/calibration.json",
+  "results": {
+    "rgb": {
+      "source_session": "/home/oms/vehicle_painting_robot/scan_planning/test/hand_eye_calibration_test/log/20261015_202951_112921",
+      "image_source": "rgb",
+      "files": {
+        "calibration.json": {
+          "source_relative_path": "calibration_20261015_203609_885625/calibration.json",
+          "sha256": "d8f3c980431cbc6f2af850da2bb3ca7376ed861a2f5bbefe79fe65410ce85089"
+        },
+        "camera.json": {
+          "source_relative_path": "camera.json",
+          "sha256": "7e6d35ff659a721da1d3424689b73414dcd20ee92dc1b341ac4589e0418842f8"
+        },
+        "source_settings.json": {
+          "source_relative_path": "settings.json",
+          "sha256": "37238a56ef37018a5e8f1b8c389e74a60578b6e247c996b1ab461e5e1d477f19"
+        },
+        "source_robot_settings.json": {
+          "source_relative_path": "robot_settings.json",
+          "sha256": "b44c290f7ab94753162973ed3915c1ec95392e8ccf4adbdb799bbd267843027a"
+        },
+        "source_manifest.json": {
+          "source_relative_path": "manifest.json",
+          "sha256": "0e6f418224b1efa7529b86b66951abcbaa97475ac5327a9f2278513f104667c9"
+        },
+        "depth_tf_variants/raw/calibration.json": {
+          "source_relative_path": "depth_tf_variants_20261015_215240_124624/raw/calibration.json",
+          "sha256": "32c89da00533c21a3779355e933feb8014bbbff608b53d69294a106ad19cac54"
+        },
+        "depth_tf_variants/unit_axis/calibration.json": {
+          "source_relative_path": "depth_tf_variants_20261015_215240_124624/unit_axis/calibration.json",
+          "sha256": "4001c51cb550ed4f2b1d8aaba7441288389afd5577dbcc6d2ec123d6594a18e2"
+        }
+      },
+      "transforms": {
+        "calibration.json:T_flange_color": {
+          "axis_lengths": [
+            0.9999999999999999,
+            1.0,
+            1.0
+          ],
+          "determinant": 1.0,
+          "max_orthogonality_error": 2.220446049250313e-16,
+          "passes_scan_se3_validation": true
+        },
+        "depth_tf_variants/raw/calibration.json:T_flange_color": {
+          "axis_lengths": [
+            0.9999999999999999,
+            1.0,
+            1.0
+          ],
+          "determinant": 1.0,
+          "max_orthogonality_error": 2.220446049250313e-16,
+          "passes_scan_se3_validation": true
+        },
+        "depth_tf_variants/raw/calibration.json:T_flange_depth": {
+          "axis_lengths": [
+            0.9940468388445921,
+            0.9999999766913048,
+            0.999999952244308
+          ],
+          "determinant": 0.9940467681176499,
+          "max_orthogonality_error": 0.011870882183073528,
+          "passes_scan_se3_validation": false
+        },
+        "depth_tf_variants/unit_axis/calibration.json:T_flange_color": {
+          "axis_lengths": [
+            0.9999999999999999,
+            1.0,
+            1.0
+          ],
+          "determinant": 1.0,
+          "max_orthogonality_error": 2.220446049250313e-16,
+          "passes_scan_se3_validation": true
+        },
+        "depth_tf_variants/unit_axis/calibration.json:T_flange_depth": {
+          "axis_lengths": [
+            0.9999999999999999,
+            0.9999999766913048,
+            0.999999952244308
+          ],
+          "determinant": 0.9999999288494872,
+          "max_orthogonality_error": 1.287885172131882e-05,
+          "passes_scan_se3_validation": false
+        }
+      }
+    },
+    "c2d": {
+      "source_session": "/home/oms/vehicle_painting_robot/scan_planning/test/hand_eye_calibration_test/log/20261026_233453_229364",
+      "image_source": "c2d",
+      "files": {
+        "calibration.json": {
+          "source_relative_path": "calibration_20261026_233811_572212/calibration.json",
+          "sha256": "7f312dca0de4974c6366aa56fd3731961bd0e629b1cc9110336ab9aabffb4832"
+        },
+        "camera.json": {
+          "source_relative_path": "camera.json",
+          "sha256": "2d50d155d49ec9136696c710c6b6da9f57bdb4d833ce0cb263b8daa99f608a30"
+        },
+        "source_settings.json": {
+          "source_relative_path": "settings.json",
+          "sha256": "89487b3ed06059824e1231cfd5748c36e0305a626196647a4e44db3ca5969016"
+        },
+        "source_robot_settings.json": {
+          "source_relative_path": "robot_settings.json",
+          "sha256": "742835ff2f378413e0bf7ed1eeffb14398a02789a1bfc215fcf0da067bc8a14b"
+        },
+        "source_manifest.json": {
+          "source_relative_path": "manifest.json",
+          "sha256": "9d4bb1cab73968a96cb6d2b06d482a2646e1c68a9fe77741d97978c1c510e40d"
+        }
+      },
+      "transforms": {
+        "calibration.json:T_flange_depth": {
+          "axis_lengths": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "determinant": 1.0000000000000002,
+          "max_orthogonality_error": 2.220446049250313e-16,
+          "passes_scan_se3_validation": true
+        }
+      }
+    }
+  }
+}

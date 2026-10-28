@@ -1,0 +1,56 @@
+ICP + Pose Graph: point_to_plane
+입력: /home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/02_reconstruction
+저장: /home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/03_registration
+ICP 쌍: pose_01 -> pose_02
+  voxel 10 mm: fitness=0.6014, RMSE=8.777 mm, 0.159초
+  voxel 5 mm: fitness=0.6165, RMSE=4.888 mm, 0.579초
+  voxel 2 mm: fitness=0.5582, RMSE=3.123 mm, 1.418초
+  accepted: 
+ICP 쌍: pose_01 -> pose_03
+  voxel 10 mm: fitness=0.3308, RMSE=10.421 mm, 0.222초
+  voxel 5 mm: fitness=0.3467, RMSE=5.501 mm, 1.357초
+  voxel 2 mm: fitness=0.3124, RMSE=3.111 mm, 0.366초
+  accepted: 
+ICP 쌍: pose_01 -> pose_04
+  voxel 10 mm: fitness=0.3349, RMSE=10.657 mm, 0.250초
+  voxel 5 mm: fitness=0.3456, RMSE=5.678 mm, 0.700초
+  voxel 2 mm: fitness=0.2846, RMSE=3.190 mm, 1.507초
+  accepted: 
+ICP 쌍: pose_01 -> pose_05
+  voxel 10 mm: fitness=0.3327, RMSE=10.146 mm, 0.301초
+  voxel 5 mm: fitness=0.3451, RMSE=5.452 mm, 0.673초
+  voxel 2 mm: fitness=0.2880, RMSE=3.259 mm, 0.958초
+  accepted: 
+ICP 쌍: pose_02 -> pose_03
+  voxel 10 mm: fitness=0.6290, RMSE=9.788 mm, 0.197초
+  voxel 5 mm: fitness=0.5897, RMSE=5.167 mm, 1.058초
+  voxel 2 mm: fitness=0.5308, RMSE=3.059 mm, 0.893초
+  accepted: 
+ICP 쌍: pose_02 -> pose_04
+  voxel 10 mm: fitness=0.4996, RMSE=10.776 mm, 0.202초
+  voxel 5 mm: fitness=0.4566, RMSE=5.527 mm, 0.725초
+  voxel 2 mm: fitness=0.3892, RMSE=3.178 mm, 1.594초
+  accepted: 
+ICP 쌍: pose_02 -> pose_05
+  voxel 10 mm: fitness=0.4894, RMSE=10.658 mm, 0.267초
+  voxel 5 mm: fitness=0.4475, RMSE=5.562 mm, 0.834초
+  voxel 2 mm: fitness=0.3816, RMSE=3.289 mm, 2.054초
+  accepted: 
+ICP 쌍: pose_03 -> pose_04
+  voxel 10 mm: fitness=0.7332, RMSE=9.750 mm, 0.082초
+  voxel 5 mm: fitness=0.6803, RMSE=5.052 mm, 0.390초
+  voxel 2 mm: fitness=0.6259, RMSE=2.953 mm, 0.809초
+  accepted: 
+ICP 쌍: pose_03 -> pose_05
+  voxel 10 mm: fitness=0.7037, RMSE=9.940 mm, 0.118초
+  voxel 5 mm: fitness=0.6539, RMSE=5.174 mm, 0.178초
+  voxel 2 mm: fitness=0.5989, RMSE=3.099 mm, 0.297초
+  accepted: 
+ICP 쌍: pose_04 -> pose_05
+  voxel 10 mm: fitness=0.8865, RMSE=7.894 mm, 0.083초
+  voxel 5 mm: fitness=0.8642, RMSE=4.558 mm, 0.239초
+  voxel 2 mm: fitness=0.7970, RMSE=3.045 mm, 0.469초
+  accepted: 
+PGO: 5 nodes, 10 edges / 고정: pose_01
+주의: PGO에서 loop 제거: pose_01 -> pose_05
+완료 (complete_with_warnings): /home/oms/vehicle_painting_robot/scan_planning/log/20261028_213231_840638/03_registration

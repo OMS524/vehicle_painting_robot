@@ -1,0 +1,108 @@
+[sequence] gantry_env x7y4z3 (/home/airo/paint_cell_ws/install/paint_viz/share/paint_viz/config/gantry/x7y4z3.yaml)
+[sequence] sequence paint_with_tool (/home/airo/paint_cell_ws/install/paint_viz/share/paint_viz/config/sequence/paint_with_tool.yaml), 슬롯 1
+[sequence] 도장 CSV: /home/airo/paint_cell_ws/nlp4cm/stitched_x7y4z3/ES300h_hood
+[sequence] 운동학 URDF paint_cell_8axis_x7y4z3_mesh.urdf, 충돌: 베어 paint_cell_8axis_x7y4z3_mesh_bare.urdf / 툴 paint_cell_8axis_x7y4z3_mesh.urdf
+[sequence] 갠트리 한계 v 0.5 m/s, a 1.6 m/s^2 (gantry_env motor_limits)
+[sequence] --- segment home (home)
+[sequence] seq_0000_home_start_joint.csv                  T=   0.00s rows=     1 tcp=link_6 tool=0 jump=0.0000 v=0.00 a=0.00
+[sequence] --- segment dock_approach (dock_approach)
+[sequence] 슬롯 1 @ [ 3.3311 -2.1019  1.7347]: 갠트리 조인트 (-0.0000, +3.5364), dock 클리어런스 5 mm, 접근 경로 경미 간섭 0쌍 (최대 -0.0 mm), 이탈 높이 0.35 m, 물러남 [0.0, 0.3, 0.0] m
+[sequence] seq_0001_dock_approach_fold_joint.csv          T=   7.71s rows=   773 tcp=link_6 tool=0 jump=0.0000 v=0.25 a=0.02
+[sequence] seq_0002_dock_approach_travel_joint.csv        T=  10.61s rows=  1062 tcp=link_6 tool=0 jump=0.0000 v=1.00 a=0.12
+[sequence] seq_0003_dock_approach_reposition_joint.csv    T=  15.43s rows=  1544 tcp=link_6 tool=0 jump=0.0000 v=0.25 a=0.01
+[sequence] seq_0004_dock_approach_descend_joint.csv       T=  10.90s rows=  1092 tcp=link_6 tool=0 jump=0.0000 v=0.07 a=0.15
+[sequence] --- segment tool_attach (tool_attach)
+[sequence] seq_0005_tool_attach_dwell_joint.csv           T=   1.00s rows=   101 tcp=link_6 tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] --- segment dock_depart (dock_depart)
+[sequence] seq_0006_dock_depart_ascend_joint.csv          T=  10.36s rows=  1038 tcp=link_6 tool=1 jump=0.0000 v=0.14 a=0.19
+[sequence] seq_0007_dock_depart_retreat_joint.csv         T=   9.00s rows=   902 tcp=link_6 tool=1 jump=0.0000 v=0.08 a=0.13
+[sequence] seq_0008_dock_depart_reposition_joint.csv      T=  15.43s rows=  1544 tcp=link_6 tool=1 jump=0.0000 v=0.25 a=0.01
+[sequence] --- segment to_paint (transit)
+[sequence] seq_0009_to_paint_travel_joint.csv             T=   8.36s rows=   837 tcp=tcp    tool=1 jump=0.0000 v=1.00 a=0.15  <-- 경미 간섭 2쌍 (침투 2.6 mm)
+[sequence] seq_0010_to_paint_reposition_joint.csv         T=   7.56s rows=   758 tcp=tcp    tool=1 jump=0.0000 v=0.50 a=0.04
+[sequence] seq_0011_to_paint_approach_joint.csv           T=   2.25s rows=   227 tcp=tcp    tool=1 jump=0.0000 v=0.15 a=0.19
+[sequence] --- segment paint (paint)
+[sequence] seq_0012_paint_000_row000_joint.csv            T=   3.21s rows=  3209 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0013_paint_001_move000_001_joint.csv       T=   0.66s rows=    67 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0014_paint_002_row001_joint.csv            T=   3.30s rows=  3304 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0015_paint_003_move001_002_joint.csv       T=   0.64s rows=    65 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0016_paint_004_row002_joint.csv            T=   3.40s rows=  3399 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0017_paint_005_move002_003_joint.csv       T=   0.57s rows=    58 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0018_paint_006_row003_joint.csv            T=   3.40s rows=  3399 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0019_paint_007_move003_004_joint.csv       T=   1.01s rows=   102 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0020_paint_008_row004_joint.csv            T=   3.40s rows=  3399 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0021_paint_009_move004_005_joint.csv       T=   0.84s rows=    85 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0022_paint_010_row005_joint.csv            T=   3.49s rows=  3494 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0023_paint_011_move005_006_joint.csv       T=   1.36s rows=   137 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0024_paint_012_row006_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0025_paint_013_move006_007_joint.csv       T=   1.38s rows=   139 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0026_paint_014_row007_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0027_paint_015_move007_008_joint.csv       T=   0.64s rows=    65 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0028_paint_016_row008_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0029_paint_017_move008_009_joint.csv       T=   0.64s rows=    65 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0030_paint_018_row009_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0031_paint_019_move009_010_joint.csv       T=   0.68s rows=    69 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0032_paint_020_row010_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0033_paint_021_move010_011_joint.csv       T=   0.62s rows=    63 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0034_paint_022_row011_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0035_paint_023_move011_012_joint.csv       T=   0.59s rows=    60 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0036_paint_024_row012_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0037_paint_025_move012_013_joint.csv       T=   0.65s rows=    66 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0038_paint_026_row013_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0039_paint_027_move013_014_joint.csv       T=   0.67s rows=    68 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0040_paint_028_row014_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0041_paint_029_move014_015_joint.csv       T=   0.61s rows=    62 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0042_paint_030_row015_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0043_paint_031_move015_016_joint.csv       T=   0.63s rows=    64 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0044_paint_032_row016_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0045_paint_033_move016_017_joint.csv       T=   0.65s rows=    66 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0046_paint_034_row017_joint.csv            T=   3.68s rows=  3685 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0047_paint_035_move017_018_joint.csv       T=   0.63s rows=    64 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0048_paint_036_row018_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0049_paint_037_move018_019_joint.csv       T=   0.74s rows=    75 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0050_paint_038_row019_joint.csv            T=   3.68s rows=  3685 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0051_paint_039_move019_020_joint.csv       T=   0.69s rows=    70 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0052_paint_040_row020_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0053_paint_041_move020_021_joint.csv       T=   0.77s rows=    78 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0054_paint_042_row021_joint.csv            T=   3.68s rows=  3685 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0055_paint_043_move021_022_joint.csv       T=   0.61s rows=    62 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0056_paint_044_row022_joint.csv            T=   3.68s rows=  3685 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0057_paint_045_move022_023_joint.csv       T=   0.69s rows=    70 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0058_paint_046_row023_joint.csv            T=   3.68s rows=  3685 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0059_paint_047_move023_024_joint.csv       T=   0.67s rows=    68 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0060_paint_048_row024_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0061_paint_049_move024_025_joint.csv       T=   0.66s rows=    67 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0062_paint_050_row025_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0063_paint_051_move025_026_joint.csv       T=   0.62s rows=    63 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0064_paint_052_row026_joint.csv            T=   3.59s rows=  3590 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0065_paint_053_move026_027_joint.csv       T=   0.65s rows=    66 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0066_paint_054_row027_joint.csv            T=   3.49s rows=  3494 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0067_paint_055_move027_028_joint.csv       T=   0.79s rows=    80 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0068_paint_056_row028_joint.csv            T=   3.49s rows=  3494 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0069_paint_057_move028_029_joint.csv       T=   0.60s rows=    61 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0070_paint_058_row029_joint.csv            T=   3.40s rows=  3399 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0071_paint_059_move029_030_joint.csv       T=   0.80s rows=    81 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0072_paint_060_row030_joint.csv            T=   3.21s rows=  3209 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0073_paint_061_move030_031_joint.csv       T=   1.32s rows=   133 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] seq_0074_paint_062_row031_joint.csv            T=   2.45s rows=  2447 tcp=tcp    tool=1 jump=0.0000 v=0.00 a=0.00
+[sequence] --- segment retreat (retreat)
+[sequence] seq_0075_retreat_lift_joint.csv                T=   2.25s rows=   227 tcp=tcp    tool=1 jump=0.0000 v=0.15 a=0.19
+[sequence] seq_0076_retreat_reposition_joint.csv          T=   6.85s rows=   687 tcp=tcp    tool=1 jump=0.0000 v=0.50 a=0.04
+[sequence] --- segment to_dock (transit)
+[sequence] seq_0077_to_dock_travel_joint.csv              T=   7.92s rows=   794 tcp=tcp    tool=1 jump=0.0000 v=1.00 a=0.16
+[sequence] --- segment dock_return (dock_return)
+[sequence] seq_0078_dock_return_reposition_joint.csv      T=  15.43s rows=  1544 tcp=link_6 tool=1 jump=0.0000 v=0.25 a=0.01
+[sequence] seq_0079_dock_return_approach_joint.csv        T=   9.00s rows=   902 tcp=link_6 tool=1 jump=0.0000 v=0.08 a=0.13
+[sequence] seq_0080_dock_return_descend_joint.csv         T=  25.90s rows=  2592 tcp=link_6 tool=1 jump=0.0000 v=0.06 a=0.08
+[sequence] --- segment tool_detach (tool_detach)
+[sequence] seq_0081_tool_detach_dwell_joint.csv           T=   1.00s rows=   101 tcp=link_6 tool=0 jump=0.0000 v=0.00 a=0.00
+[sequence] --- segment dock_depart_bare (dock_depart)
+[sequence] seq_0082_dock_depart_bare_ascend_joint.csv     T=   4.36s rows=   438 tcp=link_6 tool=0 jump=0.0000 v=0.18 a=0.40
+[sequence] seq_0083_dock_depart_bare_reposition_joint.csv T=  15.43s rows=  1544 tcp=link_6 tool=0 jump=0.0000 v=0.25 a=0.01
+[sequence] --- segment go_home (home)
+[sequence] seq_0084_go_home_travel_joint.csv              T=  10.61s rows=  1062 tcp=link_6 tool=0 jump=0.0000 v=1.00 a=0.12
+[sequence] seq_0085_go_home_unfold_joint.csv              T=   7.71s rows=   773 tcp=link_6 tool=0 jump=0.0000 v=0.25 a=0.02
+[sequence] 통합 명령 CSV sequence_command.csv: 340218 행, 340.22 s (dt 0.001)
+[sequence] 완료: stage 86개, 총 340.2 s -> /home/airo/paint_cell_ws/sequence_x7y4z3/ES300h_hood
+[sequence] 검증: 경계 관절 점프 최대 0.00000 (mm|deg), link_6 점프 최대 0.000 mm / 0.000 deg, 충돌 stage 0 (경미 간섭 ≤8 mm: 1), 관절한계 위반 stage 0, 한계 초과 stage 0
+[sequence]   경미 간섭 seq_0009_to_paint_travel_joint.csv: {'world_base_19<->link_4_1': 2, 'world_base_19<->link_5_1': 5} (침투 2.6 mm)

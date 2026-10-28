@@ -1,0 +1,58 @@
+project:
+  input: /home/oms/vehicle_painting_robot/path_planning/test/data/ES300h_trunk.ply
+  paint_dir:
+  - 0.0
+  - 0.0
+  - -1.0
+  scan_dir:
+  - 0.0
+  - 1.0
+  - 0.0
+painting_trajectory:
+  surface_extraction:
+    spline_start_side: top
+    spline_start_offset: 0.02
+    spline_spacing: 0.05
+    spline_half_width: 0.005
+    slicing_method: surface_adaptive
+    geodesic_normal_neighbor_count: 20
+    geodesic_band_half_width: 0.0
+    guide_extension_min_bin_points: 8
+    geodesic_min_band_points: 8
+    curvature_slice_angle_deg: 20.0
+  correction:
+    endpoint:
+      quantize_step: 0.001
+      graph_neighbor_count: 10
+      component_min_arc_length: 0.003
+      component_merge_backtrack_tolerance: 0.1
+    support:
+      support_point_spacing: 0.0025
+      tangent_half_width: 0.0025
+      anchor_max_distance: 0.25
+      transition_count: 4
+      endpoint_transition_count: 8
+    optimization:
+      lambda_data: 0.1
+      lambda_stretch: 1.0
+      lambda_bend: 100.0
+      lambda_end: 0.01
+      regularizer: 1.0e-09
+  offset:
+    offset_point_spacing: 0.025
+    offset_distance: 0.15
+  spline:
+    spline_point_spacing: 0.0001
+    final_point_spacing: 0.04
+    endpoint_extension_length: 0.1
+    raster_zigzag: true
+    paint_check_distance: 0.45
+    paint_check_half_width: 0.005
+    paint_min_false_length: 0.5
+    paint_min_true_length: 0.005
+  structuring:
+    frame_id: world
+    save_csv: true
+    csv_output_dir: /home/oms/vehicle_painting_robot/path_planning/log/audit_20261028_213235_298318
+    painting_trajectory_csv_name: painting_trajectory.csv
+    trajectory_csv_name_format: trajectory_{row_index:03d}.csv

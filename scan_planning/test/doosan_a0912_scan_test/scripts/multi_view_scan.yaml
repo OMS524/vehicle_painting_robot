@@ -1,0 +1,139 @@
+# 상대 경로는 이 YAML 파일 기준. ROS 없이 scan/control 별도 Python 프로세스 사용.
+control_python: ~/miniconda3/envs/vehicle_painting_robot_control/bin/python
+control_wrapper: ../../../robot_controller/doosan_a0912_controller/test/scripts/joint_target_test.py
+control_library: ../../../robot_controller/doosan_a0912_controller/test/build-scan/libdoosan_controller_c_api.so
+xacro: ../../../description/xacro/a0912_to_tool_scan.xacro
+output_dir: ../log
+
+# 선택한 TF와 실제 로봇/브라켓/카메라 장착 상태 및 관절 영점/축을 확인한 후에만 true.
+mounting_tf_confirmed: true
+
+# 두 스캔 스크립트 공통. 원본 Depth 취득은 동일하며 베이스 좌표 변환에 사용할 TF를 선택.
+pose_estimation:
+  source: hand_eye  # urdf / hand_eye
+  # urdf: 실측 관절각 + Xacro FK/장착 TF (기존 방식)
+  # hand_eye: SDK 실측 플랜지 자세 × 아래 결과 JSON의 T_flange_depth
+  # hand_eye_calibration_test/log/<촬영시각>/calibration_<계산시각>/calibration.json 지정.
+  # 상대 경로는 이 YAML 기준. 핸드아이 품질 검사 통과 결과만 허용하며 누락/실패 시 실행 차단.
+  # 원본/길이 보정본 모두 전체 calibration.json: raw/ 또는 unit_axis/ 폴더로 선택.
+  # 파일의 T_flange_depth를 추가 보정 없이 점군 변환에 적용.
+  hand_eye_calibration_file: ../../hand_eye_calibration_test/log/20261026_233453_229364/calibration_20261026_233811_572212/calibration.json
+  # hand_eye + target_frame=camera_depth_optical_frame이면 IK 목표 변환에도 동일 보정 TF 적용.
+
+robot:
+  ip: 192.168.137.100
+  port: 12345
+  rt_port: 12347
+  connect_timeout_sec: 15
+  move_timeout_sec: 120
+  max_velocity_deg_s: 10.0
+  acceleration_deg_s2: 10.0
+  # 이동 프로파일 계산에 사용하는 허용 오차. 촬영 허용 조건에는 사용하지 않는다.
+  target_tolerance_deg: 0.1
+  command_time_sec: 0.01
+  # 각 이동의 현재 관절각 대비 최대 변화. 충돌 검사를 대체하지 않습니다.
+  max_move_delta_deg: 250.0
+  # 이동 명령 종료 후 실제 관절 속도/자세가 이 시간 동안 안정되면 촬영한다.
+  # 목표각과의 차이는 기록. 정합 TF는 촬영 직후 실측 자세와 pose_estimation 설정으로 계산한다.
+  settle_sec: 1.0
+  settle_timeout_sec: 10.0
+  stationary_velocity_deg_s: 0.05
+  capture_drift_deg: 0.05
+
+# Cartesian 입력 규약: base_link 기준 목표 링크의 절대 자세.
+# 위치 mm / 고정축 roll,pitch,yaw deg. R = Rz(yaw) @ Ry(pitch) @ Rx(roll).
+# 두산 펜던트의 Euler ZYZ 자세값을 그대로 RPY에 넣으면 안 됩니다.
+cartesian:
+  # link_6: 플랜지 축 / bracket_link: 브라켓 축(플랜지 대비 회전 있음)
+  # camera_depth_optical_frame: Depth 광학 원점/축. 펜던트의 활성 TCP와 무관.
+  target_frame: link_6
+  # IK는 두산 SDK에서 계산합니다. 기존 Pinocchio 허용 오차/반복 횟수 설정은 사용하지 않습니다.
+
+# 시점마다 joint_deg 또는 pose_mm_deg 중 하나만 입력하세요(동시 지정 금지).
+# Cartesian으로 바꾸려면 해당 joint_deg 줄을 지우고 아래 형식으로 교체:
+#   pose_mm_deg: [x, y, z, roll, pitch, yaw]  # 실제 숫자 6개, mm/deg
+#   pose_mm_deg: null                       # 미입력: 실행 차단
+# 기존에 입력한 목표 관절각은 보존했습니다. 임의의 Cartesian 목표를 넣지 않습니다.
+# 시점은 1개 이상 원하는 만큼 추가할 수 있고, 아래 목록 순서대로 이동/촬영합니다.
+# name은 중복 없이 지정하세요. 문자(한글 포함), 숫자, _, - 사용 가능 (결과 폴더명).
+# 이름으로 촬영 위치/시선 방향을 자동 계산하지 않습니다.
+# null 상태에서는 --execute를 붙여도 로봇에 연결하지 않습니다.
+# roll: 부품 기준 왼쪽/오른쪽 벡터 (내리면 아래 올리면 위)
+# pitch: 부품 기준 정면/후면 벡터
+# yaw: 부품 기준 위/아래 벡터
+views:
+  # ========== 사선 뷰 ==========
+  # - name: view_01_top_left
+  #   pose_mm_deg: [500.0, 500.0, 850.0, 160.0, 0.0, -110.0]
+  # - name: view_02_top_front
+  #   pose_mm_deg: [500.0, 0.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_03_top_right
+  #   pose_mm_deg: [500.0, -500.0, 850.0, 160.0, 0.0, -70.0]
+  # - name: view_01_middle_left
+  #   pose_mm_deg: [500.0, 600.0, 500.0, 180.0, 0.0, -120.0]
+  # - name: view_01_middle_front
+  #   pose_mm_deg: [500.0, 0.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_middle_right
+  #   pose_mm_deg: [500.0, -700.0, 500.0, 180.0, 0.0, -60.0]
+  # - name: view_01_bottom_left
+  #   pose_mm_deg: [500.0, 500.0, 200.0, 180.0, 0.0, -110.0]
+  # - name: view_01_bottom_front
+  #   pose_mm_deg: [500.0, 0.0, 200.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_right
+  #   pose_mm_deg: [500.0, -500.0, 200.0, 180.0, 0.0, -70.0]
+  # # ========== 정면 뷰 ==========
+  # - name: view_01_top_left
+  #   pose_mm_deg: [500.0, 250.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_02_top_front
+  #   pose_mm_deg: [500.0, 0.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_03_top_right
+  #   pose_mm_deg: [500.0, -250.0, 850.0, 160.0, 0.0, -90.0]
+  # - name: view_01_middle_left
+  #   pose_mm_deg: [500.0, 250.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_middle_front
+  #   pose_mm_deg: [500.0, 0.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_middle_right
+  #   pose_mm_deg: [500.0, -250.0, 500.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_left
+  #   pose_mm_deg: [500.0, 250.0, 200.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_front
+  #   pose_mm_deg: [500.0, 0.0, 200.0, 180.0, 0.0, -90.0]
+  # - name: view_01_bottom_right
+  #   pose_mm_deg: [500.0, -250.0, 200.0, 180.0, 0.0, -90.0]
+
+  - name: pose_01
+    joint_deg: [81.77, 12.77, 88.52, 2.71, 73.52, 14.50]
+  - name: pose_02
+    joint_deg: [86.09, -20.87, 90.86, 15.74, 107.66, 7.90]
+  - name: pose_03
+    joint_deg: [-67.80, -16.62, 92.50, -15.10, 103.28, -174.64]
+  - name: pose_04
+    joint_deg: [-75.53, 11.68, 108.63, -2.60, 59.07, -184.32]
+  - name: pose_05
+    joint_deg: [-82.01, 26.71, 79.96, -3.33, 69.75, -199.57]
+
+
+camera:
+  serial_number: ""  # 한 대일 때만 자동 선택. 여러 대면 시리얼 필수.
+  capture_color: true  # RGB 촬영 및 컬러 점군 저장. false이면 시점별 구분색 사용.
+  # 0: Depth와 같은 FPS의 첫 지원 컬러 프로파일. MJPG를 우선 선택한다.
+  color_width: 0
+  color_height: 0
+  color_max_time_delta_ms: 50.0
+  # 0: SDK가 제공하는 해당 항목의 기본/첫 Y16 프로파일 선택.
+  width: 0
+  height: 0
+  fps: 0
+  warmup_frames: 30
+  capture_frames: 30  # 같은 자세에서 수집할 Depth 수. 0을 제외한 중앙값 사용.
+  min_valid_frames: 3  # 픽셀별 최소 측정 횟수(0 제외). 미달이면 0. 단일 프레임은 두 값을 모두 1로 설정.
+  capture_timeout_sec: 20.0
+  min_depth_mm: 200.0
+  max_depth_mm: 3000.0
+  min_points: 1000
+
+reconstruction:
+  voxel_size_mm: 2.0  # 통합본만 다운샘플링. 원본/시점별 PLY는 보존.
+  # 로봇 base_link 좌표계 ROI. null이면 깊이 범위 내 전체를 합칩니다.
+  roi_min_mm: null  # 예: [300, -500, 0] (실제 대상 위치에 맞게 지정)
+  roi_max_mm: null  # 예: [1200, 500, 1500]

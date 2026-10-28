@@ -1,0 +1,30 @@
+# 단계 3: 모든 뷰 쌍 ICP + Pose Graph Optimization.
+# false이면 단계 2의 TF 재구성 결과를 그대로 클러스터링합니다.
+enabled: true
+method: point_to_plane  # point_to_point / point_to_plane / generalized / colored
+reference_view: null   # null: 첫 뷰 고정
+icp:
+  # [계산 voxel mm, 대응점 최대 거리 mm, 최대 반복]
+  scales: [[10.0, 30.0, 60], [5.0, 15.0, 40], [2.0, 6.0, 30]]
+  evaluation_voxel_mm: 5.0
+  evaluation_distance_mm: 10.0
+  output_voxel_mm: 2.0
+  normal_radius_factor: 3.0
+  normal_max_nn: 30
+  relative_fitness: 0.000001
+  relative_rmse: 0.000001
+  colored_lambda_geometric: 0.968
+  generalized_epsilon: 0.001
+  roi_min_mm: null
+  roi_max_mm: null
+  warn_min_fitness: 0.15
+  warn_centroid_shift_mm: 50.0
+  warn_rotation_deg: 5.0
+graph:
+  min_fitness: 0.15
+  min_correspondences: 30
+  max_pair_rmse_mm: 6.0
+  max_pair_centroid_shift_mm: 50.0
+  max_pair_rotation_deg: 5.0
+  edge_prune_threshold: 0.25
+  preference_loop_closure: 1.0

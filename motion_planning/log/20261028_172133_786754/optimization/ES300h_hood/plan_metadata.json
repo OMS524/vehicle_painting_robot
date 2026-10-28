@@ -1,0 +1,179 @@
+{
+  "script": "2_optimization.py",
+  "generated_at": "2026-10-28T17:21:39+09:00",
+  "gantry_env": {
+    "name": "x7y4z3",
+    "config_file": "/home/oms/vehicle_painting_robot/motion_planning/config/gantry/x7y4z3.yaml",
+    "convention": "corner",
+    "rail_m": {
+      "x_length": 7.0,
+      "y_length": 4.0,
+      "z_height": 3.0
+    },
+    "stroke_m": {
+      "x": 6.8264,
+      "y": 3.8864
+    },
+    "bridge_z_m": 3.0,
+    "mount_z_m": 2.847,
+    "joint_limits": {
+      "gantry_x": [
+        0.0,
+        6.8264
+      ],
+      "gantry_y": [
+        0.0,
+        3.8864
+      ]
+    },
+    "world_travel_m": {
+      "x": [
+        -3.4132,
+        3.4132
+      ],
+      "y": [
+        -1.9432,
+        1.9432
+      ]
+    },
+    "arm_mount": {
+      "xyz": [
+        0.32304,
+        0.0,
+        -0.153
+      ],
+      "rpy": [
+        3.141592653589793,
+        0.0,
+        -1.5707963267948966
+      ]
+    },
+    "toolchanger_slots": [
+      [
+        "toolchanger_slot_1",
+        3.3310999999999997,
+        -2.1019,
+        1.7347,
+        true
+      ],
+      [
+        "toolchanger_slot_2",
+        3.5311,
+        -2.1019,
+        1.7347,
+        true
+      ],
+      [
+        "toolchanger_slot_3",
+        3.3310999999999997,
+        -2.3019,
+        2.0617,
+        true
+      ],
+      [
+        "toolchanger_slot_4",
+        3.5311,
+        -2.3019,
+        2.0617,
+        false
+      ]
+    ],
+    "part_xyz_offset": [
+      0.0,
+      0.0,
+      0.781
+    ],
+    "motor_limits": {
+      "gantry_velocity_m_s": 0.5,
+      "gantry_acceleration_m_s2": 1.6
+    }
+  },
+  "urdf": "/home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf",
+  "tcp_frame": "tcp",
+  "joint_names": [
+    "gantry_x",
+    "gantry_y",
+    "joint_1",
+    "joint_2",
+    "joint_3",
+    "joint_4",
+    "joint_5",
+    "joint_6"
+  ],
+  "part_xyz": [
+    -0.751,
+    -1.316,
+    2.66
+  ],
+  "part_rpy": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "initial_joint": "3.4132,1.9432,90,0,90,-90,0,0",
+  "inputs": [
+    "/home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/input/ES300h_hood/trajectory_000.csv",
+    "/home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/input/ES300h_hood/trajectory_001.csv"
+  ],
+  "outputs": [
+    "/home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/optimization/ES300h_hood/trajectory_000_nlp_joint.csv",
+    "/home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/optimization/ES300h_hood/trajectory_001_nlp_joint.csv",
+    "/home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/optimization/ES300h_hood/trajectory_000_nlp_command.csv",
+    "/home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/optimization/ES300h_hood/trajectory_001_nlp_command.csv"
+  ],
+  "args": {
+    "acceleration_weight": 0.0001,
+    "arm_singularity_weight": 0.001,
+    "center_weight": 0.001,
+    "command_dt": 0.001,
+    "command_interp": "tcp",
+    "command_time_sec": 0.001,
+    "gantry_acceleration_weight": 0.01,
+    "gantry_env": "/home/oms/vehicle_painting_robot/motion_planning/config/gantry/x7y4z3.yaml",
+    "gantry_velocity_weight": 0.01,
+    "initial_joint_deg": "3.4132,1.9432,90,0,90,-90,0,0",
+    "ipopt_max_iter": 800,
+    "ipopt_print_level": 0,
+    "ipopt_tol": 1e-05,
+    "joint_bounds_deg": "joint_3=25:135,joint_5=25:135",
+    "joint_position_gain": 4.0,
+    "max_gantry_acceleration_m_s2": 1.6,
+    "max_gantry_velocity_m_s": 0.5,
+    "max_joint_acceleration_deg_s2": 500.0,
+    "max_joint_step_deg": 20.0,
+    "max_joint_velocity_deg_s": 70.0,
+    "max_points": 0,
+    "min_manipulability": 0.0,
+    "node_limit_scale": "0.85,0.25",
+    "orientation_tolerance_deg": 1.0,
+    "orientation_weight": 100.0,
+    "output": "/home/oms/vehicle_painting_robot/motion_planning/log/20261028_172133_786754/optimization/ES300h_hood",
+    "part_rpy": "0,0,0",
+    "part_xyz": "-0.751,-1.316,2.66",
+    "position_tolerance": 0.002,
+    "position_weight": 1000.0,
+    "preposition_max_joint_acceleration_deg_s2": 100.0,
+    "preposition_max_joint_velocity_deg_s": 15.0,
+    "singularity_weight": 1e-08,
+    "stride": 1,
+    "tcp_frame": "tcp",
+    "tcp_path_axis": "y",
+    "tcp_spray_axis": "z",
+    "tool_clearance_joints": "joint_3,joint_5",
+    "tool_clearance_m": 0.35,
+    "tool_clearance_weight": 100.0,
+    "tool_tip_offset": "0.30,0,0",
+    "urdf": "/home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf",
+    "velocity_weight": 0.001
+  },
+  "joint_bounds_deg": "joint_3=25:135,joint_5=25:135",
+  "arm_singularity_weight": 0.001,
+  "gantry_limits": {
+    "velocity_m_s": 0.5,
+    "acceleration_m_s2": 1.6
+  },
+  "gantry_smoothness_weights": {
+    "velocity": 0.01,
+    "acceleration": 0.01
+  }
+}

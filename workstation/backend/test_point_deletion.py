@@ -11,13 +11,13 @@ import numpy as np
 
 import workstation_backend as backend
 
-PLANNER = Path(__file__).resolve().parents[2] / "painting_trajectory_planner/path_planner"
+PLANNER = Path(__file__).resolve().parents[2] / "path_planning"
 Config, _, spline, _ = backend._configure_planner_imports(PLANNER)
 
 
 def make_state(zigzag=False, descending=False):
     rows = [np.array([[x, y, 0.0] for x in [0, .04, .08, .12, .16, .18]]) for y in [0, .1]]
-    settings = backend.yaml.safe_load((PLANNER / "config/painting_trajectory.yaml").read_text())["painting_trajectory"]
+    settings = backend.yaml.safe_load((PLANNER / "config/painting_path.yaml").read_text())["painting_trajectory"]
     settings["spline"].update(raster_zigzag=zigzag, endpoint_extension_length=0.0, final_point_spacing=.04)
     config = Config.from_dict(settings)
     state = spline({
@@ -28,7 +28,7 @@ def make_state(zigzag=False, descending=False):
         "work_frame_world": np.eye(3), "work_origin_world": np.zeros(3),
         "spline_start_side": "top" if descending else "bottom",
     }, **config.spline.to_kwargs())
-    # Represent the sorted trajectory-to-source mapping as in real sliced data.
+    # Geometric medians must not change the trajectory-to-source mapping.
     state["paint_spline_row_slice_positions"] = [0, .1]
     state["_workstation_config"] = config.to_dict()
     state["_workstation_edit_controls"] = backend._control_points_from_state(state)
@@ -48,6 +48,16 @@ def delete(state, points, rows=()):
 
 
 class PointDeletionTests(unittest.TestCase):
+    def test_edit_controls_match_structured_row_order(self):
+        from painting_path_planner import structure_painting_trajectory
+        for side in (False, True):
+            state = make_state(zigzag=True, descending=side)
+            trajectory = structure_painting_trajectory(state)
+            self.assertEqual(backend._structured_source_row_indices(state), [0, 1])
+            for row in trajectory.rows:
+                edited = [p["position"] for p in controls(state) if p["rowIndex"] == row.row_index]
+                np.testing.assert_allclose(edited, [p.position for p in row.points])
+
     def test_noop_preserves_offset_rows(self):
         state = make_state()
         before = [row.copy() for row in state["offset_rows"]]

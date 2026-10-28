@@ -1,0 +1,14 @@
+# 단계 4: DBSCAN -> 촬영 광축 직선의 최소제곱 기준점 -> 가까운 유효 군집.
+# 보정된 점군을 입력하면 보정된 카메라 자세를 함께 사용합니다.
+# SAM/커스텀 모델은 이 설정에 포함하지 않으며 test에 그대로 둡니다.
+method: dbscan
+clustering:
+  point_cloud_filename: merged.ply
+  voxel_size_mm: 5.0         # 계산용 다운샘플. part.ply는 입력 점군의 선택 점을 보존.
+  dbscan_eps_mm: 12.0
+  dbscan_min_points: 8
+  min_cluster_voxels: 300
+  target_point_base_mm: null # 시선이 평행하면 기준점을 직접 지정: [x, y, z] mm
+  select_cluster_ids: null   # 자동 선택 대신 [0] 또는 [0, 2]
+  max_ray_rms_mm: 100.0
+  max_target_distance_mm: 600.0

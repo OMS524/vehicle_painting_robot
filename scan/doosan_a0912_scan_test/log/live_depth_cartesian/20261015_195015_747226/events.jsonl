@@ -1,7 +1,0 @@
-{"at": "2026-10-15T19:50:24.232898+09:00", "event": "initialize_requested"}
-{"at": "2026-10-15T19:50:31.001531+09:00", "event": "initialize_complete", "result": {"joint_deg": [19.87152099609375, -32.6536750793457, 90.75288391113281, 14.401338577270508, 115.73243713378906, 8.449121475219727], "joint_velocity_deg_s": [0.0, 0.0, -0.0, 0.0, -0.0, 0.0], "host_query_start_ns": 1792061430989427788, "host_query_end_ns": 1792061430989488231, "motion_running": false}}
-{"at": "2026-10-15T19:50:51.129035+09:00", "event": "move_requested", "pose_mm_deg": [-25.0, 550.0, 550.0, 118.0, 0.0, 0.0], "target_frame": "link_6"}
-{"at": "2026-10-15T19:50:51.393006+09:00", "event": "move_rejected", "reason": "ik_no_solution", "error": "두산 SDK IK 해 없음: 동작 영역 밖 (status=1).", "sdk_status": 1}
-{"at": "2026-10-15T19:51:05.046988+09:00", "event": "move_requested", "pose_mm_deg": [-25.0, 550.0, 550.0, 120.0, 0.0, 0.0], "target_frame": "link_6"}
-{"at": "2026-10-15T19:51:05.306701+09:00", "event": "move_rejected", "reason": "ik_no_solution", "error": "두산 SDK IK 해 없음: 동작 영역 밖 (status=1).", "sdk_status": 1}
-{"at": "2026-10-15T19:51:44.183989+09:00", "event": "move_requested", "pose_mm_deg": [175.0, 600.0, 500.0, 117.0, 0.0, 32.0], "target_frame": "link_6"}

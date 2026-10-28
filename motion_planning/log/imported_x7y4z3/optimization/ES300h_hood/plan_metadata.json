@@ -1,0 +1,269 @@
+{
+  "script": "trajectory_nlp.py",
+  "generated_at": "2026-10-20T05:24:35+09:00",
+  "gantry_env": {
+    "name": "x7y4z3",
+    "config_file": "/home/airo/paint_cell_ws/install/paint_viz/share/paint_viz/config/gantry/x7y4z3.yaml",
+    "convention": "corner",
+    "rail_m": {
+      "x_length": 7.0,
+      "y_length": 4.0,
+      "z_height": 3.0
+    },
+    "stroke_m": {
+      "x": 6.8264,
+      "y": 3.8864
+    },
+    "bridge_z_m": 3.0,
+    "mount_z_m": 2.847,
+    "joint_limits": {
+      "gantry_x": [
+        0.0,
+        6.8264
+      ],
+      "gantry_y": [
+        0.0,
+        3.8864
+      ]
+    },
+    "world_travel_m": {
+      "x": [
+        -3.4132,
+        3.4132
+      ],
+      "y": [
+        -1.9432,
+        1.9432
+      ]
+    },
+    "arm_mount": {
+      "xyz": [
+        0.32304,
+        0.0,
+        -0.153
+      ],
+      "rpy": [
+        3.141592653589793,
+        0.0,
+        -1.5707963267948966
+      ]
+    },
+    "toolchanger_slots": [
+      [
+        "toolchanger_slot_1",
+        3.3310999999999997,
+        -2.1019,
+        1.7347,
+        true
+      ],
+      [
+        "toolchanger_slot_2",
+        3.5311,
+        -2.1019,
+        1.7347,
+        true
+      ],
+      [
+        "toolchanger_slot_3",
+        3.3310999999999997,
+        -2.3019,
+        2.0617,
+        true
+      ],
+      [
+        "toolchanger_slot_4",
+        3.5311,
+        -2.3019,
+        2.0617,
+        false
+      ]
+    ],
+    "part_xyz_offset": [
+      0.0,
+      0.0,
+      0.781
+    ],
+    "motor_limits": {
+      "gantry_velocity_m_s": 0.5,
+      "gantry_acceleration_m_s2": 1.6
+    }
+  },
+  "urdf": "/home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3.urdf",
+  "tcp_frame": "tcp",
+  "joint_names": [
+    "gantry_x",
+    "gantry_y",
+    "joint_1",
+    "joint_2",
+    "joint_3",
+    "joint_4",
+    "joint_5",
+    "joint_6"
+  ],
+  "part_xyz": [
+    -0.751,
+    -1.316,
+    2.66
+  ],
+  "part_rpy": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "initial_joint": "3.4132,1.9432,90,0,90,-90,0,0",
+  "inputs": [
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_000.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_001.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_002.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_003.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_004.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_005.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_006.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_007.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_008.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_009.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_010.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_011.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_012.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_013.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_014.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_015.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_016.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_017.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_018.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_019.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_020.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_021.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_022.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_023.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_024.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_025.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_026.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_027.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_028.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_029.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_030.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/input/ES300h_hood/trajectory_031.csv"
+  ],
+  "outputs": [
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_000_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_001_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_002_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_003_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_004_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_005_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_006_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_007_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_008_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_009_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_010_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_011_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_012_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_013_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_014_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_015_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_016_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_017_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_018_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_019_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_020_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_021_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_022_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_023_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_024_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_025_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_026_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_027_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_028_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_029_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_030_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_031_nlp_joint.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_000_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_001_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_002_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_003_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_004_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_005_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_006_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_007_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_008_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_009_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_010_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_011_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_012_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_013_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_014_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_015_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_016_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_017_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_018_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_019_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_020_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_021_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_022_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_023_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_024_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_025_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_026_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_027_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_028_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_029_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_030_nlp_command.csv",
+    "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood/trajectory_031_nlp_command.csv"
+  ],
+  "args": {
+    "acceleration_weight": 0.0001,
+    "arm_singularity_weight": 0.001,
+    "center_weight": 0.001,
+    "command_dt": 0.001,
+    "command_interp": "tcp",
+    "command_time_sec": 0.001,
+    "gantry_acceleration_weight": 0.01,
+    "gantry_env": "x7y4z3",
+    "gantry_velocity_weight": 0.01,
+    "initial_joint_deg": "3.4132,1.9432,90,0,90,-90,0,0",
+    "ipopt_max_iter": 800,
+    "ipopt_print_level": 0,
+    "ipopt_tol": 1e-05,
+    "joint_bounds_deg": "joint_3=25:135,joint_5=25:135",
+    "joint_position_gain": 4.0,
+    "max_gantry_acceleration_m_s2": 1.6,
+    "max_gantry_velocity_m_s": 0.5,
+    "max_joint_acceleration_deg_s2": 500.0,
+    "max_joint_step_deg": 20.0,
+    "max_joint_velocity_deg_s": 70.0,
+    "max_points": 0,
+    "min_manipulability": 0.0,
+    "node_limit_scale": "0.85,0.25",
+    "orientation_tolerance_deg": 1.0,
+    "orientation_weight": 100.0,
+    "output": "/home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_hood",
+    "part_rpy": "0,0,0",
+    "part_xyz": "-0.751,-1.316,2.66",
+    "position_tolerance": 0.002,
+    "position_weight": 1000.0,
+    "preposition_max_joint_acceleration_deg_s2": 100.0,
+    "preposition_max_joint_velocity_deg_s": 15.0,
+    "singularity_weight": 1e-08,
+    "stride": 1,
+    "tcp_frame": "tcp",
+    "tcp_path_axis": "y",
+    "tcp_spray_axis": "z",
+    "tool_clearance_joints": "joint_3,joint_5",
+    "tool_clearance_m": 0.35,
+    "tool_clearance_weight": 100.0,
+    "tool_tip_offset": "0.30,0,0",
+    "urdf": "/home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3.urdf",
+    "velocity_weight": 0.001
+  },
+  "joint_bounds_deg": "joint_3=25:135,joint_5=25:135",
+  "arm_singularity_weight": 0.001,
+  "gantry_limits": {
+    "velocity_m_s": 0.5,
+    "acceleration_m_s2": 1.6
+  },
+  "gantry_smoothness_weights": {
+    "velocity": 0.01,
+    "acceleration": 0.01
+  }
+}

@@ -1,0 +1,10 @@
+# 우측 펜더 눕힌 배치 (도장면 위로, Rx+90) — run_fender_flat.sh 와 동일
+scene:
+  part_file: $REPO/path_planning/test/data/NX350h_right_fender.ply
+  trajectory_dir: $MOTION_ROOT/test/input/NX350h_right_fender
+  part_xyz: [-0.966, -0.744, 1.151]
+  part_rpy: [1.5707963, 0.0, 0.0]
+  max_part_points: 120000
+  max_rows: 0
+planning:
+  input_part: NX350h_right_fender

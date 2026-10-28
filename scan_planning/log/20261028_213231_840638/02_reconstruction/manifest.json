@@ -1,0 +1,52 @@
+{
+  "schema": "scan_geometry_v1",
+  "status": "complete",
+  "calculation_status": "complete",
+  "reference_frame": "base_link",
+  "units": {
+    "point_cloud": "m"
+  },
+  "icp_applied": false,
+  "source_directory": "/home/oms/vehicle_painting_robot/scan_planning/test/doosan_a0912_scan_test/log/20261026_235704_386974",
+  "point_count": 1237613,
+  "raw_point_count": 1312349,
+  "views": [
+    {
+      "name": "pose_01",
+      "status": "accepted",
+      "cloud": "base.ply",
+      "point_count": 260319
+    },
+    {
+      "name": "pose_02",
+      "status": "accepted",
+      "cloud": "base.ply",
+      "point_count": 277827
+    },
+    {
+      "name": "pose_03",
+      "status": "accepted",
+      "cloud": "base.ply",
+      "point_count": 267049
+    },
+    {
+      "name": "pose_04",
+      "status": "accepted",
+      "cloud": "base.ply",
+      "point_count": 264292
+    },
+    {
+      "name": "pose_05",
+      "status": "accepted",
+      "cloud": "base.ply",
+      "point_count": 242862
+    }
+  ],
+  "color_mode": "rgb",
+  "reconstruction_voxel_mm": 2.0,
+  "input": {
+    "directory": "/home/oms/vehicle_painting_robot/scan_planning/test/doosan_a0912_scan_test/log/20261026_235704_386974",
+    "format": "three_view_scan",
+    "manifest_sha256": "f899658a015bfdf0fb1aaf33815b4303972b0a99d54383a0c42b9dd9b7c6935d"
+  }
+}

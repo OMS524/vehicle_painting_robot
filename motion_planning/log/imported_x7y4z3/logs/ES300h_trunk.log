@@ -1,0 +1,353 @@
+[nlp] gantry env: x7y4z3 (/home/airo/paint_cell_ws/install/paint_viz/share/paint_viz/config/gantry/x7y4z3.yaml)
+[nlp] TCP frame: tcp
+[nlp] joint bound override joint_3: [25.00, 135.00] deg
+[nlp] joint bound override joint_5: [25.00, 135.00] deg
+[nlp] arm singularity weight: 0.001
+[nlp] node limit scale: 0.85,0.25 (env)
+[nlp] gantry limits: v 0.5 m/s (env), a 1.6 m/s^2 (env); gantry smoothness weights: v 0.01 (env), a 0.01 (env)
+[nlp] tool clearance: tip 0.30,0,0 (TCP frame) >= 0.35 m from joint_3,joint_5, weight 100
+[nlp] URDF: /home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3.urdf
+[nlp] joints: gantry_x, gantry_y, joint_1, joint_2, joint_3, joint_4, joint_5, joint_6
+[nlp] prismatic joints: 2 of 8
+[nlp] TCP spray axis: z path axis: y
+[nlp] part placement xyz=[-0.806, -1.367, 2.584] rpy=[0.0, 0.0, 0.0]
+[nlp] output: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk
+[nlp] input #1/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_000.csv
+[nlp] loaded points=38 duration=3.874s stride=1 max_points=0
+[nlp] seed 1/38 pos_err=0.00030m rot_resid=0.00100
+[nlp] seed 26/38 pos_err=0.00003m rot_resid=0.00005
+[nlp] seed 38/38 pos_err=0.00008m rot_resid=0.00001
+[nlp] solving NLP points=38 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 819.43ms (  8.28ms)  58.76ms (593.53us)        99
+       nlp_g  | 340.20ms (  3.44ms)  27.45ms (277.23us)        99
+  nlp_grad_f  |   1.32 s ( 21.33ms) 101.91ms (  1.64ms)        62
+  nlp_hess_l  |  14.65 s (244.17ms)   1.25 s ( 20.79ms)        60
+   nlp_jac_g  |   1.10 s ( 17.79ms)  94.53ms (  1.52ms)        62
+       total  |  68.76 s ( 68.76 s)   5.73 s (  5.73 s)         1
+[nlp][time] seed 0.01s + NLP 6.55s = 6.56s for 38 points (172.7 ms/point), path duration 3.87s
+[nlp] metrics max_pos_err=0.000288m max_rot_err=0.3557deg min_manip=1.104599e+00 min_arm_sigma=0.2428 tool_clearance=0.604m qdot[joint5 35.034deg/s/70.000deg/s] qddot[joint5 124.969deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_000_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint5 38.592deg/s/70.000deg/s] qddot[joint2 1.147m/s^2/1.600m/s^2]
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_000_nlp_command.csv points=3875 max_qdot=38.592deg/s max_qddot=331.284deg/s^2
+[nlp] input #2/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_001.csv
+[nlp] loaded points=41 duration=4.160s stride=1 max_points=0
+[nlp] seed 1/41 pos_err=0.00005m rot_resid=0.00005
+[nlp] seed 26/41 pos_err=0.00005m rot_resid=0.00011
+[nlp] seed 41/41 pos_err=0.00021m rot_resid=0.00012
+[nlp] solving NLP points=41 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 594.11ms ( 13.50ms)  37.48ms (851.73us)        44
+       nlp_g  | 362.18ms (  8.23ms)  23.17ms (526.66us)        44
+  nlp_grad_f  | 919.95ms ( 24.86ms)  70.24ms (  1.90ms)        37
+  nlp_hess_l  |  11.67 s (333.56ms) 893.84ms ( 25.54ms)        35
+   nlp_jac_g  | 786.88ms ( 21.27ms)  61.59ms (  1.66ms)        37
+       total  |  52.08 s ( 52.08 s)   3.68 s (  3.68 s)         1
+[nlp][time] seed 0.01s + NLP 4.61s = 4.62s for 41 points (112.6 ms/point), path duration 4.16s
+[nlp] metrics max_pos_err=0.001081m max_rot_err=1.0000deg min_manip=1.115892e+00 min_arm_sigma=0.2215 tool_clearance=0.604m qdot[joint5 46.838deg/s/70.000deg/s] qddot[joint6 124.996deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_001_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint5 50.301deg/s/70.000deg/s] qddot[joint2 1.137m/s^2/1.600m/s^2]
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_001_nlp_command.csv points=4161 max_qdot=50.301deg/s max_qddot=292.730deg/s^2
+[nlp] input #3/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_002.csv
+[nlp] loaded points=43 duration=4.350s stride=1 max_points=0
+[nlp] seed 1/43 pos_err=0.00001m rot_resid=0.00001
+[nlp] seed 26/43 pos_err=0.00007m rot_resid=0.00016
+[nlp] seed 43/43 pos_err=0.00041m rot_resid=0.00025
+[nlp] solving NLP points=43 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.10 s (  9.09ms)  79.93ms (660.56us)       121
+       nlp_g  | 563.36ms (  4.66ms)  41.67ms (344.40us)       121
+  nlp_grad_f  |   1.24 s ( 24.36ms) 100.29ms (  1.97ms)        51
+  nlp_hess_l  |  16.01 s (326.77ms)   1.35 s ( 27.56ms)        49
+   nlp_jac_g  |   1.11 s ( 21.67ms)  92.74ms (  1.82ms)        51
+       total  |  62.68 s ( 62.68 s)   4.86 s (  4.86 s)         1
+[nlp][time] seed 0.01s + NLP 5.86s = 5.88s for 43 points (136.7 ms/point), path duration 4.35s
+[nlp] metrics max_pos_err=0.003011m max_rot_err=1.0000deg min_manip=1.317381e+00 min_arm_sigma=0.1711 tool_clearance=0.573m qdot[joint2 0.425m/s/0.500m/s] qddot[joint6 125.000deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_002_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.607m/s/0.500m/s] qddot[joint1 3.954m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.21, acceleration x2.47) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_002_nlp_command.csv points=4351 max_qdot=61.470deg/s max_qddot=330.839deg/s^2
+[nlp] input #4/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_003.csv
+[nlp] loaded points=43 duration=4.350s stride=1 max_points=0
+[nlp] seed 1/43 pos_err=0.00026m rot_resid=0.00082
+[nlp] seed 26/43 pos_err=0.00007m rot_resid=0.00017
+[nlp] seed 43/43 pos_err=0.00023m rot_resid=0.00014
+[nlp] solving NLP points=43 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 534.93ms ( 15.73ms)  34.06ms (  1.00ms)        34
+       nlp_g  | 274.32ms (  8.07ms)  17.78ms (522.89us)        34
+  nlp_grad_f  | 999.05ms ( 30.27ms)  76.86ms (  2.33ms)        33
+  nlp_hess_l  |  11.42 s (368.25ms) 790.83ms ( 25.51ms)        31
+   nlp_jac_g  | 784.89ms ( 23.78ms)  60.80ms (  1.84ms)        33
+       total  |  32.94 s ( 32.94 s)   2.13 s (  2.13 s)         1
+[nlp][time] seed 0.01s + NLP 3.11s = 3.13s for 43 points (72.7 ms/point), path duration 4.35s
+[nlp] metrics max_pos_err=0.002170m max_rot_err=1.0000deg min_manip=1.273030e+00 min_arm_sigma=0.1845 tool_clearance=0.604m qdot[joint2 0.425m/s/0.500m/s] qddot[joint6 124.999deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_003_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint5 61.233deg/s/70.000deg/s] qddot[joint2 2.236m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.87, acceleration x1.40) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_003_nlp_command.csv points=4351 max_qdot=61.233deg/s max_qddot=382.274deg/s^2
+[nlp] input #5/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_004.csv
+[nlp] loaded points=43 duration=4.350s stride=1 max_points=0
+[nlp] seed 1/43 pos_err=0.00035m rot_resid=0.00075
+[nlp] seed 26/43 pos_err=0.00005m rot_resid=0.00008
+[nlp] seed 43/43 pos_err=0.00035m rot_resid=0.00017
+[nlp] solving NLP points=43 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 343.64ms ( 10.11ms)  29.92ms (879.99us)        34
+       nlp_g  | 222.63ms (  6.55ms)  18.84ms (554.24us)        34
+  nlp_grad_f  | 607.46ms ( 17.87ms)  63.29ms (  1.86ms)        34
+  nlp_hess_l  |   9.28 s (289.91ms) 870.41ms ( 27.20ms)        32
+   nlp_jac_g  | 661.43ms ( 19.45ms)  63.79ms (  1.88ms)        34
+       total  |  36.52 s ( 36.52 s)   2.90 s (  2.90 s)         1
+[nlp][time] seed 0.01s + NLP 3.85s = 3.86s for 43 points (89.8 ms/point), path duration 4.35s
+[nlp] metrics max_pos_err=0.002581m max_rot_err=1.0000deg min_manip=1.167763e+00 min_arm_sigma=0.1720 tool_clearance=0.604m qdot[joint2 0.423m/s/0.500m/s] qddot[joint6 124.999deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_004_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.438m/s/0.500m/s] qddot[joint2 2.419m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.88, acceleration x1.51) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_004_nlp_command.csv points=4351 max_qdot=60.946deg/s max_qddot=382.056deg/s^2
+[nlp] input #6/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_005.csv
+[nlp] loaded points=42 duration=4.255s stride=1 max_points=0
+[nlp] seed 1/42 pos_err=0.00001m rot_resid=0.00000
+[nlp] seed 26/42 pos_err=0.00004m rot_resid=0.00005
+[nlp] seed 42/42 pos_err=0.00023m rot_resid=0.00024
+[nlp] solving NLP points=42 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 559.76ms ( 15.55ms)  32.71ms (908.54us)        36
+       nlp_g  | 269.84ms (  7.50ms)  16.12ms (447.69us)        36
+  nlp_grad_f  |   1.15 s ( 32.92ms)  79.06ms (  2.26ms)        35
+  nlp_hess_l  |  12.58 s (381.32ms) 785.88ms ( 23.81ms)        33
+   nlp_jac_g  | 942.98ms ( 26.94ms)  66.92ms (  1.91ms)        35
+       total  |  40.35 s ( 40.35 s)   2.41 s (  2.41 s)         1
+[nlp][time] seed 0.01s + NLP 3.35s = 3.36s for 42 points (80.0 ms/point), path duration 4.25s
+[nlp] metrics max_pos_err=0.002853m max_rot_err=1.0000deg min_manip=1.046950e+00 min_arm_sigma=0.1828 tool_clearance=0.604m qdot[joint2 0.425m/s/0.500m/s] qddot[joint5 124.997deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_005_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.451m/s/0.500m/s] qddot[joint2 2.524m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.90, acceleration x1.58) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_005_nlp_command.csv points=4256 max_qdot=57.936deg/s max_qddot=534.825deg/s^2
+[nlp] input #7/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_006.csv
+[nlp] loaded points=42 duration=4.255s stride=1 max_points=0
+[nlp] seed 1/42 pos_err=0.00030m rot_resid=0.00095
+[nlp] seed 26/42 pos_err=0.00005m rot_resid=0.00010
+[nlp] seed 42/42 pos_err=0.00028m rot_resid=0.00016
+[nlp] solving NLP points=42 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 483.22ms ( 16.11ms)  27.79ms (926.49us)        30
+       nlp_g  | 237.79ms (  7.93ms)  13.86ms (462.01us)        30
+  nlp_grad_f  |   1.03 s ( 35.61ms)  63.45ms (  2.19ms)        29
+  nlp_hess_l  |  10.16 s (376.35ms) 699.69ms ( 25.91ms)        27
+   nlp_jac_g  | 863.16ms ( 29.76ms)  60.57ms (  2.09ms)        29
+       total  |  38.24 s ( 38.24 s)   2.42 s (  2.42 s)         1
+[nlp][time] seed 0.01s + NLP 3.39s = 3.40s for 42 points (80.9 ms/point), path duration 4.25s
+[nlp] metrics max_pos_err=0.001366m max_rot_err=1.0000deg min_manip=1.082133e+00 min_arm_sigma=0.1975 tool_clearance=0.604m qdot[joint5 53.843deg/s/70.000deg/s] qddot[joint6 124.997deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_006_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.451m/s/0.500m/s] qddot[joint2 2.648m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.90, acceleration x1.65) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_006_nlp_command.csv points=4256 max_qdot=57.013deg/s max_qddot=534.792deg/s^2
+[nlp] input #8/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_007.csv
+[nlp] loaded points=42 duration=4.255s stride=1 max_points=0
+[nlp] seed 1/42 pos_err=0.00130m rot_resid=0.00240
+[nlp] seed 26/42 pos_err=0.00005m rot_resid=0.00002
+[nlp] seed 42/42 pos_err=0.00021m rot_resid=0.00017
+[nlp] solving NLP points=42 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.52 s (  8.28ms) 117.76ms (639.99us)       184
+       nlp_g  | 621.73ms (  3.38ms)  48.09ms (261.38us)       184
+  nlp_grad_f  |   1.45 s ( 25.07ms) 129.51ms (  2.23ms)        58
+  nlp_hess_l  |  16.24 s (289.91ms)   1.33 s ( 23.83ms)        56
+   nlp_jac_g  |   1.17 s ( 20.21ms) 103.73ms (  1.79ms)        58
+       total  |  85.92 s ( 85.92 s)   6.57 s (  6.57 s)         1
+[nlp][time] seed 0.01s + NLP 7.49s = 7.50s for 42 points (178.6 ms/point), path duration 4.25s
+[nlp] metrics max_pos_err=0.003409m max_rot_err=1.0000deg min_manip=1.233938e+00 min_arm_sigma=0.2146 tool_clearance=0.604m qdot[joint2 0.425m/s/0.500m/s] qddot[joint6 124.999deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_007_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.464m/s/0.500m/s] qddot[joint2 2.678m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.93, acceleration x1.67) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_007_nlp_command.csv points=4256 max_qdot=59.953deg/s max_qddot=487.344deg/s^2
+[nlp] input #9/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_008.csv
+[nlp] loaded points=42 duration=4.255s stride=1 max_points=0
+[nlp] seed 1/42 pos_err=0.00057m rot_resid=0.00028
+[nlp] seed 26/42 pos_err=0.00016m rot_resid=0.00017
+[nlp] seed 42/42 pos_err=0.00018m rot_resid=0.00026
+[nlp] solving NLP points=42 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   2.25 s ( 11.84ms) 157.80ms (830.54us)       190
+       nlp_g  |   1.15 s (  6.04ms)  78.43ms (412.77us)       190
+  nlp_grad_f  |   2.85 s ( 27.13ms) 225.17ms (  2.14ms)       105
+  nlp_hess_l  |  34.47 s (334.63ms)   2.65 s ( 25.76ms)       103
+   nlp_jac_g  |   2.46 s ( 23.39ms) 182.81ms (  1.74ms)       105
+       total  | 139.71 s (139.71 s)  10.20 s ( 10.20 s)         1
+[nlp][time] seed 0.01s + NLP 11.08s = 11.10s for 42 points (264.2 ms/point), path duration 4.25s
+[nlp] metrics max_pos_err=0.001312m max_rot_err=1.0000deg min_manip=1.160127e+00 min_arm_sigma=0.2197 tool_clearance=0.604m qdot[joint6 59.499deg/s/70.000deg/s] qddot[joint6 124.999deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_008_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint6 60.742deg/s/70.000deg/s] qddot[joint2 1.626m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.87, acceleration x1.02) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_008_nlp_command.csv points=4256 max_qdot=60.742deg/s max_qddot=333.989deg/s^2
+[nlp] input #10/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_009.csv
+[nlp] loaded points=43 duration=4.350s stride=1 max_points=0
+[nlp] seed 1/43 pos_err=0.00000m rot_resid=0.00000
+[nlp] seed 26/43 pos_err=0.00011m rot_resid=0.00019
+[nlp] seed 43/43 pos_err=0.00013m rot_resid=0.00011
+[nlp] solving NLP points=43 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.24 s ( 12.64ms)  76.51ms (780.71us)        98
+       nlp_g  | 639.81ms (  6.53ms)  37.81ms (385.81us)        98
+  nlp_grad_f  |   1.72 s ( 30.09ms) 113.13ms (  1.98ms)        57
+  nlp_hess_l  |  19.57 s (355.76ms)   1.47 s ( 26.79ms)        55
+   nlp_jac_g  |   1.59 s ( 27.94ms) 106.56ms (  1.87ms)        57
+       total  |  77.98 s ( 77.98 s)   5.50 s (  5.50 s)         1
+[nlp][time] seed 0.01s + NLP 6.47s = 6.48s for 43 points (150.6 ms/point), path duration 4.35s
+[nlp] metrics max_pos_err=0.000664m max_rot_err=0.3251deg min_manip=1.013657e+00 min_arm_sigma=0.2115 tool_clearance=0.350m qdot[joint2 0.397m/s/0.500m/s] qddot[joint5 124.975deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_009_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.471m/s/0.500m/s] qddot[joint2 2.748m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.94, acceleration x1.72) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_009_nlp_command.csv points=4351 max_qdot=31.670deg/s max_qddot=421.005deg/s^2
+[nlp] input #11/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_010.csv
+[nlp] loaded points=42 duration=4.255s stride=1 max_points=0
+[nlp] seed 1/42 pos_err=0.00025m rot_resid=0.00020
+[nlp] seed 26/42 pos_err=0.00003m rot_resid=0.00010
+[nlp] seed 42/42 pos_err=0.00006m rot_resid=0.00011
+[nlp] solving NLP points=42 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 756.20ms ( 10.36ms)  51.94ms (711.56us)        73
+       nlp_g  | 429.50ms (  5.88ms)  28.33ms (388.10us)        73
+  nlp_grad_f  |   1.01 s ( 24.58ms)  76.97ms (  1.88ms)        41
+  nlp_hess_l  |  14.42 s (369.67ms)   1.02 s ( 26.04ms)        39
+   nlp_jac_g  |   1.07 s ( 26.21ms)  80.06ms (  1.95ms)        41
+       total  |  62.39 s ( 62.39 s)   4.24 s (  4.24 s)         1
+[nlp][time] seed 0.01s + NLP 5.26s = 5.27s for 42 points (125.5 ms/point), path duration 4.25s
+[nlp] metrics max_pos_err=0.000535m max_rot_err=0.2571deg min_manip=9.649399e-01 min_arm_sigma=0.1941 tool_clearance=0.350m qdot[joint2 0.422m/s/0.500m/s] qddot[joint5 124.984deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_010_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.501m/s/0.500m/s] qddot[joint2 2.953m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.00, acceleration x1.85) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_010_nlp_command.csv points=4256 max_qdot=33.205deg/s max_qddot=430.428deg/s^2
+[nlp] input #12/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_011.csv
+[nlp] loaded points=38 duration=3.874s stride=1 max_points=0
+[nlp] seed 1/38 pos_err=0.00007m rot_resid=0.00044
+[nlp] seed 26/38 pos_err=0.00011m rot_resid=0.00043
+[nlp] seed 38/38 pos_err=0.00007m rot_resid=0.00002
+[nlp] solving NLP points=38 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.05 s ( 20.15ms)  35.39ms (680.67us)        52
+       nlp_g  | 444.68ms (  8.55ms)  15.80ms (303.77us)        52
+  nlp_grad_f  |   1.88 s ( 50.78ms)  62.04ms (  1.68ms)        37
+  nlp_hess_l  |  21.17 s (604.97ms) 683.42ms ( 19.53ms)        35
+   nlp_jac_g  |   1.52 s ( 41.14ms)  50.44ms (  1.36ms)        37
+       total  |  47.83 s ( 47.83 s)   1.85 s (  1.85 s)         1
+[nlp][time] seed 0.01s + NLP 2.70s = 2.72s for 38 points (71.5 ms/point), path duration 3.87s
+[nlp] metrics max_pos_err=0.001353m max_rot_err=0.5068deg min_manip=9.318873e-01 min_arm_sigma=0.1803 tool_clearance=0.350m qdot[joint2 0.420m/s/0.500m/s] qddot[joint3 121.074deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_011_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.517m/s/0.500m/s] qddot[joint2 3.097m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.03, acceleration x1.94) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_011_nlp_command.csv points=3875 max_qdot=41.715deg/s max_qddot=449.708deg/s^2
+[nlp] input #13/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_012.csv
+[nlp] loaded points=40 duration=4.064s stride=1 max_points=0
+[nlp] seed 1/40 pos_err=0.00000m rot_resid=0.00001
+[nlp] seed 26/40 pos_err=0.00018m rot_resid=0.00018
+[nlp] seed 40/40 pos_err=0.00004m rot_resid=0.00008
+[nlp] solving NLP points=40 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 705.78ms ( 14.12ms)  36.66ms (733.12us)        50
+       nlp_g  | 388.74ms (  7.77ms)  20.38ms (407.69us)        50
+  nlp_grad_f  |   1.12 s ( 32.90ms)  65.57ms (  1.93ms)        34
+  nlp_hess_l  |  14.12 s (441.35ms) 820.21ms ( 25.63ms)        32
+   nlp_jac_g  |   1.02 s ( 30.08ms)  58.05ms (  1.71ms)        34
+       total  |  40.88 s ( 40.88 s)   2.13 s (  2.13 s)         1
+[nlp][time] seed 0.01s + NLP 3.05s = 3.06s for 40 points (76.5 ms/point), path duration 4.06s
+[nlp] metrics max_pos_err=0.000542m max_rot_err=0.2811deg min_manip=9.551630e-01 min_arm_sigma=0.1874 tool_clearance=0.350m qdot[joint2 0.416m/s/0.500m/s] qddot[joint5 115.702deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_012_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.518m/s/0.500m/s] qddot[joint2 3.099m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.04, acceleration x1.94) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_012_nlp_command.csv points=4066 max_qdot=44.049deg/s max_qddot=455.340deg/s^2
+[nlp] input #14/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_013.csv
+[nlp] loaded points=38 duration=3.874s stride=1 max_points=0
+[nlp] seed 1/38 pos_err=0.00001m rot_resid=0.00016
+[nlp] seed 26/38 pos_err=0.00006m rot_resid=0.00002
+[nlp] seed 38/38 pos_err=0.00007m rot_resid=0.00002
+[nlp] solving NLP points=38 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 866.82ms ( 16.67ms)  39.61ms (761.71us)        52
+       nlp_g  | 447.48ms (  8.61ms)  20.33ms (391.01us)        52
+  nlp_grad_f  |   1.31 s ( 35.50ms)  65.80ms (  1.78ms)        37
+  nlp_hess_l  |  17.33 s (495.00ms) 840.98ms ( 24.03ms)        35
+   nlp_jac_g  |   1.25 s ( 33.79ms)  65.50ms (  1.77ms)        37
+       total  |  45.92 s ( 45.92 s)   2.14 s (  2.14 s)         1
+[nlp][time] seed 0.01s + NLP 2.97s = 2.98s for 38 points (78.4 ms/point), path duration 3.87s
+[nlp] metrics max_pos_err=0.000725m max_rot_err=0.3361deg min_manip=8.936897e-01 min_arm_sigma=0.1700 tool_clearance=0.349m qdot[joint2 0.418m/s/0.500m/s] qddot[joint5 124.982deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_013_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.526m/s/0.500m/s] qddot[joint2 3.142m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.05, acceleration x1.96) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_013_nlp_command.csv points=3875 max_qdot=33.001deg/s max_qddot=437.918deg/s^2
+[nlp] input #15/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_014.csv
+[nlp] loaded points=35 duration=3.588s stride=1 max_points=0
+[nlp] seed 1/35 pos_err=0.00000m rot_resid=0.00001
+[nlp] seed 26/35 pos_err=0.00002m rot_resid=0.00002
+[nlp] seed 35/35 pos_err=0.00001m rot_resid=0.00003
+[nlp] solving NLP points=35 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 672.29ms ( 12.68ms)  34.31ms (647.28us)        53
+       nlp_g  | 388.51ms (  7.33ms)  20.28ms (382.70us)        53
+  nlp_grad_f  | 923.97ms ( 24.97ms)  59.14ms (  1.60ms)        37
+  nlp_hess_l  |  12.94 s (369.80ms) 733.85ms ( 20.97ms)        35
+   nlp_jac_g  | 948.16ms ( 25.63ms)  56.88ms (  1.54ms)        37
+       total  |  61.00 s ( 61.00 s)   3.48 s (  3.48 s)         1
+[nlp][time] seed 0.01s + NLP 4.22s = 4.23s for 35 points (120.9 ms/point), path duration 3.59s
+[nlp] metrics max_pos_err=0.000205m max_rot_err=0.1014deg min_manip=8.472873e-01 min_arm_sigma=0.1638 tool_clearance=0.349m qdot[joint2 0.405m/s/0.500m/s] qddot[joint3 101.564deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_014_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.496m/s/0.500m/s] qddot[joint2 2.977m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.99, acceleration x1.86) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_014_nlp_command.csv points=3590 max_qdot=28.425deg/s max_qddot=424.977deg/s^2
+[nlp] input #16/16: /home/airo/paint_cell_ws/nlp4cm/input/ES300h_trunk/trajectory_015.csv
+[nlp] loaded points=31 duration=3.207s stride=1 max_points=0
+[nlp] seed 1/31 pos_err=0.00002m rot_resid=0.00002
+[nlp] seed 26/31 pos_err=0.00007m rot_resid=0.00021
+[nlp] seed 31/31 pos_err=0.00008m rot_resid=0.00002
+[nlp] solving NLP points=31 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.03 s ( 14.55ms)  39.17ms (551.71us)        71
+       nlp_g  | 494.59ms (  6.97ms)  19.26ms (271.31us)        71
+  nlp_grad_f  |   1.35 s ( 35.65ms)  52.75ms (  1.39ms)        38
+  nlp_hess_l  |  16.42 s (456.01ms) 616.82ms ( 17.13ms)        36
+   nlp_jac_g  |   1.25 s ( 32.90ms)  51.08ms (  1.34ms)        38
+       total  |  62.92 s ( 62.92 s)   2.63 s (  2.63 s)         1
+[nlp][time] seed 0.01s + NLP 3.30s = 3.31s for 31 points (106.8 ms/point), path duration 3.21s
+[nlp] metrics max_pos_err=0.000306m max_rot_err=0.1525deg min_manip=7.479681e-01 min_arm_sigma=0.1478 tool_clearance=0.349m qdot[joint2 0.401m/s/0.500m/s] qddot[joint3 112.469deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_015_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint2 0.515m/s/0.500m/s] qddot[joint2 3.120m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.03, acceleration x1.95) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/trajectory_015_nlp_command.csv points=3209 max_qdot=29.532deg/s max_qddot=428.234deg/s^2
+[nlp][time] planning cost
+[nlp][time]   trajectory_000.csv           points=   38 seed=  0.01s NLP=    6.55s total=    6.56s (  172.7 ms/pt) path=  3.87s ratio=   1.69x
+[nlp][time]   trajectory_001.csv           points=   41 seed=  0.01s NLP=    4.61s total=    4.62s (  112.6 ms/pt) path=  4.16s ratio=   1.11x
+[nlp][time]   trajectory_002.csv           points=   43 seed=  0.01s NLP=    5.86s total=    5.88s (  136.7 ms/pt) path=  4.35s ratio=   1.35x
+[nlp][time]   trajectory_003.csv           points=   43 seed=  0.01s NLP=    3.11s total=    3.13s (   72.7 ms/pt) path=  4.35s ratio=   0.72x
+[nlp][time]   trajectory_004.csv           points=   43 seed=  0.01s NLP=    3.85s total=    3.86s (   89.8 ms/pt) path=  4.35s ratio=   0.89x
+[nlp][time]   trajectory_005.csv           points=   42 seed=  0.01s NLP=    3.35s total=    3.36s (   80.0 ms/pt) path=  4.25s ratio=   0.79x
+[nlp][time]   trajectory_006.csv           points=   42 seed=  0.01s NLP=    3.39s total=    3.40s (   80.9 ms/pt) path=  4.25s ratio=   0.80x
+[nlp][time]   trajectory_007.csv           points=   42 seed=  0.01s NLP=    7.49s total=    7.50s (  178.6 ms/pt) path=  4.25s ratio=   1.76x
+[nlp][time]   trajectory_008.csv           points=   42 seed=  0.01s NLP=   11.08s total=   11.10s (  264.2 ms/pt) path=  4.25s ratio=   2.61x
+[nlp][time]   trajectory_009.csv           points=   43 seed=  0.01s NLP=    6.47s total=    6.48s (  150.6 ms/pt) path=  4.35s ratio=   1.49x
+[nlp][time]   trajectory_010.csv           points=   42 seed=  0.01s NLP=    5.26s total=    5.27s (  125.5 ms/pt) path=  4.25s ratio=   1.24x
+[nlp][time]   trajectory_011.csv           points=   38 seed=  0.01s NLP=    2.70s total=    2.72s (   71.5 ms/pt) path=  3.87s ratio=   0.70x
+[nlp][time]   trajectory_012.csv           points=   40 seed=  0.01s NLP=    3.05s total=    3.06s (   76.5 ms/pt) path=  4.06s ratio=   0.75x
+[nlp][time]   trajectory_013.csv           points=   38 seed=  0.01s NLP=    2.97s total=    2.98s (   78.4 ms/pt) path=  3.87s ratio=   0.77x
+[nlp][time]   trajectory_014.csv           points=   35 seed=  0.01s NLP=    4.22s total=    4.23s (  120.9 ms/pt) path=  3.59s ratio=   1.18x
+[nlp][time]   trajectory_015.csv           points=   31 seed=  0.01s NLP=    3.30s total=    3.31s (  106.8 ms/pt) path=  3.21s ratio=   1.03x
+[nlp][time]   TOTAL                        points=  643 seed=  0.19s NLP=   77.25s total=   77.45s (  120.4 ms/pt) path= 65.31s ratio=   1.19x
+[nlp][time]   wall clock (I/O + 후처리 포함) 81.23s
+[nlp] saved plan metadata: /home/airo/paint_cell_ws/nlp4cm/out_x7y4z3/ES300h_trunk/plan_metadata.json
+[nlp] dry run complete. Add --execute to track the optimized command CSV on the robot.

@@ -1,0 +1,3 @@
+trajectory_000.csv: 31 pts, S=1.200 m, T=3.21 s
+trajectory_001.csv: 32 pts, S=1.240 m, T=3.30 s
+TOTAL rows=2 pts=63 exec_time=6.5 s

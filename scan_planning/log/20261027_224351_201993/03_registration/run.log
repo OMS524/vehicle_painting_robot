@@ -1,0 +1,56 @@
+ICP + Pose Graph: point_to_plane
+입력: /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/02_reconstruction
+저장: /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/03_registration
+ICP 쌍: pose_01 -> pose_02
+  voxel 10 mm: fitness=0.6014, RMSE=8.777 mm, 0.272초
+  voxel 5 mm: fitness=0.6165, RMSE=4.888 mm, 1.186초
+  voxel 2 mm: fitness=0.5582, RMSE=3.123 mm, 2.532초
+  accepted: 
+ICP 쌍: pose_01 -> pose_03
+  voxel 10 mm: fitness=0.3308, RMSE=10.421 mm, 0.403초
+  voxel 5 mm: fitness=0.3467, RMSE=5.501 mm, 2.635초
+  voxel 2 mm: fitness=0.3124, RMSE=3.111 mm, 0.352초
+  accepted: 
+ICP 쌍: pose_01 -> pose_04
+  voxel 10 mm: fitness=0.3349, RMSE=10.657 mm, 0.283초
+  voxel 5 mm: fitness=0.3456, RMSE=5.678 mm, 0.641초
+  voxel 2 mm: fitness=0.2846, RMSE=3.190 mm, 1.839초
+  accepted: 
+ICP 쌍: pose_01 -> pose_05
+  voxel 10 mm: fitness=0.3327, RMSE=10.146 mm, 0.327초
+  voxel 5 mm: fitness=0.3451, RMSE=5.452 mm, 0.749초
+  voxel 2 mm: fitness=0.2880, RMSE=3.259 mm, 1.029초
+  accepted: 
+ICP 쌍: pose_02 -> pose_03
+  voxel 10 mm: fitness=0.6290, RMSE=9.788 mm, 0.226초
+  voxel 5 mm: fitness=0.5897, RMSE=5.167 mm, 0.859초
+  voxel 2 mm: fitness=0.5308, RMSE=3.059 mm, 1.019초
+  accepted: 
+ICP 쌍: pose_02 -> pose_04
+  voxel 10 mm: fitness=0.4996, RMSE=10.776 mm, 0.232초
+  voxel 5 mm: fitness=0.4566, RMSE=5.527 mm, 0.799초
+  voxel 2 mm: fitness=0.3892, RMSE=3.178 mm, 1.722초
+  accepted: 
+ICP 쌍: pose_02 -> pose_05
+  voxel 10 mm: fitness=0.4894, RMSE=10.658 mm, 0.275초
+  voxel 5 mm: fitness=0.4475, RMSE=5.562 mm, 1.511초
+  voxel 2 mm: fitness=0.3816, RMSE=3.289 mm, 1.724초
+  accepted: 
+ICP 쌍: pose_03 -> pose_04
+  voxel 10 mm: fitness=0.7332, RMSE=9.750 mm, 0.110초
+  voxel 5 mm: fitness=0.6803, RMSE=5.052 mm, 0.411초
+  voxel 2 mm: fitness=0.6259, RMSE=2.953 mm, 1.420초
+  accepted: 
+ICP 쌍: pose_03 -> pose_05
+  voxel 10 mm: fitness=0.7037, RMSE=9.940 mm, 0.126초
+  voxel 5 mm: fitness=0.6539, RMSE=5.174 mm, 0.378초
+  voxel 2 mm: fitness=0.5989, RMSE=3.099 mm, 0.473초
+  accepted: 
+ICP 쌍: pose_04 -> pose_05
+  voxel 10 mm: fitness=0.8865, RMSE=7.894 mm, 0.152초
+  voxel 5 mm: fitness=0.8642, RMSE=4.558 mm, 0.364초
+  voxel 2 mm: fitness=0.7970, RMSE=3.045 mm, 0.789초
+  accepted: 
+PGO: 5 nodes, 10 edges / 고정: pose_01
+주의: PGO에서 loop 제거: pose_01 -> pose_05
+완료 (complete_with_warnings): /home/oms/vehicle_painting_robot/scan/log/20261027_224351_201993/03_registration

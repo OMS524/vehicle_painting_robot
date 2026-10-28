@@ -1,0 +1,102 @@
+# 갠트리 환경 "x7y4z3" — 신규: 레일 X 7 m, Y 4 m, 레일(브리지 중심) 높이 3 m.
+#
+# 규약은 spec_c 를 그대로 물려받는다: 코너 원점(조인트 0 = 툴체인저 쪽 X 끝 / +Y 끝), 두 축 반전,
+# 팔 오프셋(캐리지 +X 0.32304, 아래 0.153, yaw -90°), 툴체인저는 캐리지 이동범위 끝(x_max, y_min) 기준 같은 상대 위치.
+# 스트로크 = 레일 길이 - spec_c 와 같은 슬라이더군 여유 (X 0.1736, Y 0.1136).
+# URDF 는 `ros2 run paint_viz make_gantry_urdf --env x7y4z3` 로 생성한다 (박스 프리미티브 프레임, 메시 없음).
+gantry_env:
+  name: x7y4z3
+  title: "신규 7 x 4 m 레일, 레일 높이 3 m (spec_c 규약 상속)"
+  convention: corner
+  rail:
+    x_length: 7.0
+    y_length: 4.0
+    z_height: 3.0       # 브리지 중심 = 레일 높이 [m] (사용자 정의: Z = 레일 높이)
+  stroke:
+    x: 6.8264           # 7.0 - 0.1736
+    y: 3.8864           # 4.0 - 0.1136
+  joints:
+    gantry_x: {axis: [-1, 0, 0], lower: 0.0, upper: 6.8264, origin_xyz: [3.4132, 0.0, 3.0]}
+    gantry_y: {axis: [0, -1, 0], lower: 0.0, upper: 3.8864, origin_xyz: [0.0, 1.9432, 0.0]}
+  mount_z: 2.847        # = z_height - 0.153 (spec_c 와 같은 캐리지-장착면 오프셋)
+  arm_mount:
+    xyz: [0.32304, 0.0, -0.153]
+    rpy: [3.141592653589793, 0.0, -1.5707963267948966]
+  urdf:
+    generated: true
+    primitive: paint_cell_8axis_x7y4z3.urdf            # 프리미티브 팔 + 툴 + 슬롯 프레임 (NLP/IK 계획)
+    mesh: paint_cell_8axis_x7y4z3_mesh.urdf            # A0912 원본 메시 (RViz / 충돌 검사)
+    bare: paint_cell_8axis_x7y4z3_mesh_bare.urdf       # 툴 없는 플랜지판 (도킹 접근 검증)
+    collision: paint_cell_8axis_x7y4z3_mesh.urdf
+    arm_source: $REPO/robot_control/doosan_a0912_controller/urdf/a0912.white.urdf
+  frame:
+    # spec_c(gantry_base.stl 실측) 부재 단면·오프셋을 유지하고 길이만 레일에 맞춘다. 전부 브리지 중심 기준.
+    style: spec_c_boxes
+    column: {section: [0.194, 0.150], inset_x: 0.523, inset_y: 0.0}     # 레일 끝/브리지 끝에서 안쪽 거리. inset_y 0 = 기둥을 캐리지 Y 이동범위(±1.9432+0.185) 밖에 둔다 (spec_c 의 0.167 은 극한 코너에서 캐리지 박스와 겹친다)
+    pedestal: {size: [0.5, 0.5, 0.165]}
+    x_beam: {section: [0.200, 0.268], below_bridge: 0.2675}   # spec_c 0.2655 + 2 mm: 코너 홈에서 캐리지 박스와 1 mm 겹치던 모델 오차 제거             # 길이 = 레일 X 길이
+    x_rail: {section: [0.023, 0.022], below_bridge: 0.1445, inset_y: 0.0615}   # 동일하게 +2 mm
+    lower_brace: {section: [0.100, 0.100], z: 0.531}                     # 기둥 사이 하부 브레이스 (X·Y 방향)
+    bridge_beam: {section: [0.230, 0.215], length_extra: 0.6, center_x: -0.084084}   # 길이 = 레일 Y + 0.6
+    bridge_rail: {section: [0.022, 0.023], center_x: 0.019916, z: [-0.069, 0.084]}   # 길이 = 레일 Y
+    bridge_end_plate: {size: [0.5, 0.3, 0.015], center_x: -0.164084, z: -0.115}
+    carriage_boxes:
+      - {center: [0.217416, 0.0, 0.0025], size: [0.355, 0.370, 0.270]}
+      - {center: [-0.107084, 0.0675, 0.140], size: [0.450, 0.060, 0.005]}
+    mass: {bridge: 180.0, carriage: 160.0}
+  toolchanger:
+    # spec_c 와 같은 상대 위치: x_max = +3.4132, y_min = -1.9432, mount_z = 2.847 → slot_1 월드 (3.3311, -2.1019, 1.7347)
+    # (플레이트 높이는 팔 장착면 기준으로 따라 올라간다. 바닥 기준으로 두면 base 아래 1.93 m 라 A0912 도달 1.395 m 밖이다)
+    anchor: {x: x_max, y: y_min, z: mount_z}
+    plate_size: [0.102, 0.080, 0.044]
+    slots:
+      - {name: toolchanger_slot_1, dx: -0.0821, dy: -0.1587, dz: -1.1123, occupied: true}
+      - {name: toolchanger_slot_2, dx:  0.1179, dy: -0.1587, dz: -1.1123, occupied: true}
+      - {name: toolchanger_slot_3, dx: -0.0821, dy: -0.3587, dz: -0.7853, occupied: true}
+      - {name: toolchanger_slot_4, dx:  0.1179, dy: -0.3587, dz: -0.7853, occupied: false}
+    stand_boxes:
+      - {center: [0.0238, -0.2298, -1.173014], size: [0.310, 0.190, 0.073]}
+      - {center: [-0.3092, -0.3498, -1.506500], size: [0.050, 0.400, 0.050]}
+      - {center: [-0.3092, -0.3498, -1.179514], size: [0.070, 0.400, 0.16243]}
+      - {center: [-0.3092, -0.3498, -0.852527], size: [0.070, 0.400, 0.110]}
+      - {center: [-0.1151, -0.3098, -1.368613], size: [0.318198, 0.030, 0.318198]}
+      - {center: [-0.0492, -0.3098, -1.179514], size: [0.450, 0.030, 0.060]}
+      - {center: [0.0238, -0.4298, -0.846027], size: [0.310, 0.190, 0.073]}
+      - {center: [-0.1151, -0.5098, -1.041626], size: [0.318198, 0.030, 0.318198]}
+      - {center: [-0.0492, -0.5098, -0.852527], size: [0.450, 0.030, 0.060]}
+    stand_riser: {dx: -0.3092, dy: -0.3498, size_xy: [0.07, 0.40]}
+    dock:
+      gantry_x_joint: 0.0
+      pre_offset: 0.15
+      standoff: 0.005
+      dock_frame: link_6
+  home:
+    gantry: [0.0, 0.0]
+    arm_deg: [0, 0, 0, 0, 0, 0]
+    travel_arm_deg: [0, 0, 90, 0, 90, 0]
+  motor_limits:
+    # 2026-10-20 사용자: 갠트리 모터 최고속도 0.8 m/s. 계획은 안전 마진을 두고 0.5 m/s 로 한다 (NLP 제약, stitch/sequence
+    # 전이 시간 배분 공통). 가속도 1.6 m/s^2 는 2026-10-20 사용자 지정값(종전 5.0, 처음 가정 2.0).
+    gantry_velocity_m_s: 0.5
+    gantry_acceleration_m_s2: 1.6
+  nlp:
+    initial_joint: "3.4132,1.9432,90,0,90,-90,0,0"   # 갠트리 중앙에서 시작
+    # 갠트리 전용 부드러움 가중치 (trajectory_nlp --gantry-velocity-weight / --gantry-acceleration-weight auto 값).
+    # 직동축 qd/qd_max, qdd/qdd_max 제곱합에 곱한다. 0 = 종전 동작(8축 균등 1e-3 만).
+    # 2026-10-20 후드 스윕(0/0.005/0.01/0.03/0.1/1/10): 0.01 = 갠트리 x 이동 39→29 m, 평균 0.36→0.27 m/s, 최고 0.63→0.38,
+    # 방향 반전 7→0, 팔 σ_min 0.283→0.230. 0.03 부터 σ_min<0.19, 0.1 이상은 팔이 특이점(0.09)에 붙고 손목 한계 초과.
+    gantry_velocity_weight: 0.01
+    gantry_acceleration_weight: 0.01
+    # NLP 노드 제약 스케일 "v,a" (trajectory_nlp --node-limit-scale auto). 갠트리 항을 켜면 팔(특히 joint_5)이 row 안 움직임을
+    # 더 떠안아 1 ms 명령 가속도가 0.50 에서 500 deg/s^2 의 1.35 배까지 튀었다 → 0.25 로 조여 1.02 배 (후드). 범퍼는 run_all.sh 가 1,1 로 덮어쓴다.
+    node_limit_scale: "0.85,0.25"
+  part_placement:
+    # z = mount_z - 2.066 = +0.781: 부품 지그를 같이 올려 팔 base 대비 TCP 높이를 legacy 와 같게 둔다.
+    # (A0912 도달 1.395 m + 노즐 0.33 m 라 지그를 안 올리면 후드 경로가 base 아래 1.7~1.9 m 로 도달 불가)
+    xyz_offset: [0.0, 0.0, 0.781]
+    # 파츠별 배치 덮어쓰기 (이 환경 월드 좌표 그대로. xyz_offset 은 적용하지 않는다).
+    # NX350h_right_fender: 세운 펜더 상단 row 에서 팔꿈치가 base 위로 올라와 브리지 빔(spec_c 규약: 장착면 +0.153 m)과
+    #   140 mm 간섭했다(2026-10-13). 부품을 yaw +90° 돌려 분사 방향을 -Y → +X 로 바꾸면 팔꿈치가 브리지 반대쪽(+X)으로
+    #   나가 전 row 무충돌 (18/19 row, 마지막 row Infeasible 은 legacy 와 동일한 기존 문제). 부품 중심 위치는 유지했다.
+    overrides:
+      NX350h_right_fender: {xyz: [0.2047, -1.5493, 3.0610], rpy: [0.0, 0.0, 1.5707963]}

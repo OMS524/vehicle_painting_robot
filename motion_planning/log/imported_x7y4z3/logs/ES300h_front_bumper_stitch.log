@@ -1,0 +1,19 @@
+[stitch] URDF: /home/airo/paint_cell_ws/src/paint_viz/urdf/paint_cell_8axis_x7y4z3.urdf (gantry_env x7y4z3)
+[stitch] TCP frame: tcp, 리트랙트 방향: spray
+[stitch] 갠트리 한계 v 0.5 m/s, a 1.6 m/s^2
+[stitch] row 13개, 전이 12곳 생성
+[stitch] 리트랙트 적응형 (안전계수 9.0, 5~100 mm), 샘플 간격 10 mm
+[stitch] move  0-> 1 pts= 113 T= 1.12s (0.19+0.77+0.16) lift=  9.4mm pos_err= 1.51mm seam= 0.00 v=0.60 a=0.91
+[stitch] move  1-> 2 pts= 565 T= 5.64s (0.57+4.45+0.62) lift=100.0mm pos_err= 1.86mm seam= 0.00 v=0.92 a=0.98
+[stitch] move  2-> 3 pts=  80 T= 0.79s (0.13+0.53+0.13) lift=  5.0mm pos_err= 0.17mm seam= 0.00 v=0.42 a=0.82
+[stitch] move  3-> 4 pts=  82 T= 0.81s (0.15+0.49+0.17) lift=  5.0mm pos_err= 1.80mm seam= 0.00 v=0.46 a=0.94
+[stitch] move  4-> 5 pts=  83 T= 0.82s (0.11+0.55+0.16) lift=  5.0mm pos_err= 0.22mm seam= 0.00 v=0.43 a=0.84
+[stitch] move  5-> 6 pts=  80 T= 0.79s (0.14+0.51+0.14) lift=  5.0mm pos_err= 0.52mm seam= 0.00 v=0.36 a=0.95
+[stitch] move  6-> 7 pts=  67 T= 0.66s (0.18+0.31+0.17) lift=  8.9mm pos_err= 0.17mm seam= 0.00 v=0.41 a=0.93
+[stitch] move  7-> 8 pts= 142 T= 1.41s (0.10+1.13+0.18) lift=  5.0mm pos_err= 1.55mm seam= 0.00 v=0.29 a=0.93
+[stitch] move  8-> 9 pts=  75 T= 0.74s (0.14+0.47+0.13) lift=  5.0mm pos_err= 0.21mm seam= 0.00 v=0.35 a=0.95
+[stitch] move  9->10 pts=  84 T= 0.83s (0.15+0.55+0.13) lift=  5.0mm pos_err= 0.52mm seam= 0.00 v=0.36 a=0.88
+[stitch] move 10->11 pts= 434 T= 4.33s (0.99+2.20+1.14) lift=100.0mm pos_err= 1.80mm seam= 0.00 v=0.95 a=0.96
+[stitch] move 11->12 pts= 154 T= 1.53s (0.19+1.21+0.13) lift=  5.0mm pos_err= 1.40mm seam= 0.00 v=0.44 a=0.89
+[stitch] 완료: 세그먼트 25개 -> /home/airo/paint_cell_ws/nlp4cm/stitched_x7y4z3/ES300h_front_bumper
+[stitch] 전이 총 시간 19.5s, 최악 추종오차 1.86mm / 0.20deg, 최악 이음새 0.000, 속도 한계 대비 0.95, 가속도 한계 대비 0.98

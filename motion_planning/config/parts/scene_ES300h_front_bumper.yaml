@@ -1,0 +1,11 @@
+# 4cm waypoint 플랜 RViz 재생용 — run_all.sh 배치와 동일 (세워서 도장: rpy 90,90,0)
+scene:
+  part_file: $REPO/path_planning/test/data/ES300h_front_bumper.ply
+  trajectory_dir: $MOTION_ROOT/test/input/ES300h_front_bumper
+  part_xyz: [-1.002, -1.040, 4.872]
+  part_rpy: [1.5707963, 1.5707963, 0.0]
+  max_part_points: 120000
+  max_rows: 0
+planning:
+  # Original run_all.sh bumper exceptions, unchanged.
+  extra_optimization_arguments: [--node-limit-scale, '1,1', --ipopt-max-iter, '4000']

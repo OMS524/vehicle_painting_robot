@@ -1,0 +1,56 @@
+# Local/test logs stay on disk; production planning results are shared below.
+log/
+logs/
+Log/
+*.log
+*.log.*
+
+# Share the three production log trees, including nested logs and *.log files.
+!/scan_planning/log/
+!/scan_planning/log/**
+!/path_planning/log/
+!/path_planning/log/**
+!/motion_planning/log/
+!/motion_planning/log/**
+
+# Snapshots/builds/caches/secrets remain excluded, even inside shared log trees.
+backup/
+
+# Python caches and local environments.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# Local CMake/ROS builds, including old build-directory backups.
+build/
+build-*/
+build.*/
+install/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+
+# Frontend builds and packaged applications; retain source/package lock files.
+node_modules/
+dist/
+/workstation/src-tauri/target/
+*.AppImage
+*.AppImage.*
+
+# Local secrets and OS/editor temporary files.
+.env
+.env.*
+!.env.example
+!.env.sample
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Do not globally exclude PLY/STL/JSON/CSV: model assets, test inputs and
+# src/hand_eye_calibration/results contain files needed by the project.
