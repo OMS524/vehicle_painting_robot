@@ -43,6 +43,7 @@ dist/
 *.AppImage.*
 
 # Local secrets and OS/editor temporary files.
+/.vscode/
 .env
 .env.*
 !.env.example
