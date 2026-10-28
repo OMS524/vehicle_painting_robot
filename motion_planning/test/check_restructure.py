@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline preservation checks against the pre-move snapshot (no robot/ROS node).
 
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 python -B -s motion_planning/test/check_restructure.py
 """
 import ast

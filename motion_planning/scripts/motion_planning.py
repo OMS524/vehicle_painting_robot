@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline orchestration only. Numerical work is delegated to the unchanged four stages.
 
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 python -s motion_planning/scripts/motion_planning.py --check
 python -s motion_planning/scripts/motion_planning.py --run --part ES300h_hood
 python -s motion_planning/scripts/motion_planning.py --run --stage all --part ES300h_hood

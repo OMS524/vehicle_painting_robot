@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Offline import regression tests; no ROS nodes, cameras or robot connections.
 
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 python -B -s motion_planning/test/test_lazy_imports.py
 """
 import os

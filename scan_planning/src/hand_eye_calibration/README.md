@@ -83,7 +83,7 @@ IK 성공과 `--check`는 충돌 안전 확인이 아니며, 실제 이동은 SD
 프로젝트 루트에서 실행합니다. 작업 디렉토리가 달라도 YAML 내부 경로는 해당 YAML 기준입니다.
 
 ```bash
-conda activate vehicle_painting_robot_scan
+conda activate vehicle_painting_robot_scan_planning
 
 # 현재 YAML 설정 검사: 로봇·카메라·제어 프로세스 실행 없음
 # RGB로 보정하려면 먼저 hand_eye_calibration.yaml의 camera.image_source를 rgb로 변경

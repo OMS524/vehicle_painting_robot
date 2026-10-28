@@ -47,8 +47,8 @@ Python 코드에서는 `from scan_planner import acquisition, registration, clus
 모두 2단계 정합·보정의 중간/최종 결과입니다. YAML 이름과 파라미터 값도 유지합니다.
 
 2026-10-28 이름 변경 전 운영 코드·설정은 `backup/20261028_before_rename/`에
-보존했습니다. 최상위 디렉토리 이름만 `scan_planning`으로 변경했으며
-Conda 환경명 `vehicle_painting_robot_scan`, `config/scan.yaml`은 유지합니다.
+보존했습니다. 최상위 디렉토리 이름은 `scan_planning`이며,
+현재 Conda 환경명은 `vehicle_painting_robot_scan_planning`입니다. `config/scan.yaml` 이름은 유지합니다.
 상위 실행 파일은 `scripts/scan_planning.py`로 이름을 변경했습니다.
 세 단계 통합 직전 소스·실행 코드·설정은 `backup/20261028_before_three_stages/`에
 별도로 보존했습니다. 기존 세부 모듈은 운영 경로에서 제거했으며 테스트·모델·기존 로그는 변경하지 않았습니다.
@@ -99,7 +99,7 @@ DBSCAN은 차량 부품의 의미를 인식하는 모델이 아닙니다.
 프로젝트 루트에서:
 
 ```bash
-conda activate vehicle_painting_robot_scan
+conda activate vehicle_painting_robot_scan_planning
 
 # 설정만 검사 (장비 연결/로그 생성 없음)
 python -s scan_planning/scripts/scan_planning.py --check
@@ -140,7 +140,7 @@ python -s scan_planning/scripts/run_segmentation.py --geometry-dir /재구성_�
 `--help`는 장비 연결 없이 도움말만 표시하고, `--list-profiles` 및 측정 명령은 카메라에 연결합니다.
 
 ```bash
-conda activate vehicle_painting_robot_scan
+conda activate vehicle_painting_robot_scan_planning
 
 # 도움말만 확인 (장비 연결/로그 생성 없음)
 python -s scan_planning/scripts/camera_diagnostic.py --help
@@ -165,7 +165,7 @@ python -s scan_planning/scripts/camera_diagnostic.py --label direct --seconds 60
 `config/scan.yaml`은 `paint_cell`에서 복사한 새
 `robot_controller/doosan_a0912_controller` 구현에 연결되어 있습니다.
 이전 테스트 제어 구현을 복원한 것이 아니라 복사본에 조회/IK API를 추가한 것입니다.
-`vehicle_painting_robot_control` Python으로 worker를 실행하고,
+`vehicle_painting_robot_motion_planning` Python으로 worker를 실행하고,
 `test/scripts/joint_target_test.py` 및 `test/build/libdoosan_controller_c_api.so`를 사용합니다.
 
 현재 스캔용 프로세스 어댑터는 다음 Python 인터페이스를 요구합니다.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# 실행: conda activate vehicle_painting_robot_planner
+# 실행: conda activate vehicle_painting_robot_path_planning
 # python path_planning/scripts/path_planning.py --help
 
 import csv

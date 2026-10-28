@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # 실행 (먼저 hand_eye_calibration.yaml의 보드 치수/기준 자세/연결 설정 확인):
-#   conda activate vehicle_painting_robot_scan
+#   conda activate vehicle_painting_robot_scan_planning
 #   python -s /home/oms/vehicle_painting_robot/scan_planning/src/hand_eye_calibration/hand_eye_calibration.py --check
 # 카메라만 미리보기: --check 대신 --preview
 # 실제 로봇 이동/촬영/보정: --check 대신 --execute (작업 공간 확인 및 시작 동의 필요).

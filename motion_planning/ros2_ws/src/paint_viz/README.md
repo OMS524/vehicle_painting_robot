@@ -29,7 +29,7 @@ python -s motion_planning/scripts/visualize_motion.py --part ES300h_hood
 ros2 launch paint_viz cell_view.launch.py gantry_env:=x7y4z3 gui:=true
 ```
 
-빌드 도구는 `vehicle_painting_robot_control` 환경의 colcon을 사용한다.
+빌드 도구는 `vehicle_painting_robot_motion_planning` 환경의 colcon을 사용한다.
 ROS 노드/launch/설치 자산 변경은 재빌드한다. 활성화 스크립트는 순수 계산 소스를 우선 참조한다.
 
 ## 유지된 ROS 명령

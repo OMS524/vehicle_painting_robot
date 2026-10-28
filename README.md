@@ -40,9 +40,9 @@ bash miniforge/setup.sh
 
 | 기능 | 생성되는 환경 | 패키지 설정 파일 |
 | --- | --- | --- |
-| 스캔·정합·클러스터링 | `vehicle_painting_robot_scan` | [scan_planning.yaml](miniforge/config/scan_planning.yaml) |
-| 도장 경로 생성 | `vehicle_painting_robot_planner` | [path_planning.yaml](miniforge/config/path_planning.yaml) |
-| 모션 플래닝·로봇 제어 | `vehicle_painting_robot_control` | [motion_planning.yaml](miniforge/config/motion_planning.yaml) |
+| 스캔·정합·클러스터링 | `vehicle_painting_robot_scan_planning` | [scan_planning.yaml](miniforge/config/scan_planning.yaml) |
+| 도장 경로 생성 | `vehicle_painting_robot_path_planning` | [path_planning.yaml](miniforge/config/path_planning.yaml) |
+| 모션 플래닝·로봇 제어 | `vehicle_painting_robot_motion_planning` | [motion_planning.yaml](miniforge/config/motion_planning.yaml) |
 
 필요한 환경만 만들려면 다음 중 해당 명령만 실행합니다.
 
@@ -65,7 +65,7 @@ bash miniforge/setup.sh control
 로봇을 이동시키는 스캔 또는 실제 로봇 제어에 필요합니다. 저장 데이터 후처리나 도장 경로 생성만 한다면 생략할 수 있습니다.
 
 ```bash
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 cmake -S robot_controller/doosan_a0912_controller/test \
   -B robot_controller/doosan_a0912_controller/test/build \
   -DCMAKE_BUILD_TYPE=Release \
@@ -96,7 +96,7 @@ python -c "import sys; print(sys.executable)"
 실제 카메라로 촬영할 PC에서 한 번 설정합니다. 카메라 Python SDK는 2단계 스캔 환경 설치에 포함됩니다.
 
 ```bash
-conda activate vehicle_painting_robot_scan
+conda activate vehicle_painting_robot_scan_planning
 SDK_DIR="$(python -c 'import importlib.util, os; print(os.path.dirname(importlib.util.find_spec("pyorbbecsdk").origin))')"
 python "$SDK_DIR/shared/setup_env.py"
 ```
@@ -130,13 +130,13 @@ ROS 시각화를 사용하지 않는 스캔 후처리·도장 경로 생성·오
 전체 패키지 및 실장비 동작 검증을 대신하는 검사는 아닙니다.
 
 ```bash
-conda activate vehicle_painting_robot_scan
+conda activate vehicle_painting_robot_scan_planning
 python -s scan_planning/scripts/scan_planning.py --check
 
-conda activate vehicle_painting_robot_planner
+conda activate vehicle_painting_robot_path_planning
 python -s path_planning/scripts/path_planning.py --help
 
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 python -s motion_planning/scripts/motion_planning.py --check
 ```
 
@@ -149,18 +149,18 @@ python -s motion_planning/scripts/motion_planning.py --check
 앱 빌드는 위 설치 스크립트에 포함되지 않으며, 앱에서도 외부 planner 소스와 Python 환경이 필요합니다.
 
 ## Conda Activate
-### Scan
+### Scan Planning
 ```bash
-conda activate vehicle_painting_robot_scan
+conda activate vehicle_painting_robot_scan_planning
 conda activate vehicle_painting_robot_sam3
 conda activate vehicle_painting_robot_efficientsam3
 conda activate vehicle_painting_robot_custom_model
 ```
-### Path Planner
+### Path Planning
 ```bash
-conda activate vehicle_painting_robot_planner
+conda activate vehicle_painting_robot_path_planning
 ```
-### Robot Control
+### Motion Planning
 ```bash
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 ```

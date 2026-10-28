@@ -1,7 +1,7 @@
 # motion_planning + robot_controller 공용 환경 (Ubuntu 22.04 / ROS 2 Humble)
 # 신규: bash miniforge/setup.sh control
 # 갱신: bash miniforge/setup.sh control --update
-name: vehicle_painting_robot_control
+name: vehicle_painting_robot_motion_planning
 channels:
   - conda-forge
   - nodefaults

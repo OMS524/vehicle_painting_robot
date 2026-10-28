@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# 설정 검사: conda activate vehicle_painting_robot_scan
+# 설정 검사: conda activate vehicle_painting_robot_scan_planning
 #   python -s scan_planning/scripts/scan_planning.py --check
 # 새 취득 + 전체 공정: python -s scan_planning/scripts/scan_planning.py --execute
 # 저장 데이터 재처리: python -s scan_planning/scripts/scan_planning.py --capture-dir /촬영/폴더 --visualize

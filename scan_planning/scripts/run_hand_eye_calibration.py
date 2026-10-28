@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# conda activate vehicle_painting_robot_scan
+# conda activate vehicle_painting_robot_scan_planning
 # python -s scan_planning/scripts/run_hand_eye_calibration.py --check
 # RGB/C2D 선택: src/hand_eye_calibration/hand_eye_calibration.yaml의 camera.image_source
 # 카메라만 미리보기: --preview / 실제 이동·촬영·계산: --execute

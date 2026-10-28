@@ -28,7 +28,7 @@ path_planning/
 저장소 루트에서 실행한다. 입력 좌표의 길이 단위는 m이다.
 
 ```bash
-conda activate vehicle_painting_robot_planner
+conda activate vehicle_painting_robot_path_planning
 cd /home/oms/vehicle_painting_robot
 
 # 한 부품 경로 생성: log/<실행일시>/에 CSV, 사용 설정과 디버그 HTML 저장

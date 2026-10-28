@@ -14,14 +14,14 @@
 
 ## 현재 빌드 방법
 
-현재 `vehicle_painting_robot_control` 환경의 Eigen/Pinocchio를 사용합니다.
+현재 `vehicle_painting_robot_motion_planning` 환경의 Eigen/Pinocchio를 사용합니다.
 복사 전 빌드 캐시에 다른 절대 경로가 있다면 기존 `test/build`를 백업/이동한 후 빌드하세요.
 SDK `API-DRFL`은 프로젝트에 고정된 Git 서브모듈입니다.
 
 ```bash
 cd /home/oms/vehicle_painting_robot
 git submodule update --init -- robot_controller/doosan_a0912_controller/API-DRFL
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 cmake -S robot_controller/doosan_a0912_controller/test \
   -B robot_controller/doosan_a0912_controller/test/build \
   -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$CONDA_PREFIX" \
@@ -67,7 +67,7 @@ SDK status 1/2(작업영역 밖/손목 특이점)는 `IKNoSolutionError.sdk_stat
 
 ```bash
 cd /home/oms/vehicle_painting_robot
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 python -B -s -m unittest discover -s robot_controller/doosan_a0912_controller/test/tests -v
 python -B -s scan_planning/src/scan_planner/robot_worker.py \
   --wrapper robot_controller/doosan_a0912_controller/test/scripts/joint_target_test.py \

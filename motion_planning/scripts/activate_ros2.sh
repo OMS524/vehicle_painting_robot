@@ -23,7 +23,7 @@ if [[ "$(type -t conda 2>/dev/null)" != "function" ]]; then
         return 1
     fi
 fi
-conda activate "${PAINT_CELL_CONDA_ENV:-vehicle_painting_robot_control}" || return 1
+conda activate "${PAINT_CELL_CONDA_ENV:-vehicle_painting_robot_motion_planning}" || return 1
 source "${ROS_SETUP:-/opt/ros/humble/setup.bash}" || return 1
 if [[ -f "$PAINT_CELL_WS/install/setup.bash" ]]; then
     source "$PAINT_CELL_WS/install/setup.bash" || return 1

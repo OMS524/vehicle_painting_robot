@@ -42,7 +42,7 @@ vehicle_painting_robot/
 │   ├── urdf/                        # 갠트리·툴 URDF 및 STL
 │   └── a0912_meshes/                 # A0912 원본 메시
 ├── robot_controller/                   # 장비 SDK·실제 제어
-└── miniforge/config/motion_planning.yaml  # vehicle_painting_robot_control 환경
+└── miniforge/config/motion_planning.yaml  # vehicle_painting_robot_motion_planning 환경
 ```
 
 `paint_viz`의 `config`, `urdf`, `motion_planner`와 `dsr_description2/meshes`는
@@ -53,10 +53,10 @@ ROS 빌드 시 패키지에 코드와 자산을 설치하므로 기존 `package:
 
 ## 환경과 실행
 
-아래 명령은 저장소 루트에서 실행한다. 환경 이름은 `vehicle_painting_robot_control`이다.
+아래 명령은 저장소 루트에서 실행한다. 환경 이름은 `vehicle_painting_robot_motion_planning`이다.
 
 ```bash
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 
 # 입력·설정·실행 명령 확인: 계산/저장/로봇 연결을 하지 않음
 python -s motion_planning/scripts/motion_planning.py --check

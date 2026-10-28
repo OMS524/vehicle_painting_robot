@@ -2,7 +2,7 @@
 # 실제 촬영: --execute + Enter 확인. 기본 실행은 설정 검사만 수행합니다.
 # 모든 상대 경로는 이 YAML 기준입니다.
 # paint_cell에서 복사한 새 제어 구현 + 스캔용 조회/IK API. 원본 paint_cell은 변경하지 않습니다.
-control_python: /home/oms/miniforge3/envs/vehicle_painting_robot_control/bin/python
+control_python: /home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning/bin/python
 control_wrapper: ../../robot_controller/doosan_a0912_controller/test/scripts/joint_target_test.py
 control_library: ../../robot_controller/doosan_a0912_controller/test/build/libdoosan_controller_c_api.so
 xacro: ../../description/xacro/a0912_to_tool_scan.xacro

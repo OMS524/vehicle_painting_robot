@@ -5,9 +5,9 @@ Ubuntu 22.04 / Linux x86_64 기준이며, sudo 없이 실행한다.
 
 | 기능 | 환경 이름 | 패키지 정의 |
 | --- | --- | --- |
-| 스캔·3D 재구성·Xacro 뷰어 | `vehicle_painting_robot_scan` | [scan_planning.yaml](config/scan_planning.yaml) |
-| 도장 경로 생성·CSV/HTML 디버깅 | `vehicle_painting_robot_planner` | [path_planning.yaml](config/path_planning.yaml) |
-| 모션 플래닝·두산 로봇 제어·ROS 시각화 빌드 도구 | `vehicle_painting_robot_control` | [motion_planning.yaml](config/motion_planning.yaml) |
+| 스캔·3D 재구성·Xacro 뷰어 | `vehicle_painting_robot_scan_planning` | [scan_planning.yaml](config/scan_planning.yaml) |
+| 도장 경로 생성·CSV/HTML 디버깅 | `vehicle_painting_robot_path_planning` | [path_planning.yaml](config/path_planning.yaml) |
+| 모션 플래닝·두산 로봇 제어·ROS 시각화 빌드 도구 | `vehicle_painting_robot_motion_planning` | [motion_planning.yaml](config/motion_planning.yaml) |
 
 ## 설치
 
@@ -25,14 +25,15 @@ bash ~/vehicle_painting_robot/miniforge/setup.sh planner
 bash ~/vehicle_painting_robot/miniforge/setup.sh control
 ```
 
-환경 설정 파일은 `miniforge/config/`에서 관리한다. 실행 대상 `scan` / `planner` / `control`과 기존 가상환경 이름은 유지한다.
+환경 설정 파일은 `miniforge/config/`에서 관리한다. 실행 대상 `scan` / `planner` / `control`은 유지하고,
+각각 위 표의 `scan_planning` / `path_planning` / `motion_planning` 환경을 생성한다.
 
 기본 동작은 같은 이름의 환경이 이미 있으면 해당 환경만 건너뛰고 나머지를 생성하는 것이다.
 기존 제어 환경에도 현재 모션 플래닝 의존성을 반영하려면 다음처럼 갱신한다.
 
 ```bash
 bash ~/vehicle_painting_robot/miniforge/setup.sh control --update
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 ```
 
 `--update`는 지정한 대상의 YAML로 `conda env update`를 실행한다. 환경이 없으면 새로 생성한다.
@@ -55,15 +56,15 @@ conda activate vehicle_painting_robot_control
 
 ```bash
 # 스캔 / Xacro 뷰어
-conda activate vehicle_painting_robot_scan
+conda activate vehicle_painting_robot_scan_planning
 python ~/vehicle_painting_robot/scan_planning/test/doosan_a0912_scan_test/scripts/visualize_xacro.py
 
 # 도장 경로 생성: 실행 전 test.py의 CASES와 파라미터를 확인한다.
-conda activate vehicle_painting_robot_planner
+conda activate vehicle_painting_robot_path_planning
 python ~/vehicle_painting_robot/path_planning/test/scripts/test.py
 
 # 로봇 제어: 제어 .so 재빌드 및 장비 실행 조건을 확인한 다음 사용한다.
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 ```
 
 `setup.sh`는 환경 생성·명시적 갱신과 패키지 설치만 한다.
@@ -78,7 +79,7 @@ SDK/Open3D 바이너리 수정, 시스템 라이브러리 교체, `LD_LIBRARY_PA
 
 ```bash
 conda deactivate
-conda env remove --name vehicle_painting_robot_scan
+conda env remove --name vehicle_painting_robot_scan_planning
 bash ~/vehicle_painting_robot/miniforge/setup.sh scan
 ```
 
@@ -112,7 +113,7 @@ Plotly가 `~/.local` 경로에서 로딩되는 경우를 확인했으며, 각 �
 
 ## 모션 플래닝
 
-모션 플래닝은 별도의 `paintcell` 환경을 만들지 않고 `vehicle_painting_robot_control`을 사용한다.
+모션 플래닝은 별도의 `paintcell` 환경을 만들지 않고 `vehicle_painting_robot_motion_planning`을 사용한다.
 `config/motion_planning.yaml`은 현재 `motion_planning`의 import와 검증된 제어 환경을 기준으로 한다.
 
 | 구성 | 지정 버전 / 역할 |
@@ -131,7 +132,7 @@ ROS 자체는 시스템 Humble(`/opt/ros/humble`)을 사용한다. `setup.sh`는
 
 ```bash
 # ROS 없이 모션 플래닝 입력/설정 확인
-conda activate vehicle_painting_robot_control
+conda activate vehicle_painting_robot_motion_planning
 python -s ~/vehicle_painting_robot/motion_planning/scripts/motion_planning.py --check
 
 # 최초 1회 ROS 패키지 빌드 (시스템 ROS Humble 및 CMake/컴파일러는 별도 설치)

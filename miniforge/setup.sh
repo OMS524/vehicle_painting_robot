@@ -11,7 +11,7 @@ usage() {
         '사용법: bash miniforge/setup.sh [all|scan|planner|control] [--update]' \
         '  인자 없음: 세 환경 중 없는 환경만 생성' \
         '  control: motion_planning / robot_controller용 환경 생성' \
-        '  control --update: 기존 vehicle_painting_robot_control을 config/motion_planning.yaml 기준으로 갱신' \
+        '  control --update: 기존 vehicle_painting_robot_motion_planning을 config/motion_planning.yaml 기준으로 갱신' \
         '  --update는 명시한 대상에만 적용하며, --prune/환경 삭제/ROS 빌드는 하지 않음'
 }
 TARGET=all
@@ -57,12 +57,11 @@ fi
 # 기본 동작은 기존 환경 유지. 갱신은 --update를 명시한 경우에만 수행한다.
 EXISTING_ENVS=$("$CONDA_BIN" env list)
 for target in "${TARGETS[@]}"; do
-    env_name="vehicle_painting_robot_${target}"
-    # CLI 대상과 기존 가상환경 이름은 유지하고, 새 파일 이름으로 연결한다.
+    # 기존 CLI 대상(scan/planner/control)을 각 planning 환경에 연결한다.
     case "$target" in
-        scan) spec="$CONFIG_DIR/scan_planning.yaml" ;;
-        planner) spec="$CONFIG_DIR/path_planning.yaml" ;;
-        control) spec="$CONFIG_DIR/motion_planning.yaml" ;;
+        scan) env_name=vehicle_painting_robot_scan_planning; spec="$CONFIG_DIR/scan_planning.yaml" ;;
+        planner) env_name=vehicle_painting_robot_path_planning; spec="$CONFIG_DIR/path_planning.yaml" ;;
+        control) env_name=vehicle_painting_robot_motion_planning; spec="$CONFIG_DIR/motion_planning.yaml" ;;
     esac
     if [[ ! -f "$spec" ]]; then
         printf '[오류] 환경 정의 파일이 없습니다: %s\n' "$spec" >&2

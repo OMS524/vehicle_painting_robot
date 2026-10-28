@@ -1,4 +1,4 @@
-name: vehicle_painting_robot_planner
+name: vehicle_painting_robot_path_planning
 channels:
   - conda-forge
   - nodefaults

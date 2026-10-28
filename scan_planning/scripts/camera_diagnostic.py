@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # 실행 (카메라 연결 필요, 로봇 제어 없음):
-#   conda activate vehicle_painting_robot_scan
+#   conda activate vehicle_painting_robot_scan_planning
 #   python -s scan_planning/scripts/camera_diagnostic.py --label direct --seconds 600 --visualize
 # 지원 프로파일 확인: 위 명령 대신 동일 파일에 --list-profiles 지정.
 # 기본 저장: scan_planning/log/camera_diagnostic/<일시>_<label>/
