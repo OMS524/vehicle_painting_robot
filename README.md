@@ -152,6 +152,8 @@ python -s motion_planning/scripts/motion_planning.py --check
 ### Scan Planning
 ```bash
 conda activate vehicle_painting_robot_scan_planning
+```
+```bash
 conda activate vehicle_painting_robot_sam3
 conda activate vehicle_painting_robot_efficientsam3
 conda activate vehicle_painting_robot_custom_model
