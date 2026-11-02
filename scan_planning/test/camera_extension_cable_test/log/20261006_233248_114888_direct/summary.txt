@@ -1,0 +1,13 @@
+케이블: direct
+실행 상태: completed
+관측 판정: review_required
+프로파일: {'color': {'width': 1920, 'height': 1080, 'fps': 30, 'format': 'MJPG'}, 'depth': {'width': 640, 'height': 576, 'fps': 30, 'format': 'Y16'}}
+color: 30.117 FPS, 고유 수신 1807, 누락 의심 0, 중복 0, 최장 무수신 41.6 ms, 타임아웃 사건 0
+depth: 5.500 FPS, 고유 수신 330, 누락 의심 0, 중복 0, 최장 무수신 262.6 ms, 타임아웃 사건 0
+SDK가 USB 2 연결로 보고했습니다. USB 3 링크/케이블/포트를 확인하세요.
+depth: 평균 수신 FPS가 설정값의 95% 미만입니다.
+depth: host_gap_events=329
+depth: device_gap_events=329
+sdk_warning_or_error: 2회 (준비/측정/종료 시점은 events.jsonl에서 확인)
+frame_anomaly: 329회 (준비/측정/종료 시점은 events.jsonl에서 확인)
+관측된 이상이 없어도 케이블의 장기/실제 겐트리 운용 안정성을 보장하지 않습니다.

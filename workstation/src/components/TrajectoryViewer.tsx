@@ -805,8 +805,9 @@ export function TrajectoryViewer({
     renderer.domElement.addEventListener("pointerdown", pointerDown);
 
     const resize = () => {
-      const width = Math.max(container.clientWidth, 1);
-      const height = Math.max(container.clientHeight, 1);
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+      if (!width || !height) return;
       renderer.setSize(width, height, false);
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
@@ -816,12 +817,14 @@ export function TrajectoryViewer({
     resize();
     const rimDirection = new THREE.Vector3();
     const animate = () => {
+      runtime.animationFrame = requestAnimationFrame(animate);
+      // Keep camera/edit state while Home is shown, without drawing a hidden view.
+      if (!container.clientWidth || !container.clientHeight) return;
       controls.update();
       rimDirection.copy(camera.position).sub(controls.target).normalize();
       rimLight.position.copy(controls.target).addScaledVector(rimDirection, -5);
       rimTarget.position.copy(controls.target);
       renderer.render(scene, camera);
-      runtime.animationFrame = requestAnimationFrame(animate);
     };
     animate();
     runtimeRef.current = runtime;

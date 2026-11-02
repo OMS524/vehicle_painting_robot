@@ -1,0 +1,275 @@
+{
+  "control_python": "/home/oms/miniconda3/envs/vehicle_painting_robot_control/bin/python3.10",
+  "control_wrapper": "/home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/scripts/joint_target_test.py",
+  "control_library": "/home/oms/vehicle_painting_robot/robot_control/doosan_a0912_controller/test/build-scan/libdoosan_controller_c_api.so",
+  "xacro": "/home/oms/vehicle_painting_robot/description/xacro/a0912_to_tool_scan.xacro",
+  "output_dir": "/home/oms/vehicle_painting_robot/scan/doosan_a0912_scan_test/log",
+  "mounting_tf_confirmed": true,
+  "pose_estimation": {
+    "source": "hand_eye",
+    "hand_eye_calibration_file": "/home/oms/vehicle_painting_robot/scan/hand_eye_calibration_test/log/20261015_202951_112921/depth_tf_variants_20261015_215240_124624/unit_axis/calibration.json"
+  },
+  "robot": {
+    "ip": "192.168.137.100",
+    "port": 12345,
+    "rt_port": 12347,
+    "connect_timeout_sec": 15,
+    "move_timeout_sec": 120,
+    "max_velocity_deg_s": 10.0,
+    "acceleration_deg_s2": 10.0,
+    "target_tolerance_deg": 0.1,
+    "command_time_sec": 0.01,
+    "max_move_delta_deg": 180.0,
+    "settle_sec": 1.0,
+    "settle_timeout_sec": 10.0,
+    "stationary_velocity_deg_s": 0.05,
+    "capture_drift_deg": 0.05
+  },
+  "cartesian": {
+    "target_frame": "link_6"
+  },
+  "views": [
+    {
+      "name": "pose_01",
+      "joint_deg": [
+        88.1,
+        -9.82,
+        114.84,
+        -5.65,
+        120.46,
+        -91.59
+      ]
+    },
+    {
+      "name": "pose_02",
+      "joint_deg": [
+        88.1,
+        -35.06,
+        121.67,
+        -5.65,
+        129.89,
+        -91.59
+      ]
+    },
+    {
+      "name": "pose_03",
+      "joint_deg": [
+        88.1,
+        -15.43,
+        127.49,
+        -2.62,
+        105.41,
+        -91.59
+      ]
+    },
+    {
+      "name": "pose_04",
+      "joint_deg": [
+        60.03,
+        -13.83,
+        125.74,
+        -26.93,
+        90.6,
+        -131.24
+      ]
+    },
+    {
+      "name": "pose_05",
+      "joint_deg": [
+        60.03,
+        -13.83,
+        110.87,
+        -40.24,
+        103.18,
+        -144.16
+      ]
+    },
+    {
+      "name": "pose_06",
+      "joint_deg": [
+        43.74,
+        -6.29,
+        115.64,
+        -38.21,
+        79.8,
+        -157.04
+      ]
+    },
+    {
+      "name": "pose_07",
+      "joint_deg": [
+        45.99,
+        -1.69,
+        93.26,
+        -46.24,
+        86.94,
+        -171.8
+      ]
+    },
+    {
+      "name": "pose_08",
+      "joint_deg": [
+        40.77,
+        18.43,
+        84.33,
+        -42.93,
+        75.41,
+        -181.06
+      ]
+    },
+    {
+      "name": "pose_09",
+      "joint_deg": [
+        43.55,
+        14.62,
+        66.81,
+        -48.97,
+        95.19,
+        -191.02
+      ]
+    },
+    {
+      "name": "pose_10",
+      "joint_deg": [
+        136.37,
+        -8.84,
+        110.31,
+        35.67,
+        82.24,
+        -18.96
+      ]
+    },
+    {
+      "name": "pose_11",
+      "joint_deg": [
+        136.87,
+        -6.69,
+        108.62,
+        42.04,
+        69.39,
+        -16.22
+      ]
+    },
+    {
+      "name": "pose_12",
+      "joint_deg": [
+        138.86,
+        7.38,
+        96.93,
+        38.45,
+        78.06,
+        -10.12
+      ]
+    },
+    {
+      "name": "pose_13",
+      "joint_deg": [
+        135.4,
+        9.55,
+        79.91,
+        41.88,
+        89.56,
+        2.68
+      ]
+    },
+    {
+      "name": "pose_14",
+      "joint_deg": [
+        135.52,
+        17.77,
+        81.52,
+        38.0,
+        76.04,
+        1.77
+      ]
+    },
+    {
+      "name": "pose_15",
+      "joint_deg": [
+        134.82,
+        17.59,
+        75.95,
+        40.43,
+        60.58,
+        7.0
+      ]
+    },
+    {
+      "name": "pose_16",
+      "joint_deg": [
+        111.67,
+        13.42,
+        79.43,
+        50.37,
+        109.31,
+        -17.79
+      ]
+    },
+    {
+      "name": "pose_17",
+      "joint_deg": [
+        103.86,
+        13.03,
+        73.28,
+        57.44,
+        125.56,
+        -17.79
+      ]
+    },
+    {
+      "name": "pose_18",
+      "joint_deg": [
+        59.46,
+        16.75,
+        72.18,
+        -53.93,
+        106.87,
+        -177.51
+      ]
+    },
+    {
+      "name": "pose_19",
+      "joint_deg": [
+        65.8,
+        20.56,
+        61.17,
+        -63.35,
+        114.51,
+        -182.4
+      ]
+    },
+    {
+      "name": "pose_20",
+      "joint_deg": [
+        80.4,
+        5.57,
+        91.07,
+        -38.12,
+        132.44,
+        -130.99
+      ]
+    }
+  ],
+  "camera": {
+    "serial_number": "",
+    "capture_color": true,
+    "color_width": 0,
+    "color_height": 0,
+    "color_max_time_delta_ms": 50.0,
+    "width": 0,
+    "height": 0,
+    "fps": 0,
+    "warmup_frames": 30,
+    "capture_frames": 30,
+    "min_valid_frames": 3,
+    "capture_timeout_sec": 20.0,
+    "min_depth_mm": 200.0,
+    "max_depth_mm": 3000.0,
+    "min_points": 1000
+  },
+  "reconstruction": {
+    "voxel_size_mm": 2.0,
+    "roi_min_mm": null,
+    "roi_max_mm": null
+  }
+}

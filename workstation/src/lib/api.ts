@@ -49,6 +49,13 @@ export async function generateTrajectory(
   });
 }
 
+export async function importTrajectoryFile(file: File): Promise<GenerationSummary> {
+  requireTauri();
+  return invoke<GenerationSummary>("import_trajectory_file", new Uint8Array(await file.arrayBuffer()), {
+    headers: { "x-file-name": encodeURIComponent(file.name) },
+  });
+}
+
 export async function readGeneratedTrajectory(): Promise<ArrayBuffer> {
   requireTauri();
   return invoke<ArrayBuffer>("read_generated_trajectory");

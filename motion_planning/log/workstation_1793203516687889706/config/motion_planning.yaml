@@ -1,0 +1,31 @@
+gantry_env: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203516687889706/config/gantry.yaml
+parts:
+- workstation_path
+parts_dir: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203516687889706/config/parts
+planner_csv_root: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203516687889706/input
+fallback_input_root: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203516687889706/input
+output_root: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203516687889706/results
+stages:
+- time_profile
+- optimization
+time_profile:
+  velocity_m_s: 0.42
+  acceleration_m_s2: 1.2
+optimization_arguments:
+- --stride
+- '1'
+- --tcp-frame
+- tcp
+- --tool-clearance-weight
+- '100'
+- --ipopt-print-level
+- '0'
+transition_arguments:
+- --tcp-frame
+- tcp
+collision_arguments:
+- --stride
+- '2'
+- --part-stride
+- '4'
+sequence: paint_with_tool

@@ -21,6 +21,7 @@ from typing import Any
 import numpy as np
 import open3d as o3d
 import yaml
+from trajectory_import import import_trajectory
 
 
 STATE_FILE_NAME = "planner_state.pkl"
@@ -337,6 +338,7 @@ def generate(request: dict[str, Any]) -> dict[str, Any]:
         yaml.safe_dump(parameter_document, allow_unicode=True, sort_keys=False),
         encoding="utf-8",
     )
+    (session_dir / "imported_trajectory.json").unlink(missing_ok=True)
     return _trajectory_summary(painting_trajectory, len(controls))
 
 
@@ -609,7 +611,8 @@ def complete(request: dict[str, Any]) -> dict[str, Any]:
     full_trajectory = _require_file(
         generated_dir / "painting_trajectory.csv", "전체 도장 경로"
     )
-    scan_path = _require_file(request.get("scanPath"), "스캔 데이터")
+    scan_path = (_require_file(request["scanPath"], "스캔 데이터")
+                 if request.get("scanPath") else None)
     log_root = planner_root / "log"
     log_root.mkdir(parents=True, exist_ok=True)
 
@@ -623,15 +626,22 @@ def complete(request: dict[str, Any]) -> dict[str, Any]:
 
     for path in generated_dir.glob("*.csv"):
         shutil.copy2(path, output_dir / path.name)
-    shutil.copy2(scan_path, output_dir / scan_path.name)
-    for file_name in ("painting_trajectory.yaml", CONTROL_POINTS_FILE_NAME):
+    if scan_path is not None:
+        # A scan named painting_trajectory.csv must not overwrite the output.
+        scan_name = scan_path.name
+        if (output_dir / scan_name).exists():
+            scan_name = "scan_" + scan_name
+        shutil.copy2(scan_path, output_dir / scan_name)
+    else:
+        scan_name = ""
+    for file_name in ("painting_trajectory.yaml", CONTROL_POINTS_FILE_NAME, "imported_trajectory.json"):
         source = session_dir / file_name
         if source.is_file():
             shutil.copy2(source, output_dir / file_name)
 
     summary = {
         "completedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
-        "scanFile": scan_path.name,
+        "scanFile": scan_name,
         "trajectoryFile": full_trajectory.name,
         "outputDirectory": str(output_dir),
     }
@@ -644,7 +654,7 @@ def complete(request: dict[str, Any]) -> dict[str, Any]:
 
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Painting Process Workstation backend")
-    parser.add_argument("action", choices=("generate", "regenerate", "complete"))
+    parser.add_argument("action", choices=("generate", "regenerate", "complete", "import"))
     return parser.parse_args()
 
 
@@ -655,6 +665,7 @@ def main() -> int:
         "generate": generate,
         "regenerate": regenerate,
         "complete": complete,
+        "import": import_trajectory,
     }
     response = handlers[args.action](request)
     json.dump(response, sys.stdout, ensure_ascii=False, allow_nan=False)

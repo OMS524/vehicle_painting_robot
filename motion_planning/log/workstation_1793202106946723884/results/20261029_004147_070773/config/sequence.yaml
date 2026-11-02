@@ -1,0 +1,55 @@
+# 통합 시퀀스: 홈 → 툴체인저 슬롯 N 접근·장착 → 이탈 → 도장 시작점 접근 → CSV 도장 → 후퇴 → 슬롯 N 반납 → 홈
+#   ros2 run paint_viz build_sequence --gantry-env x7y4z3 --part ES300h_hood --out-dir <dir>
+# 갠트리/툴체인저/홈 자세는 gantry_env yaml 이 정하고, 여기서는 segment 순서·TCP·속도만 정한다.
+sequence:
+  name: paint_with_tool
+  slot: 1
+  paint:
+    # stitched row+전이 joint CSV (run_all.sh 산출). {env_suffix} = "" (legacy) | "_<env>", {part} = --part
+    dir: "$MOTION_RUN/transition/{part}"
+    pattern: "seq_*_joint.csv"
+  control_dt: 0.01        # 전이/도킹 stage 샘플 간격 [s] (도장 row 는 원본 1 ms 그대로)
+  command_dt: 0.001       # 통합 sequence_command.csv 샘플 간격 [s]
+  event_dwell_s: 1.0      # tool_attach / tool_detach 정지 시간 [s] (재생 확인용. 실제 체인저 동작 시간으로 바꿀 것)
+  collision_stride: 5     # stage 충돌 검사 샘플 간격
+  limits:                 # 관절 한계 (stitch / trajectory_nlp 와 동일)
+    joint_velocity_deg_s: 70.0
+    joint_acceleration_deg_s2: 500.0
+    # 갠트리 한계는 gantry_env yaml motor_limits 가 우선한다 (x7y4z3/spec_c: 0.5 m/s, 1.6 m/s^2). 아래는 env 에 없을 때만.
+    gantry_velocity_m_s: 1.0
+    gantry_acceleration_m_s2: 5.0
+  speeds:
+    dock_approach_scale: 0.25     # 도킹 접기/재배치/풀기 관절 구간: 한계 × 0.25 (천천히)
+    reposition_scale: 0.5         # 도장 전후 팔 재배치 관절 구간
+    transit_scale: 1.0            # 갠트리 이송 (팔 접은 채)
+    dock_descend_tcp_m_s: 0.02    # pre-dock → dock 수직 하강 TCP 속도
+    dock_ascend_tcp_m_s: 0.05     # dock → pre-dock 상승
+    paint_approach_tcp_m_s: 0.10  # 도장 시작점 접근 / 후퇴 (분사축 반대 방향 직선)
+  approach:
+    lift_m: 0.15          # 도장 시작/끝에서 분사축 반대 방향으로 띄우는 거리
+    step_m: 0.01          # Cartesian 직선 IK 샘플 간격
+  dock:                   # gantry_env toolchanger.dock 덮어쓰기 (pre_offset / standoff / gantry_x_joint / flip / grid / window)
+    flip: false
+    depart_lift_m: 0.35   # 툴을 든 채 슬롯에서 수직으로 오르내리는 높이 (pre_offset 0.15 보다 높게: 건+컵이 스탠드를 쓸지 않게)
+    depart_retreat_xyz: [0.0, 0.30, 0.0]   # 올라간 뒤 스탠드에서 수평으로 물러나는 벡터(월드, 셀 중앙 쪽 +Y). 그 다음 팔을 재배치한다
+  shallow_penetration_m: 0.008   # 이 깊이 이하 간섭은 '경미'(모델 오차 수준)로 분류 (dock_path 와 같은 기준)
+  ik:
+    max_iter: 200
+    damping: 0.05
+    max_step_deg: 5.0
+    position_tolerance: 0.002
+    orientation_tolerance_deg: 2.0
+    polish_iter: 40
+  segments:               # 순서대로 실행. 각 segment 의 tcp_frame 이 그 구간의 목표 프레임이다.
+    - {name: home,            type: home}
+    - {name: dock_approach,   type: dock_approach, slot: 1, tcp_frame: link_6}
+    - {name: tool_attach,     type: tool_attach,   slot: 1}
+    - {name: dock_depart,     type: dock_depart,   tcp_frame: link_6}
+    - {name: to_paint,        type: transit,       target: paint, tcp_frame: tcp}
+    - {name: paint,           type: paint,         tcp_frame: tcp}
+    - {name: retreat,         type: retreat,       tcp_frame: tcp}
+    - {name: to_dock,         type: transit,       target: dock,  tcp_frame: tcp}
+    - {name: dock_return,     type: dock_return,   slot: 1, tcp_frame: link_6}
+    - {name: tool_detach,     type: tool_detach}
+    - {name: dock_depart_bare, type: dock_depart,  tcp_frame: link_6}
+    - {name: go_home,         type: home}

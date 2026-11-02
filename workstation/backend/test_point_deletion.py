@@ -48,6 +48,23 @@ def delete(state, points, rows=()):
 
 
 class PointDeletionTests(unittest.TestCase):
+    def test_complete_without_regeneration_preserves_generated_csv(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            session = root / "session"; session.mkdir()
+            planner = root / "planner"; planner.mkdir()
+            scan = session / "scan.csv"
+            scan.write_text("x,y,z\n0,0,0\n1,0,0\n")
+            state = make_state()
+            config = Config.from_dict(state["_workstation_config"])
+            _, _, _, export = backend._configure_planner_imports(PLANNER)
+            generated = backend._generated_dir(session)
+            export(state, config.structuring, structuring_kwargs=backend._structuring_overrides(generated))
+            backend._write_control_points(session, controls(state))
+            original = (generated / "painting_trajectory.csv").read_bytes()
+            saved = backend.complete({"plannerRoot": str(planner), "sessionDir": str(session), "scanPath": str(scan)})
+            self.assertEqual((Path(saved["outputDirectory"]) / "painting_trajectory.csv").read_bytes(), original)
+
     def test_edit_controls_match_structured_row_order(self):
         from painting_path_planner import structure_painting_trajectory
         for side in (False, True):

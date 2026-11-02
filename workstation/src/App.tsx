@@ -3,10 +3,17 @@ import type { ReactNode } from "react";
 import * as THREE from "three";
 import { ParameterEditor } from "./components/ParameterEditor";
 import { TrajectoryViewer } from "./components/TrajectoryViewer";
+import { MotionStage } from "./components/MotionStage";
+import { ScanStage } from "./components/ScanStage";
+import { ProcessNavigation } from "./components/ProcessNavigation";
+import { HomeScreen } from "./components/HomeScreen";
+import type { ProcessStep } from "./components/ProcessNavigation";
+import { sameControlPose } from "./lib/edits";
 import {
   completeTrajectory,
   generateTrajectory,
   getBackendInfo,
+  importTrajectoryFile,
   isTauriRuntime,
   readControlPoints,
   readDefaultParameters,
@@ -27,8 +34,7 @@ import type {
   VisualizationSettings,
 } from "./types";
 
-type ProcessStep = 1 | 2 | 3;
-type BusyAction = "scan" | "generate" | "regenerate" | "complete" | null;
+type BusyAction = "scan" | "import" | "generate" | "regenerate" | "complete" | null;
 
 interface StandaloneProject {
   info: {
@@ -66,14 +72,8 @@ const initialVisualization: VisualizationSettings = {
   lightIntensity: 1,
 };
 
-const processSteps: readonly { id: ProcessStep; title: string; caption: string }[] = [
-  { id: 1, title: "스캔", caption: "Scan & Import" },
-  { id: 2, title: "도장 경로 생성", caption: "Generate" },
-  { id: 3, title: "도장 경로 수정", caption: "Edit & Complete" },
-];
-
-function Foldout({ title, children }: { title: string; children: ReactNode }) {
-  const [open, setOpen] = useState(true);
+function Foldout({ title, children, initiallyOpen = true }: { title: string; children: ReactNode; initiallyOpen?: boolean }) {
+  const [open, setOpen] = useState(initiallyOpen);
   return (
     <section className={`foldout ${open ? "open" : ""}`}>
       <button
@@ -174,13 +174,16 @@ function CommitNumberInput({
   onCommit: (value: number) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const changed = useRef(false);
   const [source, setSource] = useState(String(value));
   useEffect(() => {
     if (document.activeElement !== inputRef.current) setSource(String(value));
   }, [value]);
   const commit = () => {
+    if (!changed.current) return;
+    changed.current = false;
     const parsed = Number(source);
-    if (!Number.isFinite(parsed)) {
+    if (!source.trim() || !Number.isFinite(parsed)) {
       setSource(String(value));
       return;
     }
@@ -194,11 +197,12 @@ function CommitNumberInput({
       step={step}
       value={source}
       disabled={disabled}
-      onChange={(event) => setSource(event.target.value)}
+      onChange={(event) => { changed.current = true; setSource(event.target.value); }}
       onBlur={commit}
       onKeyDown={(event) => {
         if (event.key === "Enter") event.currentTarget.blur();
         if (event.key === "Escape") {
+          changed.current = false;
           setSource(String(value));
           event.currentTarget.blur();
         }
@@ -242,7 +246,14 @@ function VectorEditor({
 }
 
 export default function App() {
+  // The embedded read-only export still opens directly in its review screen.
+  const [page, setPage] = useState<"home" | "workspace">(() => window.__PAINTING_TRAJECTORY_STANDALONE__ ? "workspace" : "home");
+  const [workspaceOpened, setWorkspaceOpened] = useState(() => Boolean(window.__PAINTING_TRAJECTORY_STANDALONE__));
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const trajectoryInputRef = useRef<HTMLInputElement>(null);
+  const [importedPathName, setImportedPathName] = useState<string | null>(null);
+  const [scanCellView, setScanCellView] = useState(true);
+  const [generationMode, setGenerationMode] = useState<"generate" | "import">("import");
   const [step, setStep] = useState<ProcessStep>(1);
   const [layers, setLayers] = useState(initialLayers);
   const [visualization, setVisualization] = useState(initialVisualization);
@@ -265,6 +276,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [completion, setCompletion] = useState<CompletionSummary | null>(null);
   const [standalone, setStandalone] = useState(false);
+  const [motionBusy, setMotionBusy] = useState(false);
 
   useEffect(() => {
     const embedded = window.__PAINTING_TRAJECTORY_STANDALONE__;
@@ -299,7 +311,7 @@ export default function App() {
       .then(([source, info]) => {
         setParameters(parseParameterDocument(source));
         setBackendInfo(info);
-        setStatus("스캔 데이터를 불러와 공정을 시작하세요.");
+        setStatus("홈에서 공정을 시작하세요.");
       })
       .catch((reason: unknown) => {
         setError(errorText(reason));
@@ -328,12 +340,13 @@ export default function App() {
     standalone
       ? target === 3
       : target === 1
-        || (target === 2 && Boolean(scanInfo))
+        || target === 2
         || (target === 3 && Boolean(trajectory) && !generationStale)
+        || (target === 4 && Boolean(completion) && !dirty && !generationStale)
   );
 
   const invalidateGeneratedTrajectory = () => {
-    if (!trajectory) return;
+    if (!trajectory || importedPathName) return;
     setGenerationStale(true);
     setCompletion(null);
     setStatus("경로 생성 파라미터가 변경되었습니다. 경로를 다시 생성하세요.");
@@ -364,7 +377,9 @@ export default function App() {
       const info = await stageScanFile(file);
       setScanBuffer(buffer);
       setScanInfo(info);
+      setGenerationMode("generate");
       setTrajectory(null);
+      setImportedPathName(null);
       setControlPoints([]);
       setSelectedControlPointId(null);
       setDeletedRowIndices([]);
@@ -372,6 +387,7 @@ export default function App() {
       setDirty(false);
       setGenerationStale(false);
       setStep(1);
+      setScanCellView(false);
       setStatus(`${info.fileName} · ${formatBytes(info.byteCount)} 스캔 데이터를 불러왔습니다.`);
     } catch (reason: unknown) {
       setError(errorText(reason));
@@ -394,6 +410,23 @@ export default function App() {
     setDeletedPointIds([]);
   };
 
+  const importPath = async (file: File) => {
+    setBusy("import"); setError("");
+    setStatus(`${file.name} 도장 경로를 불러오는 중입니다.`);
+    try {
+      const summary = await importTrajectoryFile(file);
+      await loadGeneratedData();
+      setImportedPathName(file.name);
+      setGenerationMode("import");
+      setCompletion(null); setDirty(false); setGenerationStale(false); setStep(2);
+      setStatus(`경로 불러오기 완료 · ${summary.rowCount} rows · ${summary.pointCount} points · 원본 CSV 유지`);
+    } catch (reason) { setError(errorText(reason)); setStatus("경로 불러오기에 실패했습니다."); }
+    finally {
+      setBusy(null);
+      if (trajectoryInputRef.current) trajectoryInputRef.current.value = "";
+    }
+  };
+
   const generate = async () => {
     if (!scanInfo || !parameters) return;
     setBusy("generate");
@@ -403,6 +436,7 @@ export default function App() {
     try {
       const summary = await generateTrajectory(parameters, paintDir, scanDir);
       await loadGeneratedData();
+      setImportedPathName(null);
       setDirty(false);
       setGenerationStale(false);
       setStep(2);
@@ -421,9 +455,11 @@ export default function App() {
     id: string,
     updater: (point: EditableControlPoint) => EditableControlPoint,
   ) => {
-    setControlPoints((current) => current.map((point) => (
-      point.id === id ? updater(point) : point
-    )));
+    const previous = controlPoints.find((point) => point.id === id);
+    if (!previous) return;
+    const next = updater(previous);
+    if (sameControlPose(previous, next)) return;
+    setControlPoints((current) => current.map((point) => point.id === id ? next : point));
     setDirty(true);
     setCompletion(null);
   };
@@ -444,6 +480,7 @@ export default function App() {
 
   const setSelectedPositionAxis = (axis: number, valueMm: number) => {
     if (!selectedControlPoint) return;
+    if (Number((selectedControlPoint.position[axis] * 1000).toFixed(3)) === valueMm) return;
     const position = [...selectedControlPoint.position] as Vector3Tuple;
     position[axis] = valueMm / 1000;
     moveControlPoint(selectedControlPoint.id, position);
@@ -451,6 +488,7 @@ export default function App() {
 
   const setSelectedRotationAxis = (axis: number, valueDegrees: number) => {
     if (!selectedControlPoint || !selectedEuler) return;
+    if (Number(selectedEuler[axis].toFixed(3)) === valueDegrees) return;
     const rotation = [...selectedEuler] as Vector3Tuple;
     rotation[axis] = valueDegrees;
     updateControlPoint(selectedControlPoint.id, (point) => ({
@@ -524,6 +562,7 @@ export default function App() {
   const regenerate = async () => {
     if (!trajectory || !controlPoints.length) return;
     setBusy("regenerate");
+    setCompletion(null);
     setError("");
     setStatus("수정한 최종 경로 코어 포인트로 경로를 재생성하고 있습니다.");
     try {
@@ -555,7 +594,7 @@ export default function App() {
   };
 
   const complete = async () => {
-    if (!trajectory || dirty) return;
+    if (!trajectory || dirty || generationStale) return;
     setBusy("complete");
     setError("");
     setStatus("완료 경로와 작업 정보를 저장하고 있습니다.");
@@ -571,15 +610,51 @@ export default function App() {
     }
   };
 
-  const renderRightPanel = () => {
+  const sceneSettings = (
+    <div className="scene-settings">
+      <Foldout title="표시 설정">
+        <div className="layer-list">
+          {(scanBuffer || step === 4 || (step === 1 && scanCellView)) && <Toggle checked={layers.surface} label={step === 4 || (step === 1 && scanCellView) ? "갠트리 · 로봇" : "부품 표면"} onChange={(value) => setLayer("surface", value)} />}
+          {trajectory && step !== 1 && <>
+            <Toggle checked={layers.trajectory} label="분사 ON 경로" color="#20e66a" onChange={(value) => setLayer("trajectory", value)} />
+            <Toggle checked={layers.sprayOff} label="분사 OFF 경로" color="#ffc857" onChange={(value) => setLayer("sprayOff", value)} />
+            <Toggle checked={layers.sprayDirections} label="분사 방향" color="#4cc9f0" onChange={(value) => setLayer("sprayDirections", value)} />
+            <Toggle checked={layers.controlPoints} label="경로 포인트" color="#ff4fa3" onChange={(value) => setLayer("controlPoints", value)} />
+          </>}
+          <Toggle checked={layers.axes} label="좌표축" onChange={(value) => setLayer("axes", value)} />
+        </div>
+      </Foldout>
+      <Foldout title="조명 · 배경" initiallyOpen={false}>
+        {step !== 4 && !(step === 1 && scanCellView) && scanBuffer && <div className="inspector-property">
+          <span>표면</span>
+          <div className="segmented-control">
+            <button className={visualization.surfaceStyle === "original" ? "active" : ""} type="button" onClick={() => setVisualizationValue("surfaceStyle", "original")}>원본</button>
+            <button className={visualization.surfaceStyle === "inspection" ? "active" : ""} type="button" onClick={() => setVisualizationValue("surfaceStyle", "inspection")}>검사</button>
+          </div>
+        </div>}
+        <div className="inspector-property">
+          <span>배경</span>
+          <div className="segmented-control">
+            <button className={visualization.background === "gray" ? "active" : ""} type="button" onClick={() => setVisualizationValue("background", "gray")}>회색</button>
+            <button className={visualization.background === "black" ? "active" : ""} type="button" onClick={() => setVisualizationValue("background", "black")}>검정</button>
+          </div>
+        </div>
+        <label className="unity-toggle"><span>윤곽 조명</span><input type="checkbox" checked={visualization.rimLight} onChange={(event) => setVisualizationValue("rimLight", event.target.checked)} /></label>
+        <label className="light-control"><span><strong>조명 밝기</strong><output>{visualization.lightIntensity.toFixed(1)}×</output></span><input type="range" min="0.5" max="1.8" step="0.1" value={visualization.lightIntensity} onChange={(event) => setVisualizationValue("lightIntensity", Number(event.target.value))} /></label>
+      </Foldout>
+      <Foldout title="개발 환경" initiallyOpen={false}>
+        <div className="source-row"><span>Planner</span><strong title={backendInfo?.plannerRoot}>{backendInfo?.plannerRoot ?? "—"}</strong></div>
+        <div className="source-row"><span>Python</span><strong>{backendInfo?.pythonCommand ?? "—"}</strong></div>
+        <div className="source-row"><span>Log</span><strong title={backendInfo?.logRoot}>{backendInfo?.logRoot ?? "—"}</strong></div>
+      </Foldout>
+    </div>
+  );
+
+  const renderTaskPanel = () => {
     if (step === 1) {
       return (
-        <div className="process-panel-content">
-          <div className="process-panel-heading">
-            <span>PROCESS 01</span>
-            <h2>스캔 데이터 불러오기</h2>
-            <p>차량 부품의 PLY 또는 XYZ CSV 스캔 데이터를 선택합니다.</p>
-          </div>
+        <div className="scan-file-content">
+          <p className="section-description">저장된 부품 스캔을 선택하세요. PLY와 XYZ CSV를 지원합니다.</p>
           <button
             className="primary-action"
             type="button"
@@ -598,19 +673,12 @@ export default function App() {
               if (file) void loadScan(file);
             }}
           />
-          <div className="stage-information">
+          {scanInfo && <div className="stage-information">
             <div><span>파일</span><strong>{scanInfo?.fileName ?? "—"}</strong></div>
             <div><span>크기</span><strong>{scanInfo ? formatBytes(scanInfo.byteCount) : "—"}</strong></div>
             <div><span>형식</span><strong>{scanInfo?.fileName.split(".").pop()?.toUpperCase() ?? "—"}</strong></div>
-          </div>
-          <button
-            className="secondary-action next-action"
-            type="button"
-            disabled={!scanInfo || Boolean(busy)}
-            onClick={() => setStep(2)}
-          >
-            다음: 도장 경로 생성
-          </button>
+          </div>}
+          <p className="motion-help">이미 도장 경로가 있다면 스캔 없이 다음 단계로 이동할 수 있습니다.</p>
         </div>
       );
     }
@@ -618,11 +686,26 @@ export default function App() {
     if (step === 2) {
       return (
         <div className="process-panel-content generation-panel">
-          <div className="process-panel-heading sticky-heading">
-            <span>PROCESS 02</span>
-            <h2>도장 경로 생성</h2>
-            <p>기본 YAML 값을 확인하고 필요한 항목을 수정합니다.</p>
+          <div className="process-panel-heading">
+            <h2>도장 경로</h2>
+            <p>새로 생성하거나 저장된 경로를 불러오세요.</p>
           </div>
+          <div className="segmented-control mode-tabs" aria-label="경로 준비 방식">
+            <button className={generationMode === "generate" ? "active" : ""} disabled={Boolean(busy)} onClick={() => setGenerationMode("generate")}>새로 생성</button>
+            <button className={generationMode === "import" ? "active" : ""} disabled={Boolean(busy)} onClick={() => setGenerationMode("import")}>CSV 불러오기</button>
+          </div>
+          {generationMode === "import" ? <div className="import-section">
+          <button className="secondary-action" disabled={Boolean(busy) || !isTauriRuntime()} onClick={() => trajectoryInputRef.current?.click()}>
+            저장된 도장 경로 불러오기 (CSV)
+          </button>
+          <input ref={trajectoryInputRef} type="file" hidden accept=".csv" onChange={(event) => {
+            const file = event.target.files?.[0]; if (file) void importPath(file);
+          }} />
+          {importedPathName && <div className="file-card"><span>불러온 경로</span><strong>{importedPathName}</strong><small>{trajectory?.rows.length}개 경로 · {trajectory?.pointCount.toLocaleString()}개 포인트</small></div>}
+          <p className="motion-help">CSV는 원본 그대로 검토·저장합니다. 슬라이싱 평면 정보가 없어 포인트 편집은 지원하지 않습니다.</p>
+          </div> : <>
+          {!scanInfo && <p className="motion-notice">새 경로 생성에는 1단계의 스캔 파일이 필요합니다.</p>}
+          {importedPathName && <p className="motion-help">아래 설정은 새 경로 생성에만 사용됩니다. 불러온 CSV에는 적용되지 않습니다.</p>}
           <div className="direction-section">
             <VectorEditor label="도장 방향 벡터" value={paintDir} disabled={Boolean(busy)} onChange={updatePaintDirection} />
             <VectorEditor label="스캔 방향 벡터" value={scanDir} disabled={Boolean(busy)} onChange={updateScanDirection} />
@@ -632,17 +715,19 @@ export default function App() {
           ) : (
             <p className="empty-message">기본 파라미터를 불러오는 중입니다.</p>
           )}
+          </>}
+          {sceneSettings}
           <div className="process-actions sticky-actions">
-            <button
+            {generationMode === "generate" && <button
               className="primary-action"
               type="button"
               disabled={!scanInfo || !parameters || Boolean(busy)}
               onClick={() => void generate()}
             >
               도장 경로 생성
-            </button>
+            </button>}
             <button
-              className="secondary-action"
+              className={generationMode === "import" ? "primary-action" : "secondary-action"}
               type="button"
               disabled={!trajectory || generationStale || Boolean(busy)}
               onClick={() => setStep(3)}
@@ -670,6 +755,7 @@ export default function App() {
           <p className="empty-message">
             단일 HTML은 읽기 전용입니다. 경로 생성·수정·완료 저장은 Painting Process Workstation 앱에서 수행합니다.
           </p>
+          {sceneSettings}
         </div>
       );
     }
@@ -677,10 +763,10 @@ export default function App() {
     return (
       <div className="process-panel-content edit-panel">
         <div className="process-panel-heading">
-          <span>PROCESS 03</span>
-          <h2>도장 경로 수정</h2>
-          <p>2단계에서 생성된 분홍색 경로 포인트를 선택하고 위치와 회전을 조정합니다.</p>
+          <h2>경로 검토 및 수정</h2>
+          <p>{importedPathName ? "원본 경로를 확인하고 저장하세요." : "포인트를 선택해 위치와 회전을 조정하세요."}</p>
         </div>
+        {importedPathName && <div className="motion-notice">CSV 검토 모드 · 편집 불가<p>슬라이싱 평면 정보가 없어 원본 경로를 그대로 저장합니다.</p></div>}
         {selectedControlPoint && selectedEuler ? (
           <>
             <div className="selected-point-heading" data-preserve-point-selection>
@@ -704,11 +790,6 @@ export default function App() {
               >
                 회전
               </button>
-              <p>
-                {transformGizmoMode === "translate"
-                  ? "Scene의 빨강·초록 화살표를 드래그하여 슬라이싱 평면의 두 축으로 이동합니다."
-                  : "Scene의 빨강·초록·파랑 링을 드래그하여 세 축으로 회전합니다."}
-              </p>
             </div>
             <div className="transform-section" data-preserve-point-selection>
               <h3>위치 <em>mm</em></h3>
@@ -725,7 +806,7 @@ export default function App() {
                   </label>
                 ))}
               </div>
-              <p>입력값은 선택한 row의 슬라이싱 평면 위로 자동 투영됩니다.</p>
+              <p>위치는 해당 슬라이싱 평면 위로 제한됩니다.</p>
             </div>
             <div className="transform-section" data-preserve-point-selection>
               <h3>회전 <em>deg · XYZ</em></h3>
@@ -752,11 +833,6 @@ export default function App() {
               >
                 선택 포인트 삭제
               </button>
-              <p>
-                {selectedRowPointCount <= 2
-                  ? "경로에는 최소 2개의 편집 포인트가 필요합니다. 전체 삭제는 아래 버튼을 사용하세요."
-                  : "선택한 포인트 하나만 삭제합니다. 재생성 시 남은 점을 연결하고 설정된 간격으로 다시 샘플링합니다."}
-              </p>
               <button
                 className="delete-row-action"
                 type="button"
@@ -765,41 +841,42 @@ export default function App() {
               >
                 선택 경로 삭제
               </button>
-              <p>선택 포인트가 포함된 Row 전체를 삭제합니다.</p>
+              <p>{selectedRowPointCount <= 2 ? "각 경로에는 최소 2개의 포인트가 필요합니다." : "포인트 삭제 후 재생성하면 남은 점을 연결해 다시 샘플링합니다."}</p>
             </div>
           </>
         ) : (
-          <p className="empty-message">뷰어에서 수정할 제어점을 선택하세요.</p>
+          !importedPathName && <p className="empty-message">수정할 포인트를 클릭하세요.<br />변경할 내용이 없으면 바로 저장할 수 있습니다.</p>
         )}
-        <div className={`edit-state ${dirty ? "dirty" : "clean"}`}>
-          <i />
-          <span>{dirty ? "재생성되지 않은 수정 사항이 있습니다." : "경로가 최신 제어점과 일치합니다."}</span>
-        </div>
+        {completion && (
+          <details className="completion-card"><summary>저장 완료 · 위치 확인</summary><code>{completion.outputDirectory}</code></details>
+        )}
+        {sceneSettings}
+        <div className="sticky-actions">
+          <div className={`edit-state ${dirty ? "dirty" : "clean"}`}><i /><span>{dirty ? "변경 사항을 재생성해 주세요" : completion ? "저장 완료" : "재생성 없이 저장 가능"}</span></div>
         <div className="process-actions edit-actions">
-          <button
+          {!importedPathName && <button
             className="secondary-action"
             type="button"
-            disabled={!trajectory || !controlPoints.length || Boolean(busy)}
+            disabled={!trajectory || !controlPoints.length || !dirty || Boolean(busy)}
             onClick={() => void regenerate()}
           >
             경로 재생성
-          </button>
-          <button
+          </button>}
+          {!completion && <button
             className="primary-action complete-action"
             type="button"
-            disabled={!trajectory || dirty || Boolean(busy)}
+            disabled={!trajectory || dirty || generationStale || Boolean(busy)}
             onClick={() => void complete()}
           >
             완료 및 저장
-          </button>
+          </button>}
         </div>
-        {completion && (
-          <div className="completion-card">
-            <strong>저장 완료</strong>
-            <span>{completion.completedAt}</span>
-            <code>{completion.outputDirectory}</code>
-          </div>
-        )}
+        {completion && <button className="primary-action" type="button"
+          disabled={!completion || dirty || generationStale || Boolean(busy)}
+          onClick={() => { setSelectedControlPointId(null); setStep(4); }}>
+          다음: 모션 플래닝
+        </button>}
+        </div>
       </div>
     );
   };
@@ -810,7 +887,8 @@ export default function App() {
       onPointerDownCapture={(event) => {
         const target = event.target;
         if (
-          selectedControlPointId
+          page === "workspace"
+          && selectedControlPointId
           && target instanceof Element
           && !target.closest(".viewer-panel")
           && !target.closest("[data-preserve-point-selection]")
@@ -822,84 +900,50 @@ export default function App() {
       <header className="process-header">
         <div className="product-mark">
           <span>PW</span>
-          <div><strong>Painting Process Workstation</strong><small>Robot Paint Path Workflow</small></div>
+          <div><strong>Painting Workstation</strong><small>도장 공정 워크스테이션</small></div>
         </div>
-        <nav className="process-stepper" aria-label="도장 공정 단계">
-          {processSteps.map((item) => {
-            const enabled = canOpenStep(item.id);
-            const completed = (item.id === 1 && Boolean(scanInfo))
-              || (item.id === 2 && Boolean(trajectory) && !generationStale)
-              || (item.id === 3 && Boolean(completion));
-            return (
-              <button
-                key={item.id}
-                type="button"
-                className={`${step === item.id ? "active" : ""} ${completed ? "completed" : ""}`}
-                disabled={!enabled || Boolean(busy)}
-                onClick={() => enabled && setStep(item.id)}
-              >
-                <i>{completed ? "✓" : item.id}</i>
-                <span><strong>{item.title}</strong><small>{item.caption}</small></span>
-              </button>
-            );
-          })}
-        </nav>
+        <div className="header-actions">
+          {!standalone && <button className={`header-home ${page === "home" ? "active" : ""}`}
+            data-preserve-point-selection
+            aria-current={page === "home" ? "page" : undefined} disabled={Boolean(busy) || motionBusy}
+            onClick={() => setPage("home")}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7M5 9v12h5v-7h4v7h5V9" /></svg>홈
+          </button>}
+          <div className="workspace-mode"><i />{standalone ? "읽기 전용 검토" : "오프라인 작업 · 장비 제어 없음"}</div>
+        </div>
       </header>
 
-      <section className="workspace">
-        <aside className="left-panel panel">
-          <div className="panel-titlebar"><span className="panel-title-icon">▦</span><strong>Scene</strong></div>
-          <div className="left-panel-content">
-            <div className="workspace-object">
-              <span className="object-icon">P</span>
-              <span><strong>{scanInfo?.fileName ?? "No scan data"}</strong><small>Painting process job</small></span>
-            </div>
-            <Foldout title="Scene Layers">
-              <div className="layer-list">
-                <Toggle checked={layers.surface} label="Part surface" onChange={(value) => setLayer("surface", value)} />
-                <Toggle checked={layers.trajectory} label="Spray ON path" color="#20e66a" onChange={(value) => setLayer("trajectory", value)} />
-                <Toggle checked={layers.sprayOff} label="Spray OFF path" color="#ffc857" onChange={(value) => setLayer("sprayOff", value)} />
-                <Toggle checked={layers.sprayDirections} label="Spray directions" color="#4cc9f0" onChange={(value) => setLayer("sprayDirections", value)} />
-                <Toggle checked={layers.controlPoints} label="Path points" color="#ff4fa3" onChange={(value) => setLayer("controlPoints", value)} />
-                <Toggle checked={layers.axes} label="Coordinate axes" onChange={(value) => setLayer("axes", value)} />
-              </div>
-            </Foldout>
-            <Foldout title="Visualization">
-              <div className="inspector-property">
-                <span>Surface</span>
-                <div className="segmented-control">
-                  <button className={visualization.surfaceStyle === "original" ? "active" : ""} type="button" onClick={() => setVisualizationValue("surfaceStyle", "original")}>Original</button>
-                  <button className={visualization.surfaceStyle === "inspection" ? "active" : ""} type="button" onClick={() => setVisualizationValue("surfaceStyle", "inspection")}>Inspection</button>
-                </div>
-              </div>
-              <div className="inspector-property">
-                <span>Background</span>
-                <div className="segmented-control">
-                  <button className={visualization.background === "gray" ? "active" : ""} type="button" onClick={() => setVisualizationValue("background", "gray")}>Gray</button>
-                  <button className={visualization.background === "black" ? "active" : ""} type="button" onClick={() => setVisualizationValue("background", "black")}>Black</button>
-                </div>
-              </div>
-              <label className="unity-toggle"><span>Rim Light</span><input type="checkbox" checked={visualization.rimLight} onChange={(event) => setVisualizationValue("rimLight", event.target.checked)} /><i /></label>
-              <label className="light-control"><span><strong>Scene Light</strong><output>{visualization.lightIntensity.toFixed(1)}×</output></span><input type="range" min="0.5" max="1.8" step="0.1" value={visualization.lightIntensity} onChange={(event) => setVisualizationValue("lightIntensity", Number(event.target.value))} /></label>
-            </Foldout>
-            <Foldout title="Backend">
-              <div className="source-row"><span>Planner</span><strong title={backendInfo?.plannerRoot}>{backendInfo?.plannerRoot ?? "—"}</strong></div>
-              <div className="source-row"><span>Python</span><strong>{backendInfo?.pythonCommand ?? "—"}</strong></div>
-              <div className="source-row"><span>Log</span><strong title={backendInfo?.logRoot}>{backendInfo?.logRoot ?? "—"}</strong></div>
-            </Foldout>
-          </div>
-        </aside>
+      {page === "home" && !standalone && <HomeScreen hasWorkspace={workspaceOpened} step={step}
+        scanName={scanInfo?.fileName} pathName={importedPathName ?? undefined}
+        rowCount={trajectory?.rows.length ?? 0} pointCount={trajectory?.pointCount ?? 0}
+        dirty={dirty} stale={generationStale} savedDirectory={completion?.outputDirectory}
+        onStart={() => {
+          if (!workspaceOpened) setStatus("부품 배치 또는 스캔 데이터를 준비하세요.");
+          setWorkspaceOpened(true);
+          setPage("workspace");
+        }} />}
 
-        <section className="viewer-panel">
-          <div className="scene-titlebar"><span className="scene-tab active">Scene</span><span className="scene-project">{scanInfo?.fileName ?? "SCAN NOT LOADED"}</span></div>
+      {/* Mount on first entry only. Hiding, rather than unmounting, preserves
+          stage state, unsaved parameter drafts, model loading and orbit cameras. */}
+      {workspaceOpened && <section className="workspace" hidden={page === "home"}>
+        <ProcessNavigation current={step} standalone={standalone} busy={Boolean(busy) || motionBusy}
+          canOpen={canOpenStep} onSelect={setStep}
+          completed={[
+            ...(scanInfo ? [1 as const] : []),
+            ...(trajectory && !generationStale ? [2 as const] : []),
+            ...(completion ? [3 as const] : []),
+          ]} />
+
+        <section className="viewer-panel" style={step === 4 || (step === 1 && scanCellView) ? { display: "none" } : undefined}>
+          <div className="scene-titlebar"><span className="scene-tab active">{step === 1 ? "스캔 데이터" : "도장 경로"}</span><span className="scene-project">{scanInfo?.fileName ?? importedPathName ?? "데이터 없음"}</span></div>
           <div className="scene-body">
             <TrajectoryViewer
               surfaceBuffer={scanBuffer}
               surfaceFileName={scanInfo?.fileName ?? ""}
-              trajectory={trajectory}
-              controlPoints={controlPoints}
+              trajectory={step === 1 ? null : trajectory}
+              controlPoints={step === 1 ? [] : controlPoints}
               selectedControlPointId={selectedControlPointId}
-              editingEnabled={step === 3 && !busy && !standalone}
+              editingEnabled={step === 3 && !busy && !standalone && !importedPathName}
               transformGizmoMode={transformGizmoMode}
               layers={layers}
               visualization={visualization}
@@ -907,8 +951,8 @@ export default function App() {
               onMoveControlPoint={moveControlPoint}
               onRotateControlPoint={rotateControlPoint}
             />
-            {!scanBuffer && (
-              <div className="empty-scene"><span>01</span><strong>스캔 데이터를 불러오세요</strong><p>오른쪽 공정 패널에서 PLY 또는 CSV 파일을 선택합니다.</p></div>
+            {!scanBuffer && (!trajectory || step === 1) && (
+              <div className="empty-scene"><span>01</span><strong>스캔 데이터를 불러오세요</strong><p>왼쪽 공정 패널에서 PLY 또는 CSV 파일을 선택합니다.</p></div>
             )}
             {busy && (
               <div className="loading-card"><span className="loader" /><strong>Processing</strong><p>{status}</p></div>
@@ -916,16 +960,21 @@ export default function App() {
           </div>
         </section>
 
-        <aside className="right-panel panel workstation-inspector">
-          <div className="panel-titlebar inspector-titlebar"><span className="panel-title-icon">☷</span><strong>Process Inspector</strong><span className="panel-menu">⋮</span></div>
-          <div className="process-scroll">{renderRightPanel()}</div>
+        <aside className="panel workstation-inspector" style={step === 4 || (step === 1 && !standalone) ? { display: "none" } : undefined}>
+          <div className="process-scroll">{step !== 1 && renderTaskPanel()}</div>
         </aside>
-      </section>
+        {!standalone && isTauriRuntime() && <ScanStage active={step === 1} cellView={scanCellView} busy={Boolean(busy)}
+          onCellView={setScanCellView} layers={layers} visualization={visualization}
+          sceneSettings={sceneSettings} importPanel={step === 1 ? renderTaskPanel() : null} onNext={() => setStep(2)} onError={setError} />}
+        {completion && trajectory && !standalone && <MotionStage key={completion.outputDirectory}
+          active={step === 4} completion={completion} trajectory={trajectory}
+          sceneSettings={sceneSettings} layers={layers} visualization={visualization} onBusy={setMotionBusy} onError={setError} />}
+      </section>}
 
       <footer className="statusbar">
         <span className={error ? "status-dot error" : "status-dot"} />
         <span>{status}</span>
-        <span className="status-version">Workstation v0.2.0 · {dirty ? "MODIFIED" : "READY"}</span>
+        <span className="status-version">{dirty ? "수정됨" : busy || motionBusy ? "처리 중" : "준비"} · v0.2.0</span>
       </footer>
 
       {error && (

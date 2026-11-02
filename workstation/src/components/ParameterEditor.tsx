@@ -19,6 +19,14 @@ interface ParameterSection {
 }
 
 const mm = 1000;
+const optionLabels: Record<string, string> = {
+  axis: "축 기준", surface_adaptive: "표면 대응",
+  top: "위쪽", bottom: "아래쪽", left: "왼쪽", right: "오른쪽",
+};
+const mainParameters = new Set([
+  "slicing_method", "spline_start_side", "spline_start_offset", "spline_spacing", "curvature_slice_angle_deg",
+  "offset_distance", "final_point_spacing", "endpoint_extension_length", "raster_zigzag", "paint_min_false_length", "paint_min_true_length",
+]);
 
 const sections: readonly ParameterSection[] = [
   {
@@ -144,7 +152,7 @@ function NumericInput({
       return;
     }
     const normalized = integer ? Math.round(parsed) : parsed;
-    onCommit(normalized);
+    if (normalized !== value) onCommit(normalized);
     setSource(String(normalized));
   };
   return (
@@ -204,7 +212,7 @@ function Field({
         disabled={disabled}
         onChange={(event) => update(event.target.value)}
       >
-        {definition.options?.map((option) => <option key={option}>{option}</option>)}
+        {definition.options?.map((option) => <option key={option} value={option}>{optionLabels[option] ?? option}</option>)}
       </select>
     );
   } else if (definition.kind === "number" || definition.kind === "integer") {
@@ -250,24 +258,24 @@ export function ParameterEditor({
   disabled: boolean;
   onChange: (parameters: Record<string, unknown>) => void;
 }) {
+  const renderSection = (section: ParameterSection, advanced = false) => {
+    const definitions = section.parameters.filter((definition) =>
+      mainParameters.has(definition.path[definition.path.length - 1]) !== advanced);
+    if (!definitions.length) return null;
+    return <details key={`${section.title}-${advanced}`} open={!advanced}>
+      <summary>{section.title}</summary>
+      <div className="parameter-section-fields">
+        {definitions.map((definition) => <Field key={definition.path.join(".")}
+          definition={definition} parameters={parameters} disabled={disabled} onChange={onChange} />)}
+      </div>
+    </details>;
+  };
   return (
     <div className="parameter-editor">
-      {sections.map((section) => (
-        <details key={section.title} open>
-          <summary>{section.title}</summary>
-          <div className="parameter-section-fields">
-            {section.parameters.map((definition) => (
-              <Field
-                key={definition.path.join(".")}
-                definition={definition}
-                parameters={parameters}
-                disabled={disabled}
-                onChange={onChange}
-              />
-            ))}
-          </div>
-        </details>
-      ))}
+      {sections.map((section) => renderSection(section))}
+      <details className="advanced-parameters"><summary>고급 파라미터</summary>
+        <div className="details-content">{sections.map((section) => renderSection(section, true))}</div>
+      </details>
     </div>
   );
 }

@@ -1,0 +1,16 @@
+{
+  "runDirectory": "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203750476699958/results/20261029_010910_655727",
+  "part": "workstation_path",
+  "sourceDirectory": "/home/oms/vehicle_painting_robot/path_planning/log/20261029_010852",
+  "xyz": [
+    0,
+    0,
+    1.5
+  ],
+  "rpy": [
+    0,
+    0,
+    1.570796
+  ],
+  "collisionChecked": false
+}

@@ -1,0 +1,6 @@
+{
+  "completedAt": "2026-10-29T01:08:52+09:00",
+  "scanFile": "part.ply",
+  "trajectoryFile": "painting_trajectory.csv",
+  "outputDirectory": "/home/oms/vehicle_painting_robot/path_planning/log/20261029_010852"
+}

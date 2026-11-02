@@ -1,0 +1,234 @@
+[nlp] gantry env: x7y4z3 (/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/config/gantry.yaml)
+[nlp] TCP frame: tcp
+[nlp] joint bound override joint_3: [25.00, 135.00] deg
+[nlp] joint bound override joint_5: [25.00, 135.00] deg
+[nlp] arm singularity weight: 0.001
+[nlp] node limit scale: 0.85,0.25 (env)
+[nlp] gantry limits: v 0.5 m/s (env), a 1.6 m/s^2 (env); gantry smoothness weights: v 0.01 (env), a 0.01 (env)
+[nlp] tool clearance: tip 0.30,0,0 (TCP frame) >= 0.35 m from joint_3,joint_5, weight 100
+[nlp] URDF: /home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf
+[nlp] joints: gantry_x, gantry_y, joint_1, joint_2, joint_3, joint_4, joint_5, joint_6
+[nlp] prismatic joints: 2 of 8
+[nlp] TCP spray axis: z path axis: y
+[nlp] part placement xyz=[0.0, 0.0, 1.25] rpy=[0.0, 0.0, 1.570796]
+[nlp] output: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path
+[nlp] input #1/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_000.csv
+[nlp] loaded points=13 duration=1.493s stride=1 max_points=0
+[nlp] seed 1/13 pos_err=0.00149m rot_resid=0.00498
+[nlp] seed 13/13 pos_err=0.00126m rot_resid=0.00420
+[nlp] solving NLP points=13 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 681.39ms (  7.33ms)  20.84ms (224.06us)        93
+       nlp_g  | 336.15ms (  3.61ms)   9.36ms (100.63us)        93
+  nlp_grad_f  |   1.69 s ( 36.04ms)  25.90ms (551.04us)        47
+  nlp_hess_l  |  12.34 s (274.28ms) 235.66ms (  5.24ms)        45
+   nlp_jac_g  | 728.04ms ( 15.49ms)  19.13ms (407.05us)        47
+       total  | 237.95 s (237.95 s)   4.47 s (  4.47 s)         1
+[nlp][time] seed 0.02s + NLP 4.89s = 4.91s for 13 points (377.5 ms/point), path duration 1.49s
+[nlp] metrics max_pos_err=0.000514m max_rot_err=0.2659deg min_manip=1.000721e+00 min_arm_sigma=0.2214 tool_clearance=0.604m qdot[joint4 40.322deg/s/70.000deg/s] qddot[joint4 124.977deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_000_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint4 46.365deg/s/70.000deg/s] qddot[joint1 1.384m/s^2/1.600m/s^2]
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_000_nlp_command.csv points=1494 max_qdot=46.365deg/s max_qddot=272.986deg/s^2
+[nlp] input #2/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_001.csv
+[nlp] loaded points=18 duration=1.969s stride=1 max_points=0
+[nlp] seed 1/18 pos_err=0.00000m rot_resid=0.00001
+[nlp] seed 18/18 pos_err=0.00003m rot_resid=0.00000
+[nlp] solving NLP points=18 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 453.53ms ( 15.64ms)   9.48ms (326.83us)        29
+       nlp_g  | 224.60ms (  7.74ms)   4.31ms (148.60us)        29
+  nlp_grad_f  |   1.00 s ( 43.50ms)  17.27ms (750.89us)        23
+  nlp_hess_l  |   5.43 s (258.48ms) 137.85ms (  6.56ms)        21
+   nlp_jac_g  | 714.11ms ( 31.05ms)  12.27ms (533.43us)        23
+       total  |  77.30 s ( 77.30 s)   1.51 s (  1.51 s)         1
+[nlp][time] seed 0.01s + NLP 1.91s = 1.92s for 18 points (106.7 ms/point), path duration 1.97s
+[nlp] metrics max_pos_err=0.000374m max_rot_err=0.1852deg min_manip=9.780229e-01 min_arm_sigma=0.2093 tool_clearance=0.604m qdot[joint1 0.225m/s/0.500m/s] qddot[joint5 117.779deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_001_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.327m/s/0.500m/s] qddot[joint1 1.877m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.65, acceleration x1.17) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_001_nlp_command.csv points=1971 max_qdot=28.083deg/s max_qddot=328.956deg/s^2
+[nlp] input #3/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_002.csv
+[nlp] loaded points=22 duration=2.350s stride=1 max_points=0
+[nlp] seed 1/22 pos_err=0.00000m rot_resid=0.00000
+[nlp] seed 22/22 pos_err=0.00002m rot_resid=0.00000
+[nlp] solving NLP points=22 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 509.84ms ( 15.45ms)  13.64ms (413.35us)        33
+       nlp_g  | 172.63ms (  5.23ms)   6.22ms (188.52us)        33
+  nlp_grad_f  |   1.33 s ( 51.09ms)  24.29ms (934.30us)        26
+  nlp_hess_l  |   5.44 s (226.67ms) 182.80ms (  7.62ms)        24
+   nlp_jac_g  |   1.05 s ( 40.21ms)  17.16ms (659.96us)        26
+       total  |  92.79 s ( 92.79 s)   1.85 s (  1.85 s)         1
+[nlp][time] seed 0.01s + NLP 2.30s = 2.31s for 22 points (104.8 ms/point), path duration 2.35s
+[nlp] metrics max_pos_err=0.000342m max_rot_err=0.1687deg min_manip=9.516304e-01 min_arm_sigma=0.2003 tool_clearance=0.604m qdot[joint1 0.279m/s/0.500m/s] qddot[joint5 119.508deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_002_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.392m/s/0.500m/s] qddot[joint1 2.244m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.78, acceleration x1.40) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_002_nlp_command.csv points=2351 max_qdot=23.015deg/s max_qddot=383.707deg/s^2
+[nlp] input #4/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_003.csv
+[nlp] loaded points=25 duration=2.636s stride=1 max_points=0
+[nlp] seed 1/25 pos_err=0.00000m rot_resid=0.00001
+[nlp] seed 25/25 pos_err=0.00003m rot_resid=0.00000
+[nlp] solving NLP points=25 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  | 845.47ms ( 16.58ms)  23.49ms (460.58us)        51
+       nlp_g  | 664.18ms ( 13.02ms)  10.29ms (201.70us)        51
+  nlp_grad_f  |   2.05 s ( 63.93ms)  37.63ms (  1.18ms)        32
+  nlp_hess_l  |   5.57 s (185.67ms) 267.30ms (  8.91ms)        30
+   nlp_jac_g  |   1.19 s ( 37.15ms)  24.69ms (771.49us)        32
+       total  | 100.13 s (100.13 s)   2.08 s (  2.08 s)         1
+[nlp][time] seed 0.01s + NLP 2.59s = 2.60s for 25 points (104.0 ms/point), path duration 2.64s
+[nlp] metrics max_pos_err=0.000279m max_rot_err=0.1370deg min_manip=9.229458e-01 min_arm_sigma=0.1929 tool_clearance=0.604m qdot[joint1 0.324m/s/0.500m/s] qddot[joint4 122.834deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_003_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.452m/s/0.500m/s] qddot[joint1 2.577m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.90, acceleration x1.61) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_003_nlp_command.csv points=2637 max_qdot=25.874deg/s max_qddot=419.458deg/s^2
+[nlp] input #5/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_004.csv
+[nlp] loaded points=28 duration=2.921s stride=1 max_points=0
+[nlp] seed 1/28 pos_err=0.00005m rot_resid=0.00012
+[nlp] seed 26/28 pos_err=0.00004m rot_resid=0.00000
+[nlp] seed 28/28 pos_err=0.00004m rot_resid=0.00000
+[nlp] solving NLP points=28 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   2.06 s ( 28.20ms)  37.02ms (507.17us)        73
+       nlp_g  | 675.63ms (  9.26ms)  15.93ms (218.26us)        73
+  nlp_grad_f  |   2.83 s ( 65.87ms)  52.01ms (  1.21ms)        43
+  nlp_hess_l  |   6.89 s (168.11ms) 394.26ms (  9.62ms)        41
+   nlp_jac_g  |   1.87 s ( 43.54ms)  37.36ms (868.78us)        43
+       total  | 123.12 s (123.12 s)   2.62 s (  2.62 s)         1
+[nlp][time] seed 0.01s + NLP 3.20s = 3.21s for 28 points (114.6 ms/point), path duration 2.92s
+[nlp] metrics max_pos_err=0.001326m max_rot_err=0.7937deg min_manip=8.935701e-01 min_arm_sigma=0.1821 tool_clearance=0.565m qdot[joint1 0.402m/s/0.500m/s] qddot[joint5 124.992deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_004_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.480m/s/0.500m/s] qddot[joint1 2.840m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.96, acceleration x1.77) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_004_nlp_command.csv points=2923 max_qdot=32.775deg/s max_qddot=436.251deg/s^2
+[nlp] input #6/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_005.csv
+[nlp] loaded points=30 duration=3.112s stride=1 max_points=0
+[nlp] seed 1/30 pos_err=0.00000m rot_resid=0.00003
+[nlp] seed 26/30 pos_err=0.00032m rot_resid=0.00021
+[nlp] seed 30/30 pos_err=0.00002m rot_resid=0.00000
+[nlp] solving NLP points=30 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.50 s ( 27.32ms)  30.63ms (556.95us)        55
+       nlp_g  | 460.14ms (  8.37ms)  13.19ms (239.81us)        55
+  nlp_grad_f  |   2.44 s ( 71.74ms)  43.95ms (  1.29ms)        34
+  nlp_hess_l  |   4.99 s (156.05ms) 324.58ms ( 10.14ms)        32
+   nlp_jac_g  |   1.66 s ( 48.87ms)  31.44ms (924.60us)        34
+       total  |  98.69 s ( 98.69 s)   2.13 s (  2.13 s)         1
+[nlp][time] seed 0.01s + NLP 2.75s = 2.76s for 30 points (91.9 ms/point), path duration 3.11s
+[nlp] metrics max_pos_err=0.001164m max_rot_err=0.5563deg min_manip=8.486346e-01 min_arm_sigma=0.1712 tool_clearance=0.548m qdot[joint1 0.399m/s/0.500m/s] qddot[joint4 124.968deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_005_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.499m/s/0.500m/s] qddot[joint1 2.979m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.00, acceleration x1.86) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_005_nlp_command.csv points=3113 max_qdot=31.360deg/s max_qddot=443.780deg/s^2
+[nlp] input #7/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_006.csv
+[nlp] loaded points=30 duration=3.112s stride=1 max_points=0
+[nlp] seed 1/30 pos_err=0.00001m rot_resid=0.00002
+[nlp] seed 26/30 pos_err=0.00006m rot_resid=0.00001
+[nlp] seed 30/30 pos_err=0.00006m rot_resid=0.00001
+[nlp] solving NLP points=30 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.50 s ( 37.50ms)  23.47ms (586.78us)        40
+       nlp_g  | 233.02ms (  5.83ms)   9.96ms (248.97us)        40
+  nlp_grad_f  |   2.00 s ( 64.68ms)  40.37ms (  1.30ms)        31
+  nlp_hess_l  |   4.79 s (165.18ms) 327.50ms ( 11.29ms)        29
+   nlp_jac_g  |   1.59 s ( 51.35ms)  29.37ms (947.56us)        31
+       total  |  80.46 s ( 80.46 s)   1.79 s (  1.79 s)         1
+[nlp][time] seed 0.01s + NLP 2.43s = 2.44s for 30 points (81.3 ms/point), path duration 3.11s
+[nlp] metrics max_pos_err=0.000207m max_rot_err=0.1021deg min_manip=7.859328e-01 min_arm_sigma=0.1608 tool_clearance=0.528m qdot[joint1 0.425m/s/0.500m/s] qddot[joint4 91.831deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_006_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.533m/s/0.500m/s] qddot[joint1 3.203m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.07, acceleration x2.00) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_006_nlp_command.csv points=3113 max_qdot=30.543deg/s max_qddot=435.543deg/s^2
+[nlp] input #8/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_007.csv
+[nlp] loaded points=30 duration=3.112s stride=1 max_points=0
+[nlp] seed 1/30 pos_err=0.00004m rot_resid=0.00007
+[nlp] seed 26/30 pos_err=0.00001m rot_resid=0.00000
+[nlp] seed 30/30 pos_err=0.00001m rot_resid=0.00000
+[nlp] solving NLP points=30 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.17 s ( 32.43ms)  20.55ms (570.77us)        36
+       nlp_g  | 232.87ms (  6.47ms)   8.97ms (249.11us)        36
+  nlp_grad_f  |   1.91 s ( 68.21ms)  36.11ms (  1.29ms)        28
+  nlp_hess_l  |   4.11 s (158.13ms) 269.00ms ( 10.35ms)        26
+   nlp_jac_g  |   1.33 s ( 47.44ms)  26.08ms (931.40us)        28
+       total  |  86.38 s ( 86.38 s)   1.84 s (  1.84 s)         1
+[nlp][time] seed 0.01s + NLP 2.45s = 2.46s for 30 points (82.2 ms/point), path duration 3.11s
+[nlp] metrics max_pos_err=0.000338m max_rot_err=0.1673deg min_manip=6.911483e-01 min_arm_sigma=0.1425 tool_clearance=0.499m qdot[joint1 0.425m/s/0.500m/s] qddot[joint4 95.802deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_007_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.545m/s/0.500m/s] qddot[joint1 3.177m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.09, acceleration x1.99) - lower --node-limit-scale or raise the limits
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "/home/oms/vehicle_painting_robot/motion_planning/src/motion_planner/2_optimization.py", line 1553, in main
+    q_solution = optimize_trajectory(model, points, seed, args)
+  File "/home/oms/vehicle_painting_robot/motion_planning/src/motion_planner/2_optimization.py", line 1111, in optimize_trajectory
+    solution = opti.solve()
+  File "/home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning/lib/python3.10/site-packages/casadi/casadi.py", line 51396, in solve
+    return _casadi.Opti_solve(self, *args)
+RuntimeError: Error in Opti::solve [OptiNode] at .../casadi/core/optistack.cpp:217:
+.../casadi/core/optistack_internal.cpp:1338: Assertion "return_success(accept_limit)" failed:
+Solver failed. You may use opti.debug.value to investigate the latest values of variables. return_status is 'Infeasible_Problem_Detected'
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_007_nlp_command.csv points=3113 max_qdot=31.253deg/s max_qddot=416.738deg/s^2
+[nlp] input #9/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_008.csv
+[nlp] loaded points=32 duration=3.302s stride=1 max_points=0
+[nlp] seed 1/32 pos_err=0.00009m rot_resid=0.00005
+[nlp] seed 26/32 pos_err=0.00010m rot_resid=0.00100
+[nlp] seed 32/32 pos_err=0.00005m rot_resid=0.00001
+[nlp] solving NLP points=32 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.89 s ( 39.46ms)  30.21ms (629.30us)        48
+       nlp_g  | 347.85ms (  7.25ms)  13.38ms (278.75us)        48
+  nlp_grad_f  |   3.02 s ( 67.01ms)  64.16ms (  1.43ms)        45
+  nlp_hess_l  |   6.37 s (148.12ms) 472.30ms ( 10.98ms)        43
+   nlp_jac_g  |   2.36 s ( 52.45ms)  44.86ms (996.98us)        45
+       total  | 106.97 s (106.97 s)   2.43 s (  2.43 s)         1
+[nlp][time] seed 0.01s + NLP 3.09s = 3.10s for 32 points (97.0 ms/point), path duration 3.30s
+[nlp] metrics max_pos_err=0.003463m max_rot_err=1.0000deg min_manip=5.016933e-01 min_arm_sigma=0.0218 tool_clearance=0.410m qdot[joint1 0.398m/s/0.500m/s] qddot[joint1 0.400m/s^2/1.600m/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_008_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.561m/s/0.500m/s] qddot[joint1 3.602m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x1.12, acceleration x2.25) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_008_nlp_command.csv points=3304 max_qdot=53.233deg/s max_qddot=497.505deg/s^2
+[nlp] input #10/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_009.csv
+[nlp] loaded points=33 duration=3.398s stride=1 max_points=0
+[nlp] seed 1/33 pos_err=0.00197m rot_resid=0.00556
+[nlp] seed 26/33 pos_err=0.00176m rot_resid=0.00512
+[nlp] seed 33/33 pos_err=0.00175m rot_resid=0.00520
+[nlp] solving NLP points=33 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |   1.11 s ( 38.22ms)  19.01ms (655.54us)        29
+       nlp_g  | 235.40ms (  8.12ms)   8.34ms (287.64us)        29
+  nlp_grad_f  |   2.01 s ( 66.97ms)  42.75ms (  1.42ms)        30
+  nlp_hess_l  |   4.13 s (147.61ms) 315.27ms ( 11.26ms)        28
+   nlp_jac_g  |   1.65 s ( 54.91ms)  31.18ms (  1.04ms)        30
+       total  |  58.63 s ( 58.63 s)   1.38 s (  1.38 s)         1
+[nlp][time] seed 0.02s + NLP 2.06s = 2.08s for 33 points (63.1 ms/point), path duration 3.40s
+[nlp] metrics max_pos_err=0.003443m max_rot_err=1.0000deg min_manip=3.119323e-01 min_arm_sigma=0.0247 tool_clearance=0.443m qdot[joint1 0.425m/s/0.500m/s] qddot[joint6 124.996deg/s^2/500.000deg/s^2]
+[nlp] saved optimized joint trajectory: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_009_nlp_joint.csv
+[nlp] command TCP-exact refinement residual=0.000um
+[nlp] command limits qdot[joint1 0.480m/s/0.500m/s] qddot[joint1 2.815m/s^2/1.600m/s^2]
+[nlp] WARNING command exceeds joint limits (velocity x0.96, acceleration x1.76) - lower --node-limit-scale or raise the limits
+[nlp] saved 0.0010s speedj command reference: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/optimization/workstation_path/trajectory_009_nlp_command.csv points=3399 max_qdot=44.213deg/s max_qddot=343.664deg/s^2
+[nlp] input #11/23: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793201867101186020/results/20261029_003747_286778/input/workstation_path/trajectory_010.csv
+[nlp] loaded points=33 duration=3.398s stride=1 max_points=0
+[nlp] seed 1/33 pos_err=0.19652m rot_resid=0.66853
+[nlp] seed 26/33 pos_err=0.19993m rot_resid=0.70902
+[nlp] seed 33/33 pos_err=0.21379m rot_resid=0.55431
+[nlp] solving NLP points=33 joints=8
+      solver  :   t_proc      (avg)   t_wall      (avg)    n_eval
+       nlp_f  |  24.27 s ( 34.93ms) 417.45ms (600.64us)       695
+       nlp_g  |   7.56 s ( 10.88ms) 178.29ms (256.53us)       695
+  nlp_grad_f  |  21.42 s ( 76.76ms) 400.11ms (  1.43ms)       279
+  nlp_hess_l  |  38.62 s (118.83ms)   3.86 s ( 11.88ms)       325
+   nlp_jac_g  |  18.25 s ( 51.69ms) 359.77ms (  1.02ms)       353
+       total  | 944.94 s (944.94 s)  21.33 s ( 21.33 s)         1
+[nlp] solver failed

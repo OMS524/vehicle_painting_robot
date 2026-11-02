@@ -1,4 +1,4 @@
-# Local/test logs stay on disk; production planning results are shared below.
+# Ignore logs by default; shared result trees are explicitly included below.
 log/
 logs/
 Log/
@@ -12,6 +12,14 @@ Log/
 !/path_planning/log/**
 !/motion_planning/log/
 !/motion_planning/log/**
+
+# Share logs only from the selected scan test cases.
+!/scan_planning/test/cluster_test/log/
+!/scan_planning/test/cluster_test/log/**
+!/scan_planning/test/hand_eye_calibration_test/log/
+!/scan_planning/test/hand_eye_calibration_test/log/**
+!/scan_planning/test/camera_extension_cable_test/log/
+!/scan_planning/test/camera_extension_cable_test/log/**
 
 # Snapshots/builds/caches/secrets remain excluded, even inside shared log trees.
 backup/

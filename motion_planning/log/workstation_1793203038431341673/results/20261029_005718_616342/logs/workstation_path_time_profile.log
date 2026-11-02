@@ -1,0 +1,24 @@
+trajectory_000.csv: 13 pts, S=0.480 m, T=1.49 s
+trajectory_001.csv: 18 pts, S=0.680 m, T=1.97 s
+trajectory_002.csv: 22 pts, S=0.840 m, T=2.35 s
+trajectory_003.csv: 25 pts, S=0.960 m, T=2.64 s
+trajectory_004.csv: 28 pts, S=1.080 m, T=2.92 s
+trajectory_005.csv: 30 pts, S=1.160 m, T=3.11 s
+trajectory_006.csv: 30 pts, S=1.160 m, T=3.11 s
+trajectory_007.csv: 30 pts, S=1.160 m, T=3.11 s
+trajectory_008.csv: 32 pts, S=1.240 m, T=3.30 s
+trajectory_009.csv: 33 pts, S=1.280 m, T=3.40 s
+trajectory_010.csv: 33 pts, S=1.280 m, T=3.40 s
+trajectory_011.csv: 33 pts, S=1.280 m, T=3.40 s
+trajectory_012.csv: 32 pts, S=1.240 m, T=3.30 s
+trajectory_013.csv: 30 pts, S=1.160 m, T=3.11 s
+trajectory_014.csv: 27 pts, S=1.040 m, T=2.83 s
+trajectory_015.csv: 28 pts, S=1.080 m, T=2.92 s
+trajectory_016.csv: 26 pts, S=1.000 m, T=2.73 s
+trajectory_017.csv: 26 pts, S=1.000 m, T=2.73 s
+trajectory_018.csv: 27 pts, S=1.040 m, T=2.83 s
+trajectory_019.csv: 26 pts, S=1.000 m, T=2.73 s
+trajectory_020.csv: 22 pts, S=0.840 m, T=2.35 s
+trajectory_021.csv: 21 pts, S=0.800 m, T=2.25 s
+trajectory_022.csv: 20 pts, S=0.760 m, T=2.16 s
+TOTAL rows=23 pts=612 exec_time=64.1 s

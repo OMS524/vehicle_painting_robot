@@ -1,0 +1,43 @@
+[activate] /home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning / ROS humble / /home/oms/vehicle_painting_robot/motion_planning/ros2_ws
+[INFO] [launch]: All log files can be found below /home/oms/.ros/log/2026-10-30-17-22-54-892487-oms-948300
+[INFO] [launch]: Default logging verbosity is set to INFO
+[launch] gantry_env x7y4z3: URDF /home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3_mesh.urdf
+[INFO] [static_transform_publisher-1]: process started with pid [948301]
+[INFO] [static_transform_publisher-2]: process started with pid [948303]
+[INFO] [robot_state_publisher-3]: process started with pid [948305]
+[INFO] [scene_publisher-4]: process started with pid [948307]
+[INFO] [trajectory_player-5]: process started with pid [948309]
+[INFO] [rviz2-6]: process started with pid [948311]
+[static_transform_publisher-1] [INFO] [1793348575.045165322] [world_to_part]: Spinning until stopped - publishing transform
+[static_transform_publisher-1] translation: ('0.000000', '0.000000', '1.300000')
+[static_transform_publisher-1] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-1] from 'world' to 'part'
+[static_transform_publisher-2] [INFO] [1793348575.045955123] [world_to_robot_root]: Spinning until stopped - publishing transform
+[static_transform_publisher-2] translation: ('0.000000', '0.000000', '0.000000')
+[static_transform_publisher-2] rotation: ('0.000000', '0.000000', '0.000000', '1.000000')
+[static_transform_publisher-2] from 'world' to 'world_base'
+[robot_state_publisher-3] [INFO] [1793348575.050277558] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-3] [INFO] [1793348575.050352271] [robot_state_publisher]: got segment gantry_x_link
+[robot_state_publisher-3] [INFO] [1793348575.050358601] [robot_state_publisher]: got segment gantry_y_link
+[robot_state_publisher-3] [INFO] [1793348575.050363143] [robot_state_publisher]: got segment link_1
+[robot_state_publisher-3] [INFO] [1793348575.050366731] [robot_state_publisher]: got segment link_2
+[robot_state_publisher-3] [INFO] [1793348575.050369833] [robot_state_publisher]: got segment link_3
+[robot_state_publisher-3] [INFO] [1793348575.050372724] [robot_state_publisher]: got segment link_4
+[robot_state_publisher-3] [INFO] [1793348575.050375557] [robot_state_publisher]: got segment link_5
+[robot_state_publisher-3] [INFO] [1793348575.050378482] [robot_state_publisher]: got segment link_6
+[robot_state_publisher-3] [INFO] [1793348575.050381448] [robot_state_publisher]: got segment spray_gun
+[robot_state_publisher-3] [INFO] [1793348575.050384375] [robot_state_publisher]: got segment tcp
+[robot_state_publisher-3] [INFO] [1793348575.050387474] [robot_state_publisher]: got segment tool_assy
+[robot_state_publisher-3] [INFO] [1793348575.050390631] [robot_state_publisher]: got segment toolchanger_slot_1
+[robot_state_publisher-3] [INFO] [1793348575.050393710] [robot_state_publisher]: got segment toolchanger_slot_2
+[robot_state_publisher-3] [INFO] [1793348575.050396719] [robot_state_publisher]: got segment toolchanger_slot_3
+[robot_state_publisher-3] [INFO] [1793348575.050399493] [robot_state_publisher]: got segment toolchanger_slot_4
+[robot_state_publisher-3] [INFO] [1793348575.050402356] [robot_state_publisher]: got segment world_base
+[scene_publisher-4] [WARN] [1793348575.435192265] [scene_publisher]: part_file 파라미터가 비어 있어 부품 점군을 건너뛴다
+[scene_publisher-4] [INFO] [1793348575.438092988] [scene_publisher]: 경로 7 row / 166 point 로드 (분사 ON 50점)
+[trajectory_player-5] [INFO] [1793348575.532476126] [trajectory_player]: TCP 궤적 프레임: tcp (요청 auto)
+[trajectory_player-5] [INFO] [1793348575.538103904] [trajectory_player]: joint 궤적 13개 재생 시작 (총 24.9s, speed_scale=1.0)
+[rviz2-6] [INFO] [1793348575.813116727] [rviz2]: Stereo is NOT SUPPORTED
+[rviz2-6] [INFO] [1793348575.813252420] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[rviz2-6] [INFO] [1793348575.859498171] [rviz2]: Stereo is NOT SUPPORTED
+[trajectory_player-5] [INFO] [1793348604.483643418] [trajectory_player]: 전체 경로 1회 완료 — 처음부터 반복

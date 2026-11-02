@@ -1,0 +1,83 @@
+{
+  "gantry_env": "x7y4z3",
+  "parts": [
+    "workstation_path"
+  ],
+  "source_run": "/home/oms/vehicle_painting_robot/motion_planning/log/imported_x7y4z3",
+  "stages": [
+    {
+      "part": "workstation_path",
+      "stage": "time_profile",
+      "command": [
+        "/home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning/bin/python",
+        "-s",
+        "/home/oms/vehicle_painting_robot/motion_planning/src/motion_planner/1_time_profile.py",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/input",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path",
+        "0.42",
+        "1.2"
+      ],
+      "returncode": 0
+    },
+    {
+      "part": "workstation_path",
+      "stage": "optimization",
+      "command": [
+        "/home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning/bin/python",
+        "-s",
+        "-c",
+        "from motion_planner import optimization; raise SystemExit(optimization.main())",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path/trajectory_000.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path/trajectory_001.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path/trajectory_002.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path/trajectory_003.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path/trajectory_004.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path/trajectory_005.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/input/workstation_path/trajectory_006.csv",
+        "--urdf",
+        "/home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf",
+        "--gantry-env",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/config/gantry.yaml",
+        "--output",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/optimization/workstation_path",
+        "--stride",
+        "1",
+        "--tcp-frame",
+        "tcp",
+        "--tool-clearance-weight",
+        "100",
+        "--ipopt-print-level",
+        "0",
+        "--initial-joint-deg",
+        "3.4132,1.9432,90,0,90,-90,0,0",
+        "--part-xyz=0,0,1.3",
+        "--part-rpy=0,0,0"
+      ],
+      "returncode": 0
+    },
+    {
+      "part": "workstation_path",
+      "stage": "transition",
+      "mode": "fixed_retract_no_surface",
+      "command": [
+        "/home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning/bin/python",
+        "-s",
+        "-c",
+        "from motion_planner import transition; raise SystemExit(transition.main())",
+        "--joint-csv-dir",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/optimization/workstation_path",
+        "--pattern",
+        "*_nlp_command.csv",
+        "--urdf",
+        "/home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf",
+        "--gantry-env",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/config/gantry.yaml",
+        "--output",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793348544334641365/results/20261030_172224_513657/transition/workstation_path",
+        "--tcp-frame",
+        "tcp"
+      ],
+      "returncode": 0
+    }
+  ]
+}

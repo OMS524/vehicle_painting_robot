@@ -1,0 +1,92 @@
+[10/06 23:29:53.579120][info][14404][HostTimestampProvider.cpp:36] Update clock type to: realtime(0)
+[10/06 23:29:53.787899][info][14404][LinuxUsbPal.cpp:334] Create PollingDeviceWatcher!
+[10/06 23:29:53.787933][info][14404][DeviceManager.cpp:25] Current found device(s): (1)
+[10/06 23:29:53.787936][info][14404][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB2.1
+[10/06 23:29:53.787938][info][14404][DeviceManager.cpp:463] Enable net device enumeration: true
+[10/06 23:29:54.796448][info][14404][DeviceManager.cpp:25] Current device(s) list: (1)
+[10/06 23:29:54.796483][info][14404][DeviceManager.cpp:34] 	- Name: FemtoBolt, PID: 0x066b, SN/ID: CL8M8410004, Connection: USB2.1
+[10/06 23:29:55.145633][info][14404][DeviceManager.cpp:200] Device created successfully! Name: Femto Bolt, PID: 0x066b, SN/ID: CL8M8410004 FW: 1.0.9
+[10/06 23:29:55.150579][info][14404][RawPhaseStreamer.cpp:482] Succeed to load depth engine plugin
+[10/06 23:29:55.169840][error][14427][RawPhaseStreamer.cpp:504] Frame data size error: 327428
+[10/06 23:29:55.389206][warning][14427][ObException.cpp:32] A unrecoverable_exception has occurred!
+ - where: Frame.cpp(88)
+ - msg: Update data size(1572556) > data buffer size! (1048576)
+ - type: MEMORY
+ - status: 104
+[10/06 23:29:55.389490][warning][14427][ObLibuvcDevicePort.cpp:474] Execute failure! A libobsensor_exception has occurred!
+ - where: ObLibuvcDevicePort.cpp(474):onFrameCallback
+ - msg: Update data size(1572556) > data buffer size! (1048576)
+ - type: N11libobsensor23unrecoverable_exceptionE
+ - status: 104
+[10/06 23:29:55.590851][info][14427][RawPhaseStreamer.cpp:512] initNvramData: metadataHeader.size: 491592, metadataHeader.width: 0, metadataHeader.height: 0
+[10/06 23:29:56.020985][info][14404][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[10/06 23:29:56.021001][info][14404][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Color
+[10/06 23:29:56.021006][info][14404][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Color, format: MJPG, width: 1920, height: 1080, fps: 30}
+[10/06 23:29:56.023549][info][14404][VideoSensor.cpp:61] [CL8M8410004] Try to start stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[10/06 23:29:56.023559][info][14404][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPED to STARTING@Depth
+[10/06 23:29:56.023563][info][14404][VideoSensor.cpp:130] [CL8M8410004] Start backend stream: {type: Depth, format: Y16, width: 640, height: 576, fps: 30}
+[10/06 23:29:56.927029][info][14429][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Color
+[10/06 23:29:56.994926][error][14432][RawPhaseStreamer.cpp:267] Frame data size error: rawFrameSize: 54401360, frameDataSize: 2553129, nRows: 520
+[10/06 23:29:56.995091][error][14432][RawPhaseStreamer.cpp:267] Frame data size error: rawFrameSize: 4055342592, frameDataSize: 65530, nRows: 59648
+[10/06 23:29:57.121266][error][14432][RawPhaseStreamer.cpp:267] Frame data size error: rawFrameSize: 49678200, frameDataSize: 4041205, nRows: 772
+[10/06 23:29:57.400353][info][14431][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STARTING to STREAMING@Depth
+[10/06 23:30:01.941199][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.309074fps
+[10/06 23:30:01.941472][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.315119fps
+[10/06 23:30:02.520691][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.492188fps
+[10/06 23:30:02.520885][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.492188fps
+[10/06 23:30:06.954740][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.121683fps
+[10/06 23:30:06.954920][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.115677fps
+[10/06 23:30:07.668589][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.273504fps
+[10/06 23:30:07.668822][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.273504fps
+[10/06 23:30:11.968593][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.115677fps
+[10/06 23:30:11.968812][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.115677fps
+[10/06 23:30:12.669118][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.399120fps
+[10/06 23:30:12.669285][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.399120fps
+[10/06 23:30:16.982752][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.109673fps
+[10/06 23:30:16.982927][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.115677fps
+[10/06 23:30:17.897675][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.207305fps
+[10/06 23:30:17.897864][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.207305fps
+[10/06 23:30:21.997348][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.115677fps
+[10/06 23:30:21.997543][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.109673fps
+[10/06 23:30:22.933214][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.170805fps
+[10/06 23:30:22.933364][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.170805fps
+[10/06 23:30:27.011282][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.115677fps
+[10/06 23:30:27.011454][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.115677fps
+[10/06 23:30:28.175243][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.196871fps
+[10/06 23:30:28.175408][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.196071fps
+[10/06 23:30:32.028711][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.091669fps
+[10/06 23:30:32.028902][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.097666fps
+[10/06 23:30:33.360772][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.242191fps
+[10/06 23:30:33.360943][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.243009fps
+[10/06 23:30:37.042738][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.115677fps
+[10/06 23:30:37.042931][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.115677fps
+[10/06 23:30:38.555453][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.234841fps
+[10/06 23:30:38.555664][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.234841fps
+[10/06 23:30:42.054387][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.127693fps
+[10/06 23:30:42.054578][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.127693fps
+[10/06 23:30:43.681648][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.291845fps
+[10/06 23:30:43.681993][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.291008fps
+[10/06 23:30:47.068900][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.109673fps
+[10/06 23:30:47.069090][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.109673fps
+[10/06 23:30:48.850422][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.256142fps
+[10/06 23:30:48.850593][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.256966fps
+[10/06 23:30:52.081457][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.127693fps
+[10/06 23:30:52.081663][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.127693fps
+[10/06 23:30:54.007430][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.266046fps
+[10/06 23:30:54.007620][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.266046fps
+[10/06 23:30:57.098541][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.097666fps
+[10/06 23:30:57.098760][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.091669fps
+[10/06 23:30:59.208179][info][14431][VideoSensor.cpp:180] [CL8M8410004] Depth backend frame callback, frameRate=4.229956fps
+[10/06 23:30:59.208378][info][14448][SensorBase.cpp:405] [CL8M8410004] Depth Streaming... frameRate=4.229956fps
+[10/06 23:31:01.563466][info][14404][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Depth
+[10/06 23:31:02.109802][info][14429][VideoSensor.cpp:180] [CL8M8410004] Color backend frame callback, frameRate=30.127693fps
+[10/06 23:31:02.109908][info][14442][SensorBase.cpp:405] [CL8M8410004] Color Streaming... frameRate=30.133705fps
+[10/06 23:31:02.268147][info][14404][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Depth
+[10/06 23:31:02.268540][info][14404][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STREAMING to STOPPING@Color
+[10/06 23:31:04.123276][info][14404][SensorBase.cpp:216] [CL8M8410004] Stream state changed from STOPPING to STOPPED@Color
+[10/06 23:31:04.131988][info][14404][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[10/06 23:31:04.133770][info][14404][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[10/06 23:31:04.133795][info][14404][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done
+[10/06 23:31:04.133809][info][14404][SensorBase.cpp:53] [CL8M8410004] SensorBase is destroyed
+[10/06 23:31:04.212966][info][14404][ObLibuvcDevicePort.cpp:87] uvc_close done.
+[10/06 23:31:04.212975][info][14404][ObLibuvcDevicePort.cpp:88] ~ObLibuvcDevicePort done

@@ -1,0 +1,88 @@
+{
+  "schema": "doosan_eye_in_hand_v1",
+  "status": "captured",
+  "samples": [
+    {
+      "name": "pose_01",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_02",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_03",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_04",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_05",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_06",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_07",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_08",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_09",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_10",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_11",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_12",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_13",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_14",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_15",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_16",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_17",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_18",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_19",
+      "status": "accepted"
+    },
+    {
+      "name": "pose_20",
+      "status": "accepted"
+    }
+  ],
+  "image_source": "c2d",
+  "camera_frame": "camera_depth_optical_frame"
+}

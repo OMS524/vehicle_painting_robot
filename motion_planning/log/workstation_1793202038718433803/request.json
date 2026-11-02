@@ -1,0 +1,18 @@
+{
+  "acceleration": 1.2,
+  "jobDir": "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202038718433803",
+  "modelKey": "dca8d6530cd9bd538d28dde9d747f4d58d601923559d6adf3e9b7962c3a91e9a",
+  "motionRoot": "/home/oms/vehicle_painting_robot/motion_planning",
+  "rpy": [
+    0,
+    0,
+    1.570796
+  ],
+  "sourceDirectory": "/home/oms/vehicle_painting_robot/path_planning/log/20261029_004030",
+  "velocity": 0.42,
+  "xyz": [
+    0,
+    0,
+    1.25
+  ]
+}

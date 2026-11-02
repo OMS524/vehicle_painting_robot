@@ -1,0 +1,75 @@
+{
+  "gantry_env": "x7y4z3",
+  "parts": [
+    "workstation_path"
+  ],
+  "source_run": "/home/oms/vehicle_painting_robot/motion_planning/log/imported_x7y4z3",
+  "stages": [
+    {
+      "part": "workstation_path",
+      "stage": "time_profile",
+      "command": [
+        "/home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning/bin/python",
+        "-s",
+        "/home/oms/vehicle_painting_robot/motion_planning/src/motion_planner/1_time_profile.py",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/input",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path",
+        "0.42",
+        "1.2"
+      ],
+      "returncode": 0
+    },
+    {
+      "part": "workstation_path",
+      "stage": "optimization",
+      "command": [
+        "/home/oms/miniforge3/envs/vehicle_painting_robot_motion_planning/bin/python",
+        "-s",
+        "-c",
+        "from motion_planner import optimization; raise SystemExit(optimization.main())",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_000.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_001.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_002.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_003.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_004.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_005.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_006.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_007.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_008.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_009.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_010.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_011.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_012.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_013.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_014.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_015.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_016.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_017.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_018.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_019.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_020.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_021.csv",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/input/workstation_path/trajectory_022.csv",
+        "--urdf",
+        "/home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf",
+        "--gantry-env",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/config/gantry.yaml",
+        "--output",
+        "/home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793202387593606864/results/20261029_004627_777811/optimization/workstation_path",
+        "--stride",
+        "1",
+        "--tcp-frame",
+        "tcp",
+        "--tool-clearance-weight",
+        "100",
+        "--ipopt-print-level",
+        "0",
+        "--initial-joint-deg",
+        "3.4132,1.9432,90,0,90,-90,0,0",
+        "--part-xyz=0,-0.47,1.55",
+        "--part-rpy=0,0,1.570796"
+      ],
+      "returncode": 1
+    }
+  ]
+}

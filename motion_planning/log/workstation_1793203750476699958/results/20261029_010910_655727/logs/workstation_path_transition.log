@@ -1,0 +1,18 @@
+[stitch] URDF: /home/oms/vehicle_painting_robot/description/paint_cell/urdf/paint_cell_8axis_x7y4z3.urdf (gantry_env x7y4z3)
+[stitch] TCP frame: tcp, 리트랙트 방향: spray
+[stitch] 갠트리 한계 v 0.5 m/s, a 1.6 m/s^2
+[stitch] row 12개, 전이 11곳 생성
+[stitch] 리트랙트 고정 30 mm, 샘플 간격 10 mm
+[stitch] move  0-> 1 pts= 120 T= 1.19s (0.37+0.52+0.30) lift= 30.0mm pos_err= 0.08mm seam= 0.00 v=0.40 a=0.92
+[stitch] move  1-> 2 pts= 134 T= 1.33s (0.32+0.72+0.29) lift= 30.0mm pos_err= 0.06mm seam= 0.00 v=0.56 a=0.94
+[stitch] move  2-> 3 pts=  96 T= 0.95s (0.30+0.30+0.35) lift= 30.0mm pos_err= 0.11mm seam= 0.00 v=0.46 a=0.93
+[stitch] move  3-> 4 pts= 156 T= 1.55s (0.35+0.89+0.31) lift= 30.0mm pos_err= 1.65mm seam= 0.00 v=0.70 a=0.93
+[stitch] move  4-> 5 pts= 106 T= 1.05s (0.30+0.41+0.34) lift= 30.0mm pos_err= 0.10mm seam= 0.00 v=0.34 a=0.94
+[stitch] move  5-> 6 pts= 116 T= 1.15s (0.39+0.45+0.31) lift= 30.0mm pos_err= 0.53mm seam= 0.00 v=0.35 a=0.94
+[stitch] move  6-> 7 pts= 122 T= 1.21s (0.35+0.55+0.31) lift= 30.0mm pos_err= 0.10mm seam= 0.00 v=0.44 a=0.94
+[stitch] move  7-> 8 pts=  98 T= 0.97s (0.32+0.33+0.32) lift= 30.0mm pos_err= 0.11mm seam= 0.00 v=0.36 a=0.94
+[stitch] move  8-> 9 pts= 110 T= 1.09s (0.28+0.40+0.41) lift= 30.0mm pos_err= 0.31mm seam= 0.00 v=0.37 a=0.91
+[stitch] move  9->10 pts= 111 T= 1.10s (0.33+0.45+0.32) lift= 30.0mm pos_err= 0.17mm seam= 0.00 v=0.34 a=0.94
+[stitch] move 10->11 pts= 100 T= 0.99s (0.29+0.38+0.32) lift= 30.0mm pos_err= 0.23mm seam= 0.00 v=0.46 a=0.94
+[stitch] 완료: 세그먼트 23개 -> /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203750476699958/results/20261029_010910_655727/transition/workstation_path
+[stitch] 전이 총 시간 12.6s, 최악 추종오차 1.65mm / 0.04deg, 최악 이음새 0.000, 속도 한계 대비 0.70, 가속도 한계 대비 0.94

@@ -1,0 +1,12 @@
+scene:
+  part_file: ''
+  part_rpy:
+  - 0.0
+  - 0.0
+  - 0.0
+  part_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  gantry_env: x7y4z3
+  trajectory_dir: /home/oms/vehicle_painting_robot/motion_planning/log/workstation_1793203516687889706/results/20261029_010516_841339/input/workstation_path

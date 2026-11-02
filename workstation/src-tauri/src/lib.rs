@@ -9,6 +9,8 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 use tauri::ipc::{InvokeBody, Request, Response};
+use tauri::Manager;
+mod motion;
 
 #[derive(Clone)]
 struct PythonCommand {
@@ -19,7 +21,7 @@ struct PythonCommand {
 #[derive(Clone)]
 struct SessionState {
     session_dir: PathBuf,
-    scan_path: PathBuf,
+    scan_path: Option<PathBuf>,
     generated: bool,
 }
 
@@ -99,9 +101,7 @@ fn resolve_planner_root() -> Result<PathBuf, String> {
 
     for candidate in candidates {
         let normalized = candidate.canonicalize().unwrap_or(candidate);
-        if normalized
-            .join("scripts/path_planning.py")
-            .is_file()
+        if normalized.join("scripts/path_planning.py").is_file()
             && normalized.join("config/painting_path.yaml").is_file()
         {
             return Ok(normalized);
@@ -191,6 +191,20 @@ fn resolve_python() -> Result<PythonCommand, String> {
         ));
     }
 
+    // Prefer the dedicated planner environment when launched by double-click.
+    if let Some(home) = env::var_os("HOME") {
+        for base in ["miniforge3", "miniconda3", "anaconda3"] {
+            let program = PathBuf::from(&home)
+                .join(base)
+                .join("envs/vehicle_painting_robot_path_planning/bin/python");
+            if program.is_file() {
+                return Ok(PythonCommand {
+                    program: program.to_string_lossy().into_owned(),
+                    prefix_args: vec!["-s".to_string()],
+                });
+            }
+        }
+    }
     let candidates = [
         PythonCommand {
             program: "python3".to_string(),
@@ -385,7 +399,7 @@ fn stage_scan_file(
         .map_err(|_| "작업 세션 잠금이 손상되었습니다.".to_string())?;
     *session = Some(SessionState {
         session_dir: session_dir.clone(),
-        scan_path,
+        scan_path: Some(scan_path),
         generated: false,
     });
     Ok(ScanInfo {
@@ -396,11 +410,125 @@ fn stage_scan_file(
 }
 
 #[tauri::command]
+fn save_scan_layout(
+    layout: Value,
+    state: tauri::State<'_, WorkstationState>,
+) -> Result<String, String> {
+    if layout["version"] != 1 || layout["frame"] != "world_base" {
+        return Err("스캔 배치 버전 또는 좌표계가 올바르지 않습니다.".into());
+    }
+    let placements = layout["placements"]
+        .as_array()
+        .ok_or("배치 목록이 없습니다.")?;
+    if placements.is_empty() || placements.len() > 100 {
+        return Err("배치 개수는 1~100개여야 합니다.".into());
+    }
+    for placement in placements {
+        for key in ["xyz", "rpy", "direction"] {
+            let values = placement[key]
+                .as_array()
+                .ok_or("배치 벡터가 올바르지 않습니다.")?;
+            if values.len() != 3
+                || values
+                    .iter()
+                    .any(|v| !v.as_f64().is_some_and(f64::is_finite))
+            {
+                return Err("배치 벡터는 유한한 숫자 3개여야 합니다.".into());
+            }
+            if key == "direction"
+                && values
+                    .iter()
+                    .map(|v| v.as_f64().unwrap().powi(2))
+                    .sum::<f64>()
+                    < 1e-18
+            {
+                return Err("스캔 방향이 0입니다.".into());
+            }
+        }
+    }
+    let unique = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|e| e.to_string())?
+        .as_nanos();
+    let directory = state
+        .planner_root
+        .parent()
+        .ok_or("저장소 루트가 없습니다.")?
+        .join("scan_planning/log")
+        .join(format!("workstation_layout_{unique}"));
+    fs::create_dir_all(&directory).map_err(|e| e.to_string())?;
+    let path = directory.join("scan_layout.json");
+    let data = json!({"purpose": "placement_preview_only", "hardwareExecuted": false,
+        "units": {"position": "m", "rpy": "rad"}, "layout": layout});
+    fs::write(
+        &path,
+        serde_json::to_vec_pretty(&data).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())?;
+    Ok(path.display().to_string())
+}
+
+#[tauri::command]
+async fn import_trajectory_file(
+    request: Request<'_>,
+    state: tauri::State<'_, WorkstationState>,
+) -> Result<GenerationSummary, String> {
+    let encoded = request
+        .headers()
+        .get("x-file-name")
+        .and_then(|v| v.to_str().ok())
+        .ok_or("경로 CSV 이름이 없습니다.")?;
+    let name = safe_scan_file_name(&percent_decode(encoded)?)?;
+    if !name.to_lowercase().ends_with(".csv") {
+        return Err("도장 경로는 CSV 파일을 선택하세요.".into());
+    }
+    let bytes = match request.body() {
+        InvokeBody::Raw(bytes) if !bytes.is_empty() => bytes.clone(),
+        _ => return Err("경로 CSV 파일이 비어 있거나 올바르지 않습니다.".into()),
+    };
+    let scan_path = state
+        .session
+        .lock()
+        .map_err(|e| e.to_string())?
+        .as_ref()
+        .and_then(|session| session.scan_path.clone());
+    // Import into a fresh session. Validation failures never destroy a prior job.
+    let unique = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|e| e.to_string())?
+        .as_nanos();
+    let session_dir = env::temp_dir()
+        .join("painting_process_workstation")
+        .join(format!("{}-import-{unique}", std::process::id()));
+    fs::create_dir_all(&session_dir).map_err(|e| e.to_string())?;
+    let csv = session_dir.join("source_trajectory.csv");
+    fs::write(&csv, bytes).map_err(|e| e.to_string())?;
+    let payload = json!({"sessionDir": session_dir, "csvPath": csv, "fileName": name});
+    let python = state.python.clone();
+    let backend = state.backend_script.clone();
+    let response = tauri::async_runtime::spawn_blocking(move || {
+        run_backend(&python, &backend, "import", &payload)
+    })
+    .await
+    .map_err(|e| e.to_string())??;
+    let summary = serde_json::from_value(response).map_err(|e| e.to_string())?;
+    *state.session.lock().map_err(|e| e.to_string())? = Some(SessionState {
+        session_dir,
+        scan_path,
+        generated: true,
+    });
+    Ok(summary)
+}
+
+#[tauri::command]
 async fn generate_trajectory(
     request: GenerateRequest,
     state: tauri::State<'_, WorkstationState>,
 ) -> Result<GenerationSummary, String> {
     let session = lock_session(&state, false)?;
+    if session.scan_path.is_none() {
+        return Err("새 경로를 생성하려면 스캔 데이터를 먼저 불러오세요.".into());
+    }
     let planner_root = state.planner_root.clone();
     let backend_script = state.backend_script.clone();
     let python = state.python.clone();
@@ -508,6 +636,12 @@ pub fn run() {
     let backend_script = resolve_backend_script().unwrap_or_else(|error| panic!("{error}"));
     let python = resolve_python().unwrap_or_else(|error| panic!("{error}"));
     tauri::Builder::default()
+        .manage(motion::MotionState::default())
+        .on_window_event(|window, event| {
+            if matches!(event, tauri::WindowEvent::Destroyed) {
+                motion::shutdown(&window.state::<motion::MotionState>());
+            }
+        })
         .manage(WorkstationState {
             planner_root,
             backend_script,
@@ -518,11 +652,19 @@ pub fn run() {
             get_backend_info,
             read_default_parameters,
             stage_scan_file,
+            save_scan_layout,
+            import_trajectory_file,
             generate_trajectory,
             read_generated_trajectory,
             read_control_points,
             regenerate_trajectory,
             complete_trajectory,
+            motion::get_motion_model,
+            motion::read_motion_asset,
+            motion::start_motion_job,
+            motion::motion_job_status,
+            motion::stop_motion_process,
+            motion::open_motion_rviz,
         ])
         .run(tauri::generate_context!())
         .expect("Painting Process Workstation 실행 중 오류가 발생했습니다.");
